@@ -26,17 +26,17 @@ public class DrLuckyImplement implements DrLucky{
   }
   @Override
   public String getName() {
-    return null;
+    return this.name;
   }
 
   @Override
   public int getCurrentHp() {
-    return 0;
+    return this.curHp;
   }
 
   @Override
   public int getCurrentRoomNumber() {
-    return 0;
+    return this.curRoomNum;
   }
 
   @Override
@@ -45,7 +45,21 @@ public class DrLuckyImplement implements DrLucky{
   }
 
   @Override
-  public void decreaseHp() {
+  public void decreaseHp(int decreaseBy) {
+    if (decreaseBy <=0){
+      throw new IllegalArgumentException("Error: the decreased amount must be 1 or larger!");
+    }
+    if (this.curHp - decreaseBy <=0){
+      this.curHp = 0; // if health is less than 0 then set to 0, dr lucky is dead! game over!
+    }else{
+      this.curHp -=decreaseBy;
+    }
+  }
 
+  @Override
+  public String toString(){
+    String returnedString;
+    returnedString = String.format("Target name: %s, Cur Hp: %d, Cur room index: %d\n",this.name, this.curHp, this.curRoomNum);
+    return returnedString;
   }
 }

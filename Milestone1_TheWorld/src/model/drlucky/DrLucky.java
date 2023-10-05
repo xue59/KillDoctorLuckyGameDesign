@@ -10,6 +10,6 @@ public interface DrLucky {
 
   void moveDrLucky();
 
-  void decreaseHp();
+  void decreaseHp(int decreaseBy);
 
 }
