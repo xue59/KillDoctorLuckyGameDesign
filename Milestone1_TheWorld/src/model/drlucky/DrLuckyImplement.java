@@ -41,7 +41,7 @@ public class DrLuckyImplement implements DrLucky{
 
   @Override
   public void moveDrLucky() {
-    this.curRoomNum = (this.curRoomNum+1) % this.maxRoomIndex;
+    this.curRoomNum = (this.curRoomNum+1) % (this.maxRoomIndex+1);
   }
 
   @Override
