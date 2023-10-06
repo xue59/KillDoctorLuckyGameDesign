@@ -10,14 +10,14 @@ import java.io.*;
 public class Driver {
 
   public static void main(String[] args) throws IOException {
-    //manually provide the file name path & name
-    String fileName = "res/mansion2023.txt";
+    //The default file name path & name
+    String fileName = "mansion2023.txt";
 
     try {
       if (args.length < 1) {
         System.out.println("No File Args Txt File Path found! ");
         System.out.println(
-            "ex: Example run command: java -jar sampleRun.jar <$ModuleFileDir$/res/myOwnWorldMapV1.txt>");
+            "ex: Example run command: java -jar sampleRun.jar <$ModuleFileDir$/myOwnWorldMapV1.txt>");
         System.out.println(String.format("Initiating with Default File.....>>>> %s  ", fileName));
       } else {
         fileName = args[0];
@@ -29,12 +29,12 @@ public class Driver {
       BufferedReader br = new BufferedReader(fileReader);
       CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
       World mainWorld = createHelper.createWorld();
-//      mainWorld.printWorldNeighborMap();
+      mainWorld.printWorldNeighborMap();
 //      mainWorld.printWorld2DArray();
-//      System.out.println(mainWorld.getDrLuckyInfo());
+      System.out.println(mainWorld.getDrLuckyInfo());
 //      mainWorld.moveDrLucky();
 //      System.out.println(mainWorld.getDrLuckyInfo());
-//      mainWorld.printAllRoomInfo();
+      mainWorld.printAllRoomInfo();
 //      mainWorld.moveDrLucky();
 
       //After mainWorld created, add you example run below:
