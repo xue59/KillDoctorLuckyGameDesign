@@ -11,8 +11,8 @@ public interface Room {
   Map<String, Integer> getAllItemsWithDamage();
 
   Item getOneItem(String itemName) throws IllegalArgumentException;
-  void addOneItem(String itemName) throws IllegalArgumentException, NullPointerException;
-  void removeOneItem(Item itemObj) throws IllegalArgumentException, NullPointerException;
+  void addOneItem(Item addedItem) throws IllegalArgumentException, NullPointerException;
+  void removeOneItem(Item removedItem) throws IllegalArgumentException, NullPointerException;
 
 
 }

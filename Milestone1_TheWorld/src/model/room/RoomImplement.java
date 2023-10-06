@@ -83,16 +83,56 @@ public class RoomImplement implements Room {
       }
     }
     throw new IllegalArgumentException(
-        String.format("Error: %s not in Room %d %s", itemName, this.roomNumber,this.roomName));
+        String.format("Error: %s not in Room %d %s", itemName, this.roomNumber, this.roomName));
   }
 
   @Override
-  public void addOneItem(String itemName) throws IllegalArgumentException, NullPointerException {
-
+  public void addOneItem(Item addedItem) throws IllegalArgumentException, NullPointerException {
+    //check item cannot be Null
+    if (addedItem == null) {
+      throw new NullPointerException("Error: input item cannot be empty or Null!");
+    }
+    //check the addedItem cannot exist in the current room.
+    if (this.itemList.contains(addedItem)) {
+      throw new IllegalArgumentException(
+          String.format("Error: %s already in the room %s cannot add again!", addedItem.getName(),
+              this.roomName));
+    }
+    // after checking can be added to the room
+    this.itemList.add(addedItem);
   }
 
   @Override
-  public void removeOneItem(Item itemObj) throws IllegalArgumentException, NullPointerException {
+  public void removeOneItem(Item removedItem) throws IllegalArgumentException, NullPointerException {
+    //check item cannot be Null
+    if (removedItem == null) {
+      throw new NullPointerException("Error: try to remove item cannot be empty or Null!");
+    }
 
+    //check if item is not in the room:
+    if (!(this.itemList.contains(removedItem))){
+      throw new IllegalArgumentException("Error: Item is not in the room item list.");
+    }
+    //pass all validation:
+    this.itemList.remove(removedItem);
+  }
+
+  @Override
+  public int hashCode(){
+    return this.roomName.hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj){
+    if (obj instanceof Room){
+      Room comparedRoom = (Room) obj;
+      if(this.hashCode() == comparedRoom.hashCode()){
+        return true;
+      } else{
+        return false;
+      }
+    }else {
+      return false;
+    }
   }
 }
