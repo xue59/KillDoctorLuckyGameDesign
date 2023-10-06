@@ -34,3 +34,15 @@ MileStone1_TheWorld
 
 
 
+
+
+Reference: 
+1. https://www.youtube.com/watch?v=9hsPLAB5a9s&ab_channel=fenirob 
+2. https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/Graphics.html 
+3. https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/image/BufferedImage.html 
+4. https://www.jetbrains.com/idea/guide/tutorials/hello-world/packaging-the-application/ 
+5. https://www.jetbrains.com/help/idea/compiling-applications.html#run_packaged_jar 
+
+
+
+

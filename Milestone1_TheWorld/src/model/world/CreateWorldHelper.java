@@ -317,7 +317,6 @@ public class CreateWorldHelper {
     for (Map.Entry<Integer, Set<Integer>> entry : worldNeighborMap.entrySet()) {
       Integer roomNumber = entry.getKey();
       Set<Integer> neighborSet = entry.getValue();
-
       System.out.print("Room " + roomNumber + " Neighbors: ");
       for (Integer neighbor : neighborSet) {
         System.out.print(neighbor + " ");
