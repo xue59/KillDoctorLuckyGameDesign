@@ -11,7 +11,7 @@ public interface World {
   int getTotalOfRoom();
   int getTotalOfItem();
 
-  String GetOneRoomInfo(String RoomName) throws IllegalArgumentException, NullPointerException;
+  String GetOneRoomInfo(String roomName) throws IllegalArgumentException, NullPointerException;
   void moveDrLucky();
 
   BufferedImage createGraphBufferedImage();

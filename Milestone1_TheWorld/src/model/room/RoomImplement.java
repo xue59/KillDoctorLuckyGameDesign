@@ -53,6 +53,11 @@ public class RoomImplement implements Room {
   }
 
   @Override
+  public int getRoomNumber(){
+    return this.roomNumber;
+  }
+
+  @Override
   public int[] getRoomCoordinate() {
     int[] returnCoordinate = new int[4];
     returnCoordinate[0] = this.topColX;
@@ -60,6 +65,22 @@ public class RoomImplement implements Room {
     returnCoordinate[2] = this.botColX;
     returnCoordinate[3] = this.botRowY;
     return returnCoordinate;
+  }
+
+  public int getTopRowY() {
+    return topRowY;
+  }
+
+  public int getTopColX() {
+    return topColX;
+  }
+
+  public int getBotColX() {
+    return botColX;
+  }
+
+  public int getBotRowY() {
+    return botRowY;
   }
 
   @Override
@@ -134,5 +155,10 @@ public class RoomImplement implements Room {
     }else {
       return false;
     }
+  }
+  @Override
+  public String toString(){
+    return String.format(
+        "Room Info Name= %s \nItems in this Room and damage= %s \n", this.roomName, this.itemList);
   }
 }
