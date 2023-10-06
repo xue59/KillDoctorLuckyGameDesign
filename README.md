@@ -10,8 +10,8 @@ MileStone1_TheWorld
    5. If no file map provided, it will run the default file map of mansion.txt. 
    6. After run you can open the Folder: /Milestone1_TheWorld/out/artifacts/Milestone1_TheWorld_jar, you will see an newCreatedMap.png created which is the World Map of your txt file! 
 
-2. Example run: 
-   1. Example Run 1 result can be found in res/ExampleRunsForProject1 
+2. Example Run: (Result can be found in res/ExampleRunsForProject1 )
+   1. Example Run 1 
       1. Line 4: The result shows just after new Mansion.txt just created, Dr Lucky have NOT yet move any steps, so he is in Room #0-Armory. 
       2. Line 5 to 25: It shows all the Room # with it's neighbor Room #. (Work as a bi-directional AdjList). 
       3. Open the "AfterExampleRun1.png" in the same Folder, the picture shows this 1st run result, thus compare with the mansion.txt, we can know the Neighbor list is correct.
