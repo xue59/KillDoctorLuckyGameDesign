@@ -3,6 +3,7 @@ package model.world;
 import model.drlucky.DrLucky;
 import model.drlucky.DrLuckyImplement;
 import model.item.Item;
+import model.item.ItemImplement;
 import model.room.Room;
 import model.room.RoomImplement;
 
@@ -56,7 +57,7 @@ public class CreateWorldHelper {
       throw new IllegalArgumentException("Error: Total Rooms cannot be Negative or Zero.");
     }
     this.totalRooms = intTotalRooms;                          // create total rooms
-    //以上代码 完成前三行 line 扫描 & 创建
+    //以上代码 完成前三行 line 扫描 & 创建 Row, Col Size, Target 和 hp血量
 
     //Now Scan throw room list and create rooms:
     this.worldMapWithRmNum = new Integer[this.rowSize][this.colSize]; // init worldMapWithRmNum
@@ -74,10 +75,62 @@ public class CreateWorldHelper {
       System.out.println(String.format("%d %d %d %d %s", aRoom.getTopRowY(), aRoom.getTopColX(),
           aRoom.getBotRowY(), aRoom.getBotColX(), aRoom.getRoomName()));
     }
-    print2DArray(this.worldMapWithRmNum);
+    //    print2DArray(this.worldMapWithRmNum);
+    // 以上代码 完成 Room 创建 & 2d array world Map
+
+    // Scan Items number and create Item:
+    // 先确定 item number合法为正数
+    int intTotalItems = Integer.parseInt(inputText.next());
+    if (intTotalItems < 0 || intTotalItems == 0) {
+      throw new IllegalArgumentException(
+          "Error: in readBuildTxtFile item number cannot be 0 or negative");
+    }
+    this.totalItems = intTotalItems;
+    System.out.println(totalItems);
+    // 再读取 txt里剩余line of items
+    for (int i = 0; i < this.totalItems; i++) {
+      int appearInRmNum = Integer.parseInt(inputText.next());
+      int damage = Integer.parseInt(inputText.next());
+      String newItemName = inputText.nextLine().trim();
+      Item newItem = (Item) this.createAnItem(newItemName, damage);
+      System.out.println(String.format("%d %d %s",appearInRmNum,damage,newItemName));
+      this.addAnItemToRoom(appearInRmNum,newItem);
+    }
+    //Above Finish all txt file reading
+    System.out.println("check room list and item list: ");
+    for(Room aRoom : roomListRoom){
+      System.out.println(aRoom.toString());
+    }
+    for(Item aItem : itemListItem){
+      System.out.println(aItem.toString());
+    }
+    System.out.println(this.drLucky.toString());
+
 
     return null;
   }
+
+  // following create an item and return the class
+  private Item createAnItem(String createdItem, int damage){
+    // item name cannot be repeated
+    for (Item anItem : itemListItem){
+      if (createdItem.equals(anItem.getName())){
+        throw new IllegalArgumentException(String.format("Error: item duplicated for %s", createdItem));
+      }
+    }
+    return new ItemImplement(createdItem,damage);
+  }
+
+  private void addAnItemToRoom(int roomNum, Item addedItem){
+    Objects.requireNonNull(addedItem);
+    if (roomNum>=0 && roomNum<=this.totalRooms-1){
+      this.itemListItem.add(addedItem);
+      this.roomListRoom.get(roomNum).addOneItem(addedItem);
+    } else{
+      throw new IllegalArgumentException("Error addAnItemToRoom: room number oversize!");
+    }
+  }
+
 
   // helper function parse the 1st line set row and cols and world name.
   private void createRowColSizeWorldName(int row, int col, String worldName) {
@@ -110,7 +163,7 @@ public class CreateWorldHelper {
     //check if the room size too big
     if (!(this.checkIfRoomSizeInWorld(topRowY, topColX, botRowY, botColX))) {
       throw new IllegalArgumentException(
-          String.format("Erro: room size %s is large or equal to world size.", name));
+          String.format("Error: room size %s is large or equal to world size.", name));
     }
     //create room obj:
     Room newRoom = new RoomImplement(roomName, roomNumber, topRowY, topColX, botRowY, botColX);
@@ -145,7 +198,7 @@ public class CreateWorldHelper {
   // following function check for over lab of the room in roomListRoom
   private boolean checkIfRoomOverLapAndFillWorldMap(int topRowY, int topColX, int botRowY,
       int botColX, int rmNumber) {
-    System.out.println(String.format("roomNumber: %d", rmNumber));
+//    System.out.println(String.format("roomNumber: %d", rmNumber));
     for (int row = topRowY; row <= botRowY; row++) {
       for (int col = topColX; col <= botColX; col++) {
         if (Objects.isNull(this.worldMapWithRmNum[row][col])) {
@@ -166,9 +219,9 @@ public class CreateWorldHelper {
         if (Objects.isNull(array[i][j])) {
           System.out.print("——" + " ");
         } else {
-          if (array[i][j]<10){
-            System.out.print("0"+array[i][j] + " ");
-          } else{
+          if (array[i][j] < 10) {
+            System.out.print("0" + array[i][j] + " ");
+          } else {
             System.out.print(array[i][j] + " ");
           }
         }

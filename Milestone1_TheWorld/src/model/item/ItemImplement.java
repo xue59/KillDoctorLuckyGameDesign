@@ -28,7 +28,7 @@ public class ItemImplement implements Item {
   @Override
   public String toString(){
     String newString;
-    newString = String.format("Item: %s Damage=%s \n", this.getName(), this.getDamage());
+    newString = String.format("%s Damage=%s ", this.getName(), this.getDamage());
     return newString;
   }
 

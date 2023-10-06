@@ -159,6 +159,6 @@ public class RoomImplement implements Room {
   @Override
   public String toString(){
     return String.format(
-        "Room Info Name= %s \nItems in this Room and damage= %s \n", this.roomName, this.itemList);
+        "#%d Room: %s, has : %s", this.roomNumber,this.roomName, this.itemList);
   }
 }
