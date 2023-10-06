@@ -2,35 +2,42 @@ import model.world.World;
 import model.world.WorldImplement;
 import model.world.CreateWorldHelper;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 public class Driver {
 
   public static void main(String[] args) throws IOException {
-//    if (args == null) {
-//      System.out.println("Error: No input, please input arguments!!!");
-//      return;
-//    }
-//    if (args.length < 2) {
-//      System.out.println("Need min 2 arguments!!!");
-//      return;
-//    }
-    System.out.println("Starting the game in Main>>>>>>");
-
     //manually provide the file name path & name
-    String filename = "res/mansion2023.txt";
-    System.out.println(String.format("Filename: %s", filename));
+    String fileName = "res/mansion2023.txt";
 
-    try{
-      FileReader fileReader = new FileReader(filename);
+    try {
+      if (args.length < 1) {
+        System.out.println("No File Args Txt File Path found! ");
+        System.out.println(
+            "Example run command: java -jar sampleRun.jar <$ModuleFileDir$/res/myOwnWorldMapV1.txt>");
+        System.out.println(String.format("Initiating with Default File.....>>>> %s  ", fileName));
+      } else {
+        fileName = args[0];
+        System.out.println(String.format("Input File args Found: %s", fileName));
+
+      }
+
+      FileReader fileReader = new FileReader(fileName);
       BufferedReader br = new BufferedReader(fileReader);
-      CreateWorldHelper createWorld = new CreateWorldHelper().readBuildTxtFile(br);
+      CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
+      World mainWorld = createHelper.createWorld();
+      mainWorld.printWorldNeighborMap();
+      //      mainWorld.printWorld2DArray();
+      System.out.println(mainWorld.getDrLuckyInfo());
+      mainWorld.moveDrLucky();
+      System.out.println(mainWorld.getDrLuckyInfo());
+      mainWorld.printAllRoomInfo();
+      mainWorld.moveDrLucky();
 
-
-    } catch(IOException e){
+    } catch (IOException e) {
       throw new IOException("Error: unable to open file");
     }
 

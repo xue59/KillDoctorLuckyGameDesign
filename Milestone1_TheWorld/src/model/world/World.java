@@ -11,10 +11,15 @@ public interface World {
   int getTotalOfRoom();
   int getTotalOfItem();
 
-  String GetOneRoomInfo(String roomName) throws IllegalArgumentException, NullPointerException;
+  String getOneRoomInfo(String roomName) throws IllegalArgumentException, NullPointerException;
   void moveDrLucky();
 
   BufferedImage createGraphBufferedImage();
+
+  public void printWorldNeighborMap() ;
+  public void printWorld2DArray();
+  public String getDrLuckyInfo();
+  public void printAllRoomInfo();
 
 
 }
