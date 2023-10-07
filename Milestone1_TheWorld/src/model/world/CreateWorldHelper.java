@@ -1,5 +1,13 @@
 package model.world;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Scanner;
+import java.util.Set;
 import model.drlucky.DrLucky;
 import model.drlucky.DrLuckyImplement;
 import model.item.Item;
@@ -7,10 +15,11 @@ import model.item.ItemImplement;
 import model.room.Room;
 import model.room.RoomImplement;
 
-import java.util.Objects;
 
-import java.util.*;
-
+/**
+ * The following CreateWorldHelper class is responsible for reading a text file and creating a world
+ * with rooms, items, and Dr. Lucky based on the provided information.
+ */
 public class CreateWorldHelper {
   private int totalRooms;
   private int totalItems;
@@ -22,8 +31,11 @@ public class CreateWorldHelper {
   private final List<Room> roomListRoom;
   private final List<String> itemListString;
   private final List<Item> itemListItem;
-  private Integer[][] worlMap2dRmIndex;
+  private Integer[][] worldMap2dRmIndex;
 
+  /**
+   * Constructs a new CreateWorldHelper instance.
+   */
   public CreateWorldHelper() {
     this.roomListRoom = new ArrayList<>();
     this.itemListString = new ArrayList<>();
@@ -32,6 +44,13 @@ public class CreateWorldHelper {
     // check it readable is null throw invalid
   }
 
+  /**
+   * Reads and parses a text file to build the world, including rooms, items, and Dr. Lucky.
+   *
+   * @param readable A {@link Readable} object representing the text file.
+   * @return The CreateWorldHelper instance with the world data.
+   * @throws IllegalArgumentException If there is an error in the input file format or content.
+   */
   public CreateWorldHelper readBuildTxtFile(Readable readable) {
     Scanner inputText = new Scanner(readable);
     //    print out all the text to check
@@ -51,7 +70,7 @@ public class CreateWorldHelper {
 
     //    System.out.println(String.format("%d, %d, %s", rows, cols, worldName));
     //    System.out.println(
-    //        String.format("HP: %d, target name: %s, total rooms: %d", hp, drLuckyName, intTotalRooms));
+    //    String.format("HP:%d, targetname: %s, total rooms: %d", hp, drLuckyName, intTotalRooms));
     this.createRowColSizeWorldName(rows, cols, worldName);    // create row col size
     this.createDrLucky(drLuckyName, hp, (intTotalRooms - 1)); // create Dr Lucky
     // create numbers of rooms and check valid?
@@ -62,8 +81,8 @@ public class CreateWorldHelper {
     //以上代码 完成前三行 line 扫描 & 创建 Row, Col Size, Target 和 hp血量
 
     //Now Scan throw room list and create rooms:
-    if (Objects.isNull(worlMap2dRmIndex)) { // 创建 worlMap2dRmIndex
-      this.worlMap2dRmIndex = new Integer[this.rowSize][this.colSize]; // init worlMap2dRmIndex
+    if (Objects.isNull(worldMap2dRmIndex)) { // 创建 worldMap2dRmIndex
+      this.worldMap2dRmIndex = new Integer[this.rowSize][this.colSize]; // init worldMap2dRmIndex
     }
 
     for (int i = 0; i < this.totalRooms; i++) {
@@ -72,16 +91,16 @@ public class CreateWorldHelper {
       int botRowY = Integer.parseInt(inputText.next());
       int botColX = Integer.parseInt(inputText.next());
       String rmName = inputText.nextLine().trim();
-      Room newRoom = (Room) this.createARoom(rmName, i, topRowY, topColX, botRowY, botColX);
+      Room newRoom = (Room) this.createAroom(rmName, i, topRowY, topColX, botRowY, botColX);
       // create a new map hashset prepare for the AdjList Map<int, str()>
       this.worldNeighborMap.put(newRoom.getRoomNumber(), new HashSet<>());
     }
     //    System.out.println("Checking created rooms: ");
     //    for (Room aRoom : roomListRoom) {
-    //      System.out.println(String.format("%d %d %d %d %s", aRoom.getTopRowY(), aRoom.getTopColX(),
-    //          aRoom.getBotRowY(), aRoom.getBotColX(), aRoom.getRoomName()));
+    //      System.out.println(String.format("%d %d %d %d %s", aRoom.getTopRowY(),
+    //      aRoom.getTopColX(),aRoom.getBotRowY(), aRoom.getBotColX(), aRoom.getRoomName()));
     //    }
-    //    print2DArray(this.worlMap2dRmIndex);
+    //    print2dArray(this.worldMap2dRmIndex);
     // 以上代码 完成 Room 创建 & 2d array world Map
 
     // Scan Items number and create Item:
@@ -120,6 +139,11 @@ public class CreateWorldHelper {
     return this;
   }
 
+  /**
+   * Creates a world based on the parsed data.
+   *
+   * @return A {@link World} instance representing the created world.
+   */
   public World createWorld() {
     Map<Integer, Set<Integer>> newMap = new HashMap<>(this.worldNeighborMap);
     String newName = new String(this.name);
@@ -132,7 +156,7 @@ public class CreateWorldHelper {
     // Copy the values from the original array to the new array
     for (int i = 0; i < this.rowSize; i++) {
       for (int j = 0; j < this.colSize; j++) {
-        new2dArray[i][j] = this.worlMap2dRmIndex[i][j];
+        new2dArray[i][j] = this.worldMap2dRmIndex[i][j];
       }
     }
 
@@ -143,22 +167,22 @@ public class CreateWorldHelper {
   // following code create world adj neighbor map
 
   /**
-   * Following create an item and return the class Map<Integer, Set<Integer>> worldNeighborMap.
-   *
-   * @return void.
+   * Creates the world's neighbor map, establishing relationships between rooms. This method
+   * iterates through the world map's cells, determining neighboring rooms to establish connections
+   * in the worldNeighborMap.
    */
   private void createWorldNeighborMap() {
     for (int i = 0; i < this.rowSize; i++) {
       for (int j = 0; j < this.colSize; j++) {
-        if (Objects.isNull(this.worlMap2dRmIndex[i][j])) {
+        if (Objects.isNull(this.worldMap2dRmIndex[i][j])) {
           continue;
         }
         // Checking room on the right.
-        int curRoomIndex = this.worlMap2dRmIndex[i][j];
+        int curRoomIndex = this.worldMap2dRmIndex[i][j];
         int newNeighbor;
-        if (j + 1 < this.colSize && Objects.nonNull(this.worlMap2dRmIndex[i][j + 1])
-            && curRoomIndex != this.worlMap2dRmIndex[i][j + 1]) {
-          newNeighbor = this.worlMap2dRmIndex[i][j + 1];
+        if (j + 1 < this.colSize && Objects.nonNull(this.worldMap2dRmIndex[i][j + 1])
+            && curRoomIndex != this.worldMap2dRmIndex[i][j + 1]) {
+          newNeighbor = this.worldMap2dRmIndex[i][j + 1];
           try {
             this.worldNeighborMap.get(curRoomIndex).add(newNeighbor);
             this.worldNeighborMap.get(newNeighbor).add(curRoomIndex);
@@ -169,9 +193,9 @@ public class CreateWorldHelper {
           }
         }
         // Checking room to the bottom.
-        if (i + 1 < this.rowSize && Objects.nonNull(this.worlMap2dRmIndex[i + 1][j])
-            && curRoomIndex != this.worlMap2dRmIndex[i + 1][j]) {
-          newNeighbor = this.worlMap2dRmIndex[i + 1][j];
+        if (i + 1 < this.rowSize && Objects.nonNull(this.worldMap2dRmIndex[i + 1][j])
+            && curRoomIndex != this.worldMap2dRmIndex[i + 1][j]) {
+          newNeighbor = this.worldMap2dRmIndex[i + 1][j];
           try {
             this.worldNeighborMap.get(curRoomIndex).add(newNeighbor);
             this.worldNeighborMap.get(newNeighbor).add(curRoomIndex);
@@ -185,6 +209,16 @@ public class CreateWorldHelper {
     }
   }
 
+  /**
+   * Creates an Item with the specified item name and damage value. This method checks if an item
+   * with the same name already exists in the itemListItem. If a duplicate item name is found, it
+   * throws an IllegalArgumentException.
+   *
+   * @param createdItem The name of the item to be created.
+   * @param damage      The damage value associated with the item.
+   * @return An instance of the created Item.
+   * @throws IllegalArgumentException If an item with the same name already exists.
+   */
   private Item createAnItem(String createdItem, int damage) {
     // item name cannot be repeated
     for (Item anItem : itemListItem) {
@@ -196,6 +230,13 @@ public class CreateWorldHelper {
     return new ItemImplement(createdItem, damage);
   }
 
+  /**
+   * Adds the specified item to a room with the given room number.
+   *
+   * @param roomNum   The room number to which the item will be added.
+   * @param addedItem The Item to be added to the room.
+   * @throws IllegalArgumentException If the room number is out of bounds or if the item is null.
+   */
   private void addAnItemToRoom(int roomNum, Item addedItem) {
     Objects.requireNonNull(addedItem);
     if (roomNum >= 0 && roomNum <= this.totalRooms - 1) {
@@ -208,8 +249,17 @@ public class CreateWorldHelper {
     }
   }
 
-  // helper function parse the 1st line set row and cols and world name.
+  /**
+   * Sets the row size, column size, and world name for creating a world.
+   *
+   * @param row       The number of rows in the world grid.
+   * @param col       The number of columns in the world grid.
+   * @param worldName The name of the world.
+   * @throws IllegalArgumentException If either row or col is non-positive, or if worldName is
+   *                                  empty.
+   */
   private void createRowColSizeWorldName(int row, int col, String worldName) {
+    // Helper function parse the 1st line set row and cols and world name.
     if (row > 0 && col > 0) {
       this.rowSize = row;
       this.colSize = col;
@@ -223,13 +273,31 @@ public class CreateWorldHelper {
     }
   }
 
-  // create DrLucky
+  /**
+   * Creates a DrLucky object with the specified name, hit points (hp), and maximum room index.
+   *
+   * @param name         The name of DrLucky.
+   * @param hp           The initial hit points of DrLucky.
+   * @param maxRoomIndex The maximum room index DrLucky can occupy.
+   */
   private void createDrLucky(String name, int hp, int maxRoomIndex) {
     this.drLucky = new DrLuckyImplement(name, hp, maxRoomIndex);
   }
 
-  // create rooms:
-  private Room createARoom(String roomName, int roomNumber, int topRowY, int topColX, int botRowY,
+  /**
+   * Creates a room with the given parameters and adds it to the list of rooms in the world.
+   *
+   * @param roomName   The name of the room.
+   * @param roomNumber The room number.
+   * @param topRowY    The top row coordinate of the room.
+   * @param topColX    The top column coordinate of the room.
+   * @param botRowY    The bottom row coordinate of the room.
+   * @param botColX    The bottom column coordinate of the room.
+   * @return The newly created Room object.
+   * @throws IllegalArgumentException If the room with the same name already exists or if the room
+   *                                  size is too large.
+   */
+  private Room createAroom(String roomName, int roomNumber, int topRowY, int topColX, int botRowY,
       int botColX) {
     //check if room already exist
     if (this.checkIfRoomAlreadyExist(roomName)) {
@@ -250,17 +318,30 @@ public class CreateWorldHelper {
     return newRoom;
   }
 
-  //check if room already exist in the World
+  /**
+   * Checks if a room with the given name already exists in the world.
+   *
+   * @param name The name of the room to check.
+   * @return True if a room with the same name exists; otherwise, false.
+   */
   private boolean checkIfRoomAlreadyExist(String name) {
-    for (Room aRoom : this.roomListRoom) {
-      if (name.equals(aRoom.getRoomName())) {
+    for (Room room : this.roomListRoom) {
+      if (name.equals(room.getRoomName())) {
         return true;
       }
     }
     return false;
   }
 
-  //check if the room is too big
+  /**
+   * Checks if the room size specified by the coordinates is within the bounds of the world.
+   *
+   * @param topRowY The top row coordinate of the room.
+   * @param topColX The top column coordinate of the room.
+   * @param botRowY The bottom row coordinate of the room.
+   * @param botColX The bottom column coordinate of the room.
+   * @return True if the room size is within bounds; otherwise, false.
+   */
   private boolean checkIfRoomSizeInWorld(int topRowY, int topColX, int botRowY, int botColX) {
     if (topColX >= this.colSize || botColX >= this.colSize || topRowY >= this.rowSize
         || botRowY >= this.rowSize) {
@@ -272,14 +353,24 @@ public class CreateWorldHelper {
     }
   }
 
-  // following function check for over lab of the room in roomListRoom
+  /**
+   * Checks for room overlap and fills the world map with room numbers.
+   *
+   * @param topRowY  The top row coordinate of the room.
+   * @param topColX  The top column coordinate of the room.
+   * @param botRowY  The bottom row coordinate of the room.
+   * @param botColX  The bottom column coordinate of the room.
+   * @param rmNumber The room number to assign.
+   * @return True if there is no overlap; otherwise, false.
+   * @throws IllegalArgumentException If room overlap is detected.
+   */
   private boolean checkIfRoomOverLapAndFillWorldMap(int topRowY, int topColX, int botRowY,
       int botColX, int rmNumber) {
     //    System.out.println(String.format("roomNumber: %d", rmNumber));
     for (int row = topRowY; row <= botRowY; row++) {
       for (int col = topColX; col <= botColX; col++) {
-        if (Objects.isNull(this.worlMap2dRmIndex[row][col])) {
-          this.worlMap2dRmIndex[row][col] = rmNumber;
+        if (Objects.isNull(this.worldMap2dRmIndex[row][col])) {
+          this.worldMap2dRmIndex[row][col] = rmNumber;
         } else {
           throw new IllegalArgumentException(
               String.format("Error: overlap room detected! Room line: %d,", rmNumber));
@@ -289,8 +380,12 @@ public class CreateWorldHelper {
     return false;
   }
 
-  //a function of printing 2D array to check world map with room number is correct
-  public void print2DArray(Integer[][] array) {
+  /**
+   * Prints a 2D array representing the world map with room numbers to check its correctness.
+   *
+   * @param array The 2D array containing room numbers.
+   */
+  public void print2dArray(Integer[][] array) {
     for (int i = 0; i < array.length; i++) {
       for (int j = 0; j < array[i].length; j++) {
         if (Objects.isNull(array[i][j])) {
@@ -310,8 +405,7 @@ public class CreateWorldHelper {
   /**
    * Prints the room numbers and their neighboring rooms from a given worldNeighborMap.
    *
-   * @param worldNeighborMap A map where keys are room numbers (Integer) and values are sets of
-   *                         neighboring room numbers (Set<Integer>).
+   * @param worldNeighborMap A map where keys are room numbers Integer and values are sets.
    */
   public void printWorldNeighborMap(Map<Integer, Set<Integer>> worldNeighborMap) {
     for (Map.Entry<Integer, Set<Integer>> entry : worldNeighborMap.entrySet()) {
@@ -321,7 +415,7 @@ public class CreateWorldHelper {
       for (Integer neighbor : neighborSet) {
         System.out.print(neighbor + " ");
       }
-      System.out.println(); // Move to the next line for the next room
+      System.out.println(); // Move to the next line for the next room.
     }
   }
 

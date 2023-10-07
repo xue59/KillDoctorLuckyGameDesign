@@ -1,6 +1,6 @@
 # KillDoctorLuckyGameDesign ReadMe:
-Author: Zack-Haowen Xue
-Project Github: https://github.com/xue59/KillDoctorLuckyGameDesign
+Author: Zack-Haowen Xue 
+Prject Github: https://github.com/xue59/KillDoctorLuckyGameDesign
 
 MileStone1_TheWorld 
 1. Instruction on how to run:
