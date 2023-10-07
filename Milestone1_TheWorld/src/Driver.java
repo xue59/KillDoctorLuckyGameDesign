@@ -40,7 +40,6 @@ public class Driver {
       CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
       World mainWorld = createHelper.createWorld();
       mainWorld.printWorldNeighborMap();
-      mainWorld.printWorld2dArray();
       System.out.println(mainWorld.getDrLuckyInfo());
       mainWorld.printAllRoomInfo();
       mainWorld.moveDrLucky();
