@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.imageio.ImageIO;
+import model.Player.Player;
+import model.Player.PlayerImplement;
 import model.drlucky.DrLucky;
 import model.room.Room;
 
@@ -31,6 +33,12 @@ public class WorldImplement implements World {
   private final DrLucky drLucky;                     // The character DrLucky.
   private final Map<Integer, Set<Integer>> worldMapIndex; // A map representing neighbor index.
   private final Integer[][] world2dArray;            // A 2D array representation of the world.
+  private int totalAllowedPlayers;
+  private int totalAllowedTurns;
+  private final List<Player> playerList;
+  private int curPlayerIndex;
+  private int curTurn;
+  private Player winnerPlayer;
 
   /**
    * Constructs a WorldImplement object with the specified attributes.
@@ -49,8 +57,10 @@ public class WorldImplement implements World {
    * @throws NullPointerException     If roomList, drLucky, or worldMapIndex is null.
    */
   public WorldImplement(int rowSize, int colSize, String name, int totalRooms, int totalItems,
-      List<Room> roomList, DrLucky drLucky, Map<Integer, Set<Integer>> worldMapIndex,
-      Integer[][] world2dArray) throws IllegalArgumentException, NullPointerException {
+                        List<Room> roomList, DrLucky drLucky,
+                        Map<Integer, Set<Integer>> worldMapIndex,
+                        Integer[][] world2dArray)
+      throws IllegalArgumentException, NullPointerException {
     // Check if rowSize and colSize are positive values.
     if (colSize <= 0 || rowSize <= 0) {
       throw new IllegalArgumentException("Error: Row or column size cannot be negative or zero.");
@@ -79,6 +89,9 @@ public class WorldImplement implements World {
     this.drLucky = drLucky;
     this.worldMapIndex = worldMapIndex;
     this.world2dArray = world2dArray;
+    this.playerList = new ArrayList<>();
+    this.curPlayerIndex = 0;
+    this.curTurn = 0;
 
     // Generate an initial map representation with DrLucky's position and save it to an image.
     this.createGraphBufferedImage();
@@ -227,8 +240,11 @@ public class WorldImplement implements World {
       int colX = room.getTopColX() * scale + padding;
       int roomH = (room.getBotRowY() - room.getTopRowY() + 1);
       int roomW = (room.getBotColX() - room.getTopColX() + 1);
-      g2d.drawString(room.getRoomName(), colX + scale / 2, rowY + scale / 2);
       int roomNumber = room.getRoomNumber();
+      String roomName = room.getRoomName();
+      g2d.drawString(String.format("#%d.%s", roomNumber, roomName), colX + scale / 2,
+          rowY + scale / 2);
+
 
       // Check if DrLucky in room & display on map
       if (roomNumber == this.drLucky.getCurrentRoomNumber()) {
@@ -237,6 +253,17 @@ public class WorldImplement implements World {
         g2d.setColor(Color.RED); // Set line color as RED!
         g2d.drawString(drLuckyWithHp, colX + scale / 2, rowY + scale);
         g2d.setColor(Color.BLUE); // Set line back to Blue!
+      }
+      // Check if Player in room & display on map
+      int count = 1;
+      for (Player player : this.playerList) {
+        if (roomNumber == player.getCurrentRoomNumber()) {
+          g2d.setColor(Color.DARK_GRAY); // Set line color as RED!
+          g2d.drawString(player.getPlayerName(), colX + scale / 2,
+              rowY + scale / 2 + count * scale / 2);
+          g2d.setColor(Color.BLUE); // Set line back to Blue!
+          count++; // makesure the draw do not overlap
+        }
       }
       g2d.drawRect(colX, rowY, scale * roomW, scale * roomH);
     }
@@ -318,5 +345,111 @@ public class WorldImplement implements World {
       System.out.println(getOneRoomInfo(room.getRoomName()));
     }
   }
+
+  public void setTotalAllowedPlayers(int totalAllowedPlayers) {
+    if (totalAllowedPlayers <= 0) {
+      throw new IllegalArgumentException("Error: totalAllowedPlayers must larger than 0!");
+    }
+    this.totalAllowedPlayers = totalAllowedPlayers;
+  }
+
+  public void setTotalAllowedTurns(int totalAllowedTurns) {
+    if (totalAllowedTurns <= 0) {
+      throw new IllegalArgumentException("Error: totalAllowedTurns must larger than 0!");
+    }
+    this.totalAllowedTurns = totalAllowedTurns;
+  }
+
+  /**
+   * @param name
+   * @param initialRoomNum
+   * @param limit
+   * @param checkComputer
+   * @throws IllegalArgumentException
+   * @throws NullPointerException
+   */
+  @Override
+  public void addOnePlayer(String name, int initialRoomNum, boolean checkComputer, int limit)
+      throws IllegalArgumentException, NullPointerException {
+    if (this.playerList.size() + 1 > this.totalAllowedPlayers) {
+      throw new IllegalArgumentException("Error: Maximum totalAllowedPlayers already reached!");
+    }
+    for (Player player : playerList) {
+      if (player.getPlayerName().equals(name)) {
+        throw new IllegalArgumentException(String.format("Player Name: %s already taken!", name));
+      }
+    }
+    if (initialRoomNum < 0 || initialRoomNum >= this.totalRooms) {
+      throw new IllegalArgumentException(String.format("Initial Room index invalid, must within " +
+          "totalRooms: %d", this.totalRooms));
+    }
+
+    Player newPlayer = new PlayerImplement(name, initialRoomNum, checkComputer, limit);
+    this.playerList.add(newPlayer);
+    this.createGraphBufferedImage();
+  }
+
+  public void cmdPlayerMove(String roomName)
+      throws IllegalAccessException, IllegalArgumentException {
+    if (this.checkGameOver()) {
+      throw new IllegalAccessException("Error: GameOver cannot move!");
+    }
+
+    Player curPlayer = this.playerList.get(curPlayerIndex);
+    Room curRoom = this.roomList.get(curPlayer.getCurrentRoomNumber());
+    Room disRoom = getRoomByName(roomName);
+    List<String> curRoomNeighbors = getNeighborsRoomList(curRoom.getRoomName());
+    if (curRoomNeighbors.contains(disRoom.getRoomName())) {
+      curPlayer.moveToRoomNumber(disRoom.getRoomNumber());
+      changeTurn();
+    } else {
+      throw new IllegalArgumentException(String.format(
+          "Player: %s can't move to %s, the target room is not a neighbor of its current room: %s!",
+          curPlayer.getPlayerName(), roomName, curRoom.getRoomName()));
+    }
+  }
+
+  private Room getRoomByName(String roomName) {
+    for (Room room : roomList) {
+      if (roomName.equals(room.getRoomName())) {
+        return room;
+      }
+    }
+    throw new IllegalArgumentException(String.format("Error: %s room does not exist!", roomName));
+  }
+
+  private void changeTurn(){
+    if (this.playerList.size() ==0){
+      return;
+    }
+    if (checkGameOver()){
+      this.winnerPlayer = this.playerList.get(curPlayerIndex);
+    }
+    if(this.curPlayerIndex+1>=playerList.size()){
+      this.curPlayerIndex = 0;
+    }else {
+      this.curPlayerIndex++;
+    }
+    this.curTurn++;
+  }
+
+  @Override
+  public int getCurrentTurn() {
+    return this.curTurn;
+  }
+
+  @Override
+  public boolean checkGameOver() {
+    if (this.drLucky.getCurrentHp() <=0){
+      return true;
+    }
+    if(this.curTurn == totalAllowedTurns){
+      return true;
+    }
+    return false;
+  }
+
+
+
 
 }

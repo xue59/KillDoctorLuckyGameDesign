@@ -85,4 +85,24 @@ public interface World {
    * Prints information about all rooms in the world to the console.
    */
   void printAllRoomInfo();
+
+  /**
+   * Add a human or computer player into the game world.
+   * @param name
+   * @param initialRoomNum
+   * @param limit
+   * @param checkComputer
+   * @throws IllegalArgumentException
+   * @throws NullPointerException
+   */
+  void addOnePlayer(String name, int initialRoomNum, boolean checkComputer, int limit)
+      throws IllegalArgumentException, NullPointerException;
+
+  void setTotalAllowedTurns(int totalAllowedTurns);
+  void setTotalAllowedPlayers(int totalAllowedPlayers);
+
+  void cmdPlayerMove(String roomName)
+      throws IllegalAccessException, IllegalArgumentException, IllegalAccessException;
+  boolean checkGameOver();
+  int getCurrentTurn();
 }

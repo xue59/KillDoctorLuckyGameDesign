@@ -2,6 +2,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 import model.world.CreateWorldHelper;
 import model.world.World;
@@ -23,68 +24,62 @@ public class Driver {
   public static void main(String[] args) throws IOException {
     // The default file name path & name
     // CustomerMap input file path: $ContentRoot$/res/customerWorld.txt
-    String fileName = "mansion2023.txt";
+    String fileName = "res/mansion2023.txt";
+    int totalPlayers = 2;
+    int totalTurns = 5;
 
     try {
-      if (args.length < 1) {
-        System.out.println("No File Args Txt File Path found! ");
-        System.out.println(
-            "ex: Example run command: java -jar sampleRun.jar <$ModuleFileDir$/mansion2023.txt>");
+      if (args.length < 3) {
+        System.out.println("Less than 3 arguments found! Staring game with default file, 2 " +
+            "players, 3 total turns!");
+//        System.out.println(
+//            "ex: Example run command: java -jar sampleRun.jar <$ModuleFileDir$/mansion2023.txt>");
         System.out.println(String.format("Initiating with Default File.....>>>> %s  ", fileName));
       } else {
         fileName = args[0];
+        totalPlayers = Integer.parseInt(args[1]);
+        totalTurns = Integer.parseInt(args[2]);
         System.out.println(String.format("Input File args Found: %s", fileName));
       }
 
+      //build world Implement
       FileReader fileReader = new FileReader(fileName);
       CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(fileReader);
       World mainWorld = createHelper.createWorld();
-      mainWorld.printWorld2dArray();
-//      mainWorld.printWorldNeighborMap();
-//      System.out.println(mainWorld.getDrLuckyInfo());
-//      mainWorld.printAllRoomInfo();
-//      mainWorld.moveDrLucky();
+      mainWorld.printWorld2dArray(); // print 2d world
+      mainWorld.setTotalAllowedPlayers(totalPlayers); //set totoal players
+      mainWorld.setTotalAllowedTurns(totalTurns); //set total turns
+      System.out.println("Starting Game in console command Line >>>>>>>>>>:");
 
-            // After mainWorld created, add your example runs below:
-             //Example run 1 - Brand New World with mansion.txt
-//                        System.out.println("#1 Example Run with new Mansion.txt just created: ");
-//                        System.out.println(mainWorld.getDrLuckyInfo());
-//                        mainWorld.printWorldNeighborMap();
-//                        mainWorld.printAllRoomInfo();
-      //
-      //      // Example run 2 -
-                        System.out.println("#2 Example Run with new Mansion.txt "
-                            + "DrLucky after move by 1: ");
-                        mainWorld.moveDrLucky();
-                        System.out.println(mainWorld.getDrLuckyInfo());
-                        mainWorld.printWorldNeighborMap();
-                        mainWorld.printAllRoomInfo();
-                        mainWorld.createGraphBufferedImage();
-      //
-      //      // Example run 3 -
-      //                  System.out.println("#3 Example Run with new Mansion.txt DrLucky after "
-      //                      + "move by 2: ");
-      //                  mainWorld.moveDrLucky();
-      //                  mainWorld.moveDrLucky();
-      //                  System.out.println(mainWorld.getDrLuckyInfo());
-      //                  mainWorld.printWorldNeighborMap();
-      //                  mainWorld.printAllRoomInfo();
-      //                  mainWorld.createGraphBufferedImage();
-      //
-      //       //Example run 4 -
-      //                  System.out.println("#4 Example Run with new Mansion.txt "
-      //                      + "DrLucky after move by 25 "
-      //                      + "DrLucky should be at Room #3-Drawing Room");
-      //                  for (int i = 1; i <= 25; i++) {
-      //                      mainWorld.moveDrLucky();
-      //                  }
-      //                  System.out.println(mainWorld.getDrLuckyInfo());
-      //                  mainWorld.printWorldNeighborMap();
-      //                  mainWorld.printAllRoomInfo();
-      //                  mainWorld.createGraphBufferedImage();
-      //
+      // starting game in console command line:
+      Readable input = new InputStreamReader(System.in);
+      Appendable output = System.out;
+      mainWorld.addOnePlayer("Zack0",0,false,5);
+      mainWorld.addOnePlayer("Zack1",1,false,3);
+
+      //1st round move player 1
+      mainWorld.cmdPlayerMove("Dining Hall");
+      mainWorld.moveDrLucky();
+      mainWorld.createGraphBufferedImage();
+
+      //2st round move player 2
+      mainWorld.cmdPlayerMove("Dining Hall");
+      mainWorld.moveDrLucky();
+      mainWorld.createGraphBufferedImage();
+
+      mainWorld.cmdPlayerMove("Armory");
+
+
+
+
+
+
+
+
     } catch (IOException e) {
       throw new IOException("Error: unable to open file in Driver.");
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
   }
 }
