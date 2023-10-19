@@ -1,6 +1,6 @@
 import static org.junit.Assert.*;
 
-import model.Player.PlayerImplement;
+import model.player.PlayerImplement;
 import model.item.ItemImplement;
 import org.junit.Before;
 import org.junit.Test;

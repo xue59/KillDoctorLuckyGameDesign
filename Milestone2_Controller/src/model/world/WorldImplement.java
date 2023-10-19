@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.imageio.ImageIO;
-import model.Player.Player;
-import model.Player.PlayerImplement;
+import model.player.Player;
+import model.player.PlayerImplement;
 import model.drlucky.DrLucky;
 import model.room.Room;
 
@@ -190,12 +190,21 @@ public class WorldImplement implements World {
     //check if DrLucky in this room
     Room drLuckyRoom = this.roomList.get(drLucky.getCurrentRoomNumber());
     if (drLuckyRoom.equals(room)) { // if dr lucky in the same room append the string
-      roomInfo.append(String.format("DrLucky(%s) in this room.\n", this.drLucky.getName()));
+      roomInfo.append(String.format("DrLucky(%s HP:%d) in this room.\n", this.drLucky.getName(),
+          this.drLucky.getCurrentHp()));
+    }
+
+    //check if players in this room
+    roomInfo.append("Players in this room: ");
+    for (Player player : playerList){
+      if (player.getCurrentRoomNumber() == room.getRoomNumber()){
+        roomInfo.append(String.format("%s, ", player.getPlayerName()));
+      }
     }
 
     //check the rooms neighbors info
     List<String> neighbors = this.getNeighborsRoomList(roomName);
-    roomInfo.append("Neighbors: ");
+    roomInfo.append("\nRoom neighbors: ");
     for (String neighbor : neighbors) {
       roomInfo.append(neighbor);
       roomInfo.append(",");
@@ -204,6 +213,40 @@ public class WorldImplement implements World {
 
     return roomInfo.toString();
   }
+
+  @Override
+  public String getOnePlayerAndRoomInfo(String playerName)
+      throws IllegalArgumentException, NullPointerException {
+    Objects.requireNonNull(playerName);
+
+    // Find the player by name
+    Player player = null;
+    for (Player p : playerList) {
+      if (p.getPlayerName().equals(playerName)) {
+        player = p;
+        break;
+      }
+    }
+
+    if (player == null) {
+      throw new IllegalArgumentException("Player not found: " + playerName);
+    }
+
+    // Get the player's current room
+    Room playerRoom = roomList.get(player.getCurrentRoomNumber());
+
+    // Get the player's neighboring rooms
+    List<String> neighborRooms = getNeighborsRoomList(playerRoom.getRoomName());
+
+    // Build the player and room information string
+    StringBuilder playerRoomInfo = new StringBuilder();
+    playerRoomInfo.append(player.toString());
+    playerRoomInfo.append("Current Room: " + playerRoom.getRoomName() + "\n");
+    playerRoomInfo.append("Neighbor Rooms: " + String.join(", ", neighborRooms) + "\n");
+
+    return playerRoomInfo.toString();
+  }
+
 
   /**
    * Moves DrLucky to the next room in the world.
@@ -346,19 +389,29 @@ public class WorldImplement implements World {
     }
   }
 
+  @Override
   public void setTotalAllowedPlayers(int totalAllowedPlayers) {
     if (totalAllowedPlayers <= 0) {
       throw new IllegalArgumentException("Error: totalAllowedPlayers must larger than 0!");
     }
     this.totalAllowedPlayers = totalAllowedPlayers;
   }
-
+  @Override
+  public int getTotalAllowedPlayers() {
+    return totalAllowedPlayers;
+  }
+  @Override
   public void setTotalAllowedTurns(int totalAllowedTurns) {
     if (totalAllowedTurns <= 0) {
       throw new IllegalArgumentException("Error: totalAllowedTurns must larger than 0!");
     }
     this.totalAllowedTurns = totalAllowedTurns;
   }
+  @Override
+  public int getTotalAllowedTurns() {
+    return totalAllowedTurns;
+  }
+
 
   /**
    * @param name
@@ -376,7 +429,8 @@ public class WorldImplement implements World {
     }
     for (Player player : playerList) {
       if (player.getPlayerName().equals(name)) {
-        throw new IllegalArgumentException(String.format("Player Name: %s already taken!", name));
+        throw new IllegalArgumentException(String.format("Error: Player Name: %s already taken, " +
+                "try a different name!", name));
       }
     }
     if (initialRoomNum < 0 || initialRoomNum >= this.totalRooms) {
@@ -386,7 +440,7 @@ public class WorldImplement implements World {
 
     Player newPlayer = new PlayerImplement(name, initialRoomNum, checkComputer, limit);
     this.playerList.add(newPlayer);
-    this.createGraphBufferedImage();
+//    this.createGraphBufferedImage();
   }
 
   public void cmdPlayerMove(String roomName)
@@ -448,6 +502,38 @@ public class WorldImplement implements World {
     }
     return false;
   }
+
+  @Override
+  public List<String> getAllPlayerNames() {
+    List<String> playerNames = new ArrayList<>();
+    for (Player player : playerList) {
+      playerNames.add(player.getPlayerName());
+    }
+    return playerNames;
+  }
+  @Override
+  public String getAllPlayerInfo() {
+    StringBuilder playerInfo = new StringBuilder();
+
+    for (Player player : playerList) {
+      playerInfo.append(player.toString()).append("\n");
+    }
+
+    return playerInfo.toString();
+  }
+
+  @Override
+  public List<String> getAllRoomNames() {
+    List<String> roomNames = new ArrayList<>();
+
+    for (Room room : roomList) {
+      roomNames.add(room.getRoomName());
+    }
+    return roomNames;
+  }
+
+
+
 
 
 

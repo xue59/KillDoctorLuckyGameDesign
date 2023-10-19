@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
+import controller.WorldConsoleController;
+import controller.WorldConsoleControllerImplement;
 import model.world.CreateWorldHelper;
 import model.world.World;
 import model.world.WorldImplement;
@@ -54,20 +56,25 @@ public class Driver {
       // starting game in console command line:
       Readable input = new InputStreamReader(System.in);
       Appendable output = System.out;
-      mainWorld.addOnePlayer("Zack0",0,false,5);
-      mainWorld.addOnePlayer("Zack1",1,false,3);
 
-      //1st round move player 1
-      mainWorld.cmdPlayerMove("Dining Hall");
-      mainWorld.moveDrLucky();
-      mainWorld.createGraphBufferedImage();
+      WorldConsoleController consoleController = new WorldConsoleControllerImplement(input,output
+          ,mainWorld);
+      consoleController.startGame();
 
-      //2st round move player 2
-      mainWorld.cmdPlayerMove("Dining Hall");
-      mainWorld.moveDrLucky();
-      mainWorld.createGraphBufferedImage();
-
-      mainWorld.cmdPlayerMove("Armory");
+//      mainWorld.addOnePlayer("Zack0",0,false,5);
+//      mainWorld.addOnePlayer("Zack1",1,false,3);
+//
+//      //1st round move player 1
+//      mainWorld.cmdPlayerMove("Dining Hall");
+//      mainWorld.moveDrLucky();
+//      mainWorld.createGraphBufferedImage();
+//
+//      //2st round move player 2
+//      mainWorld.cmdPlayerMove("Dining Hall");
+//      mainWorld.moveDrLucky();
+//      mainWorld.createGraphBufferedImage();
+//
+//      mainWorld.cmdPlayerMove("Armory");
 
 
 
@@ -78,8 +85,6 @@ public class Driver {
 
     } catch (IOException e) {
       throw new IOException("Error: unable to open file in Driver.");
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
     }
   }
 }

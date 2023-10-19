@@ -1,7 +1,6 @@
-package model.Player;
+package model.player;
 
 import model.item.Item;
-import java.nio.channels.IllegalChannelGroupException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -140,14 +139,14 @@ public class PlayerImplement implements Player {
   public String toString(){
     if (this.checkComputer){
       // is computer
-      return String.format("Player Info String: **ComputerPlayer**\n"
+      return String.format("Player type: **Computer Player**\n"
               + "Player's Name: %s \n"
               + "Player's limit: %d, can still carry: %d\n"
               + "Carrying: %s \n",
           this.name, this.limit, (this.limit - this.itemList.size()), itemList);
     }else{
       // is human player
-      return String.format("Player Info String: \n"
+      return String.format("Player type: Human Player\n"
               + "Player's Name: %s \n"
               + "Player's limit: %d, can still carry: %d\n"
               + "Carrying: %s \n",

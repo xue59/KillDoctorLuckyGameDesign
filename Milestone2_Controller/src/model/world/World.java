@@ -100,9 +100,17 @@ public interface World {
 
   void setTotalAllowedTurns(int totalAllowedTurns);
   void setTotalAllowedPlayers(int totalAllowedPlayers);
+  int getTotalAllowedPlayers();
+  int getTotalAllowedTurns();
 
   void cmdPlayerMove(String roomName)
       throws IllegalAccessException, IllegalArgumentException, IllegalAccessException;
   boolean checkGameOver();
   int getCurrentTurn();
+  List<String> getAllPlayerNames();
+
+  String getAllPlayerInfo();
+
+  List<String> getAllRoomNames();
+  String getOnePlayerAndRoomInfo(String playerName);
 }
