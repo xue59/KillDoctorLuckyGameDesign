@@ -154,6 +154,15 @@ public class ControllerImplement implements Controller {
       loopToSelectMainMenu();
       return;
     }
+    // if game over then should not start the game, let user go back re-start the game
+    if (world.checkGameOver()){
+      // True game is over
+      this.output.append(
+          String.format("Last game already finished, back to main menu to re-start a New Game.\n"));
+      loopToSelectMainMenu();
+      return;
+    }
+
 
     int curTurnNum = 1;
 
@@ -203,18 +212,31 @@ public class ControllerImplement implements Controller {
         loopToSelectMainMenu();
         return;
       } catch (IllegalAccessException e) {
-        this.output.append(e.getMessage() + "\nTry a different command!");
+        this.output.append(e.getMessage() + "Try a different command!\n");
       }
 
     }
   }
 
+  /**
+   *
+   * @param curTurnPlayerName
+   * @throws IOException IO Error
+   * @throws IllegalAccessException Error when cannot pick more item, player limit full.
+   * @throws IllegalStateException  Error when game is over.
+   */
   private void consolePlayerPick(String curTurnPlayerName)
-      throws IOException, IllegalAccessException {
-    output.append(
-        String.format("You are in %s\n", world.getPlayerWhatCanPickInfo(curTurnPlayerName)));
-    output.append(String.format("To Player: %s, enter the name of the item you want to pick up:\n",
-        curTurnPlayerName));
+      throws IOException, IllegalAccessException,IllegalStateException {
+    String whatCanPickInfo = world.getPlayerWhatCanPickInfo(curTurnPlayerName);
+    if (whatCanPickInfo != null) {
+      output.append(
+          String.format("You are in %s\n", whatCanPickInfo)); // display what can be picked info
+      output.append(
+          String.format("To Player: %s, enter the name of the item you want to pick up:\n",
+              curTurnPlayerName));
+    }else{
+      throw new IllegalAccessException("No items can be picked in current room.\n");
+    }
 
     while (true) {
       String inputItemName;

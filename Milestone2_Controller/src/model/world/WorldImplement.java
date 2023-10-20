@@ -514,7 +514,11 @@ public class WorldImplement implements World {
     if (player != null) {
       // Get the player's current room
       Room playerRoom = roomList.get(player.getCurrentRoomNumber());
-      playerRoomInfo = playerRoom.toString();
+      if (playerRoom.getAllItemsWithDamage().size() == 0){
+        playerRoomInfo = null;
+      }else{
+        playerRoomInfo = playerRoom.toString();
+      }
     } else {
       // Handle the case where the player is not found
       throw new IllegalArgumentException("In getPlayerRoomInfo, Player not found: " + playerName);
@@ -546,6 +550,7 @@ public class WorldImplement implements World {
     }else {
       this.curPlayerIndex++;
     }
+    moveDrLucky(); // 每一次 player 动一次 drlucky也动一次
     this.curTurn++;
   }
 
