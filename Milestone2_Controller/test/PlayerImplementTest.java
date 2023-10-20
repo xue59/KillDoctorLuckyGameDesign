@@ -30,14 +30,14 @@ public class PlayerImplementTest {
   }
 
   @Test
-  public void testPickUpOneItem() {
+  public void testPickUpOneItem() throws IllegalAccessException {
     Item item = new ItemImplement("Sword", 10);
     player.pickUpOneItem(item);
     assertTrue(player.getItemListMapInfo().containsKey("Sword"));
   }
 
   @Test
-  public void testPickUpOneItemWithLimitExceeded() {
+  public void testPickUpOneItemWithLimitExceeded() throws IllegalAccessException {
     Item item = new ItemImplement("Sword", 10);
     for (int i = 0; i < 5; i++) {
       player.pickUpOneItem(new ItemImplement("Item" + i, 5));
@@ -67,7 +67,7 @@ public class PlayerImplementTest {
   }
 
   @Test
-  public void testDeleteOneItem() {
+  public void testDeleteOneItem() throws IllegalAccessException {
     Item item = new ItemImplement("Sword", 10);
     player.pickUpOneItem(item);
     player.deleteOneItem(item);

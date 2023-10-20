@@ -2,6 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-public interface WorldConsoleController {
+public interface Controller {
   void startGame() throws IOException;
 }

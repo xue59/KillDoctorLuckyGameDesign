@@ -1,14 +1,10 @@
-import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import javax.imageio.ImageIO;
-import controller.WorldConsoleController;
-import controller.WorldConsoleControllerImplement;
+import controller.Controller;
+import controller.ControllerImplement;
 import model.world.CreateWorldHelper;
 import model.world.World;
-import model.world.WorldImplement;
 
 /**
  * The main driver class for running the Dr. Lucky's Mansion game simulation. It reads a text-based
@@ -57,32 +53,9 @@ public class Driver {
       Readable input = new InputStreamReader(System.in);
       Appendable output = System.out;
 
-      WorldConsoleController consoleController = new WorldConsoleControllerImplement(input,output
+      Controller consoleController = new ControllerImplement(input,output
           ,mainWorld);
       consoleController.startGame();
-
-//      mainWorld.addOnePlayer("Zack0",0,false,5);
-//      mainWorld.addOnePlayer("Zack1",1,false,3);
-//
-//      //1st round move player 1
-//      mainWorld.cmdPlayerMove("Dining Hall");
-//      mainWorld.moveDrLucky();
-//      mainWorld.createGraphBufferedImage();
-//
-//      //2st round move player 2
-//      mainWorld.cmdPlayerMove("Dining Hall");
-//      mainWorld.moveDrLucky();
-//      mainWorld.createGraphBufferedImage();
-//
-//      mainWorld.cmdPlayerMove("Armory");
-
-
-
-
-
-
-
-
     } catch (IOException e) {
       throw new IOException("Error: unable to open file in Driver.");
     }

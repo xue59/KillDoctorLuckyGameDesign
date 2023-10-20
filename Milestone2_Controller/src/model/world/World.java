@@ -88,6 +88,7 @@ public interface World {
 
   /**
    * Add a human or computer player into the game world.
+   *
    * @param name
    * @param initialRoomNum
    * @param limit
@@ -99,18 +100,40 @@ public interface World {
       throws IllegalArgumentException, NullPointerException;
 
   void setTotalAllowedTurns(int totalAllowedTurns);
+
   void setTotalAllowedPlayers(int totalAllowedPlayers);
+
   int getTotalAllowedPlayers();
+
   int getTotalAllowedTurns();
 
   void cmdPlayerMove(String roomName)
-      throws IllegalAccessException, IllegalArgumentException, IllegalAccessException;
+      throws IllegalArgumentException, IllegalAccessException;
+
+  String cmdPlayerLook()
+      throws IllegalArgumentException;
+
+  void cmdPlayerPick(String inputItemName)
+      throws NullPointerException, IllegalArgumentException, IllegalAccessException,
+      IllegalStateException;
+  String getPlayerWhatCanPickInfo(String playerName);
+
+
   boolean checkGameOver();
-  int getCurrentTurn();
+
   List<String> getAllPlayerNames();
 
   String getAllPlayerInfo();
 
   List<String> getAllRoomNames();
+
   String getOnePlayerAndRoomInfo(String playerName);
+
+  String getOnePlayerCurrentRoomName(String playerName);
+
+  String getCurrentPlayerName();
+
+  int getCurrentPlayerIndex();
+
+  int getCurrentTurnNumber();
 }

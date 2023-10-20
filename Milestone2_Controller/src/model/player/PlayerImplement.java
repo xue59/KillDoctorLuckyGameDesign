@@ -67,7 +67,7 @@ public class PlayerImplement implements Player {
    * @param item
    */
   @Override
-  public void pickUpOneItem(Item item) {
+  public void pickUpOneItem(Item item) throws NullPointerException, IllegalArgumentException, IllegalAccessException{
     // check item cannot null
     if (item == null) {
       throw new NullPointerException("Error pickUpOneItem: item to pickup cannot be null!");
@@ -83,7 +83,7 @@ public class PlayerImplement implements Player {
 
     // check new picked item cannot over player item limit
     if ((this.itemList.size() + 1) > this.limit) {
-      throw new IllegalStateException("Error pickUpOneItem: player-"+this.name+" itemlist is " +
+      throw new IllegalAccessException("Error pickUpOneItem: player-"+this.name+" item list is " +
           "full, can't pickup: "+ item.getName());
     }
     // pass all the check then add to item list

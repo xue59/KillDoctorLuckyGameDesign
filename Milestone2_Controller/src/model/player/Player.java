@@ -12,7 +12,8 @@ public interface Player {
 
   void moveToRoomNumber(int destinationRoomNum);
 
-  void pickUpOneItem(Item item);
+  void pickUpOneItem(Item item) throws NullPointerException, IllegalArgumentException,
+      IllegalAccessException;
 
   void deleteOneItem(Item item);
 
