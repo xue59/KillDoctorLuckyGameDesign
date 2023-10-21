@@ -243,6 +243,7 @@ public class WorldImplement implements World {
     StringBuilder playerRoomInfo = new StringBuilder();
     playerRoomInfo.append(player.toString());
     playerRoomInfo.append("Current Room: " + playerRoom.getRoomName() + "\n");
+    playerRoomInfo.append(playerRoom.toString() + "\n"); // append room#, name and items in room.
     playerRoomInfo.append("Neighbor Rooms: " + String.join(", ", neighborRooms) + "\n");
 
     return playerRoomInfo.toString();
@@ -446,6 +447,7 @@ public class WorldImplement implements World {
 
   public void cmdPlayerMove(String roomName)
       throws IllegalAccessException, IllegalStateException, IllegalArgumentException{
+    // 记得mock model
     if (this.checkGameOver()) {
       throw new IllegalStateException("Error: Game Over cannot MOVE!\n");
     }
@@ -499,6 +501,82 @@ public class WorldImplement implements World {
     curRoom.removeOneItem(item);
     changeTurn();
   }
+
+  /**
+   * Computer player would 1st check if can pick and then pick the most damage item in the room.
+   * 2nd if cannot pick, then it will randomly move the next room.
+   * 3rd if cannot move, it will look.
+   * @return
+   * @throws IllegalStateException
+   */
+  @Override
+  public String cmdComputerPlayerAction() throws IllegalStateException, IllegalAccessException {
+    if (checkGameOver()) {
+      throw new IllegalStateException("Error: Game Over, Computer player cannot take action!\n");
+    }
+
+    Player curPlayer = (Player) this.playerList.get(curPlayerIndex);
+    Room curRoom = (Room) this.roomList.get(curPlayer.getCurrentRoomNumber());
+    Map<String, Integer> itemWithDamageInTheRoom = curRoom.getAllItemsWithDamage();
+
+    // Check if the computer player can pick and there are items in the room
+    // Computer finish PICK & return String
+    // Change turn in here
+    if (curPlayer.getCurrentCapacity() > 0 && !itemWithDamageInTheRoom.isEmpty()) {
+      // Find the item with the highest damage
+      String bestItem = null;
+      int maxDamage = Integer.MIN_VALUE;
+
+      for (Map.Entry<String, Integer> entry : itemWithDamageInTheRoom.entrySet()) {
+        String itemName = entry.getKey();
+        int damage = entry.getValue();
+
+        // Compare the damage values
+        if (damage > maxDamage) {
+          maxDamage = damage;
+          bestItem = itemName;
+        }
+      }
+
+      if (bestItem != null) {
+        // Pick the item with the highest damage
+        Item item = curRoom.getOneItem(bestItem);
+        try {
+          curPlayer.pickUpOneItem(item);
+        } catch (IllegalAccessException e) {
+          // Might throw IllegalAccessException due to check new picked item cannot over player
+          // item limit, but due to curPlayer.getCurrentCapacity() > 0, this should never happen.
+          throw new IllegalAccessException(e.getMessage());
+        }
+        changeTurn();
+        curRoom.removeOneItem(item);
+        return String.format("**Computer player**: %s picked up %s with %d damage.\n",
+            curPlayer.getPlayerName(), bestItem, maxDamage);
+      }
+    }
+
+    // If the computer player cannot pick the highest damage item, then attempt to move to a neighboring room.
+    // Computer finish MOVE & return String
+    List<String> curRoomNeighbors = getNeighborsRoomList(curRoom.getRoomName());
+    if (!curRoomNeighbors.isEmpty()) {
+      // Randomly select a neighboring room to move to
+      int randomNeighborIndex = (int) (Math.random() * curRoomNeighbors.size());
+      String targetRoomName = curRoomNeighbors.get(randomNeighborIndex);
+      cmdPlayerMove(targetRoomName);
+      return String.format("**Computer player**: %s MOVE to room: %s.\n", curPlayer.getPlayerName(),
+          targetRoomName);
+    }
+
+    // If the computer player cannot move to a neighboring room.
+    // Then perform a "look" action.
+    String lookResult = cmdPlayerLook();
+    return ("**Computer player**: "
+        + curPlayer.getPlayerName()
+        + " performed a LOOK action.\n"
+        + lookResult);
+  }
+
+
 
   public String getPlayerWhatCanPickInfo(String playerName) {
 
@@ -619,6 +697,16 @@ public class WorldImplement implements World {
   @Override
   public String getCurrentPlayerName() {
     return this.playerList.get(curPlayerIndex).getPlayerName();
+  }
+
+  /**
+   *
+   * @return
+   */
+  @Override
+  public boolean isCurrentPlayerComputer(){
+    boolean isComputer = this.playerList.get(curPlayerIndex).checkComputer();
+    return isComputer;
   }
 
   /**

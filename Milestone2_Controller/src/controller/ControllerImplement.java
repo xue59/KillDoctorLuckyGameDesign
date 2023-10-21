@@ -28,6 +28,7 @@ public class ControllerImplement implements Controller {
     while (true) {
       this.output.append(String.format("Welcome to the Game World of %s:\n",
           world.getWorldName()));
+      this.output.append("(To quit: Ctrl + C) \n");
       this.displayMainMenuOptions();
       int select = 0;
       try {
@@ -155,7 +156,7 @@ public class ControllerImplement implements Controller {
       return;
     }
     // if game over then should not start the game, let user go back re-start the game
-    if (world.checkGameOver()){
+    if (world.checkGameOver()) {
       // True game is over
       this.output.append(
           String.format("Last game already finished, back to main menu to re-start a New Game.\n"));
@@ -163,21 +164,20 @@ public class ControllerImplement implements Controller {
       return;
     }
 
-
     int curTurnNum = 1;
 
     this.output.append(String.format("Game turns starting in %s, total %d players: %s\n",
         world.getWorldName(), world.getAllPlayerNames().size(), world.getAllPlayerNames()));
 
     // For MS2 game only end when max turns reached, no Dr.Lucky Health involved now!
+    // Turn starting loop curTurnNum starting with 1
     while (curTurnNum <= world.getTotalAllowedTurns()) {
       this.loopToOnePlayerTurn(curTurnNum);
       //last curTurnNum ++
       curTurnNum++;
     }
-
-    if (curTurnNum > world.getTotalAllowedTurns()){
-      output.append(String.format("Game Over: Max %d turns finished!\n", curTurnNum-1));
+    if (curTurnNum > world.getTotalAllowedTurns()) {
+      output.append(String.format("Game Over: Max %d turns finished!\n", curTurnNum - 1));
       loopToSelectMainMenu();
     }
 
@@ -185,11 +185,22 @@ public class ControllerImplement implements Controller {
 
   private void loopToOnePlayerTurn(int curTurnNum) throws IOException {
     String curTurnPlayerName = world.getCurrentPlayerName();
+    boolean isCurPlayerComputer = world.isCurrentPlayerComputer();
+    this.output.append(String.format("\nTurn #%d Current Player Status: \n%s",
+        curTurnNum, world.getOnePlayerAndRoomInfo(curTurnPlayerName)));
     this.output.append(
-        String.format("Current Turn #%d for player: %s\n", curTurnNum, curTurnPlayerName));
+        String.format("Current Turn #%d for player: %s. (Available commands: [Move, Look, Pick])\n",
+            curTurnNum, curTurnPlayerName));
 
-    //following loop let player make a selection of their move
-    while (true) {
+    //call to computer player logic
+    if (isCurPlayerComputer) {
+      this.computerPlayerTakeOneTurn(curTurnPlayerName);
+      return;
+    }
+
+    //following loop let a HUMAN player make a selection of their actions
+    //true and current player is not a Computer
+    while (!isCurPlayerComputer) {
       String command;
       // Convert the input to ALL UPPER CASE for case-insensitivity
       command = scanner.nextLine().trim().toUpperCase();
@@ -207,34 +218,48 @@ public class ControllerImplement implements Controller {
           this.output.append("No match command found! Please enter exact command: [Move, Look, " +
               "Pick].\n");
         }
-      } catch (IllegalStateException e) {    // Turn max reached Game over!
+      } catch (IllegalStateException e) {    // Turn max reached & Game over!
         this.output.append(e.getMessage());
         loopToSelectMainMenu();
         return;
       } catch (IllegalAccessException e) {
         this.output.append(e.getMessage() + "Try a different command!\n");
       }
+    }
+  }
 
+  private void computerPlayerTakeOneTurn(String curTurnPlayerName) throws IOException {
+    this.output.append(String.format("**Computer player**: %s is taking action...\n",
+        curTurnPlayerName));
+    String computerActionResult = null;
+    try {
+      computerActionResult = world.cmdComputerPlayerAction();
+      this.output.append(computerActionResult); // display computer action run
+    } catch (IllegalAccessException e) {
+      this.output.append(e.getMessage());
+      loopToSelectMainMenu();
+    } catch (IllegalStateException e) { // Turn max reached Game over!
+      this.output.append(e.getMessage());
+      loopToSelectMainMenu();
     }
   }
 
   /**
-   *
    * @param curTurnPlayerName
-   * @throws IOException IO Error
+   * @throws IOException            IO Error
    * @throws IllegalAccessException Error when cannot pick more item, player limit full.
    * @throws IllegalStateException  Error when game is over.
    */
   private void consolePlayerPick(String curTurnPlayerName)
-      throws IOException, IllegalAccessException,IllegalStateException {
+      throws IOException, IllegalAccessException, IllegalStateException {
     String whatCanPickInfo = world.getPlayerWhatCanPickInfo(curTurnPlayerName);
     if (whatCanPickInfo != null) {
       output.append(
           String.format("You are in %s\n", whatCanPickInfo)); // display what can be picked info
       output.append(
-          String.format("To Player: %s, enter the name of the item you want to pick up:\n",
+          String.format("(To Player) %s: What do you want to pick? (Enter the exact name.):\n",
               curTurnPlayerName));
-    }else{
+    } else {
       throw new IllegalAccessException("No items can be picked in current room.\n");
     }
 

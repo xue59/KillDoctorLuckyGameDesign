@@ -23,8 +23,8 @@ public class Driver {
     // The default file name path & name
     // CustomerMap input file path: $ContentRoot$/res/customerWorld.txt
     String fileName = "res/mansion2023.txt";
-    int totalPlayers = 2;
-    int totalTurns = 5;
+    int totalPlayers = 3;
+    int totalTurns = 9;
 
     try {
       if (args.length < 3) {
@@ -44,7 +44,7 @@ public class Driver {
       FileReader fileReader = new FileReader(fileName);
       CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(fileReader);
       World mainWorld = createHelper.createWorld();
-      mainWorld.printWorld2dArray(); // print 2d world
+//      mainWorld.printWorld2dArray(); // print 2d world
       mainWorld.setTotalAllowedPlayers(totalPlayers); //set totoal players
       mainWorld.setTotalAllowedTurns(totalTurns); //set total turns
       System.out.println("Starting Game in console command Line >>>>>>>>>>:");

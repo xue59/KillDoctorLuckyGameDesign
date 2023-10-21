@@ -15,6 +15,8 @@ public interface Player {
   void pickUpOneItem(Item item) throws NullPointerException, IllegalArgumentException,
       IllegalAccessException;
 
+  int getCurrentCapacity();
+
   void deleteOneItem(Item item);
 
   Map<String, Integer> getItemListMapInfo();

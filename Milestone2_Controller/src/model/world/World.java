@@ -107,6 +107,9 @@ public interface World {
 
   int getTotalAllowedTurns();
 
+  String cmdComputerPlayerAction()
+      throws IllegalStateException, IllegalAccessException;
+
   void cmdPlayerMove(String roomName)
       throws IllegalArgumentException, IllegalAccessException;
 
@@ -117,7 +120,6 @@ public interface World {
       throws NullPointerException, IllegalArgumentException, IllegalAccessException,
       IllegalStateException;
   String getPlayerWhatCanPickInfo(String playerName);
-
 
   boolean checkGameOver();
 
@@ -132,6 +134,8 @@ public interface World {
   String getOnePlayerCurrentRoomName(String playerName);
 
   String getCurrentPlayerName();
+
+  boolean isCurrentPlayerComputer();
 
   int getCurrentPlayerIndex();
 

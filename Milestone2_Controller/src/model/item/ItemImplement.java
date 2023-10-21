@@ -55,7 +55,7 @@ public class ItemImplement implements Item {
   @Override
   public String toString() {
     String newString;
-    newString = String.format("%s Damage=%s ", this.getName(), this.getDamage());
+    newString = String.format("%s(Damage=%s)", this.getName(), this.getDamage());
     return newString;
   }
 

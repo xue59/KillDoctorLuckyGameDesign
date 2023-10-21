@@ -91,6 +91,16 @@ public class PlayerImplement implements Player {
 
   }
 
+  /**
+   * @return
+   */
+  @Override
+  public int getCurrentCapacity() {
+    int curCapacity;
+    curCapacity = this.limit - this.itemList.size();
+    return curCapacity;
+  }
+
 
   /**
    * @param destinationRoomNum
