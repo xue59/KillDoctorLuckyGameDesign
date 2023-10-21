@@ -1,9 +1,13 @@
 package controller;
 
-import model.world.World;
+import command.ComputerActionCmd;
+import command.LookAroundCmd;
+import command.MovePlayerCmd;
+import command.PlayerPickCmd;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import model.world.World;
 
 public class ControllerImplement implements Controller {
   private World world;
@@ -209,7 +213,7 @@ public class ControllerImplement implements Controller {
           this.consolePlayerMove(curTurnPlayerName);
           break;
         } else if (command.equals("LOOK")) {
-          this.consolePlayerLook(curTurnPlayerName);
+          this.consolePlayerLook();
           break;
         } else if (command.equals("PICK")) {
           this.consolePlayerPick(curTurnPlayerName);
@@ -231,9 +235,11 @@ public class ControllerImplement implements Controller {
   private void computerPlayerTakeOneTurn(String curTurnPlayerName) throws IOException {
     this.output.append(String.format("**Computer player**: %s is taking action...\n",
         curTurnPlayerName));
+
     String computerActionResult = null;
+    ComputerActionCmd computerActionCmd = new ComputerActionCmd();
     try {
-      computerActionResult = world.cmdComputerPlayerAction();
+      computerActionResult = computerActionCmd.execute(this.world);
       this.output.append(computerActionResult); // display computer action run
     } catch (IllegalAccessException e) {
       this.output.append(e.getMessage());
@@ -265,15 +271,20 @@ public class ControllerImplement implements Controller {
 
     while (true) {
       String inputItemName;
+      String cmdPickResult;
       inputItemName = scanner.nextLine().trim();
+      PlayerPickCmd cmdPick = new PlayerPickCmd(inputItemName);
       try {
-        world.cmdPlayerPick(inputItemName);
-        output.append(String.format("Player: %s picked up item: %s SUCCESS!\n",
-            curTurnPlayerName, inputItemName));
+        cmdPickResult = cmdPick.execute(this.world);
+        if (!cmdPickResult.isEmpty()){
+          output.append(cmdPickResult);
+          output.append(String.format("Player: %s picked up item: %s SUCCESS!\n",
+              curTurnPlayerName, inputItemName));
+        }
         return;
       } catch (IllegalAccessException e) {
         output.append(e.getMessage());
-        throw new IllegalAccessException("Can't PICK, your bag is Full, try other commands!");
+        throw new IllegalAccessException("Can't PICK, your bag is Full, try other commands!\n");
       } catch (IllegalStateException e) {
         throw new IllegalStateException( // Game Over state!
             String.format("Game Over! Player:%s Cannot pick up item! %s", curTurnPlayerName,
@@ -282,15 +293,17 @@ public class ControllerImplement implements Controller {
         output.append(e.getMessage());
         output.append("\nCheck the item name for typos and case sensitivity!\n");
       } catch (NullPointerException e) {
-        output.append("Error: Item name cannot be null!\n");
+        output.append("Item name cannot be null! Try a valid Item name.\n");
       }
     }
   }
 
 
-  private void consolePlayerLook(String curTurnPlayerName)
+  private void consolePlayerLook()
       throws IOException, IllegalAccessException {
-    output.append(this.world.cmdPlayerLook());
+    // using command design pattern to execute the Look command
+    LookAroundCmd cmdLook = new LookAroundCmd();
+    output.append(cmdLook.execute(this.world));
   }
 
   private void consolePlayerMove(String curTurnPlayerName) throws IOException {
@@ -304,13 +317,20 @@ public class ControllerImplement implements Controller {
       String inputRoomName;
       inputRoomName = scanner.nextLine().trim();
       try {
-        world.cmdPlayerMove(inputRoomName);
-        output.append(String.format("Player: %s moved to room: %s SUCCESS!\n",
-            curTurnPlayerName, inputRoomName));
+        MovePlayerCmd cmdMove = new MovePlayerCmd(inputRoomName);
+        String moveResult;
+        moveResult = cmdMove.execute(this.world);
+        if (!moveResult.isEmpty()) {
+          output.append(String.format("Player: %s moved to room: %s SUCCESS!\n",
+              curTurnPlayerName, inputRoomName));
+        }
         return;
       } catch (IllegalAccessException e) {
         output.append(e.getMessage());
-        output.append("Check your room name for typo and case sensitive\n!");
+        output.append("Check your room name for typo and case sensitivity!\n");
+      } catch (NullPointerException e) {
+      output.append(e.getMessage());
+      output.append("Enter a valid room name again!\n");
       } catch (IllegalStateException e) {
         // Game Over state!
         throw new IllegalStateException(
@@ -391,7 +411,7 @@ public class ControllerImplement implements Controller {
         return false;
       }
     }
-    throw new IllegalArgumentException("Only enter yes or no, y/n!!");
+    throw new IllegalArgumentException("Only enter yes or no, y/n!!\n");
   }
 
 

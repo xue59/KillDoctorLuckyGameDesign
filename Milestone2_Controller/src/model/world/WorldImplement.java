@@ -197,8 +197,8 @@ public class WorldImplement implements World {
 
     //check if players in this room
     roomInfo.append("Players in this room: ");
-    for (Player player : playerList){
-      if (player.getCurrentRoomNumber() == room.getRoomNumber()){
+    for (Player player : playerList) {
+      if (player.getCurrentRoomNumber() == room.getRoomNumber()) {
         roomInfo.append(String.format("%s, ", player.getPlayerName()));
       }
     }
@@ -242,8 +242,12 @@ public class WorldImplement implements World {
     // Build the player and room information string
     StringBuilder playerRoomInfo = new StringBuilder();
     playerRoomInfo.append(player.toString());
-    playerRoomInfo.append("Current Room: " + playerRoom.getRoomName() + "\n");
-    playerRoomInfo.append(playerRoom.toString() + "\n"); // append room#, name and items in room.
+    playerRoomInfo.append("Current Room: " + playerRoom.getRoomName());
+    if(drLucky.getCurrentRoomNumber() == playerRoom.getRoomNumber()){
+      playerRoomInfo.append(String.format(" (**Dr.Lucky**(%s HP=%d) is in this #%d room.)",
+          drLucky.getName(), drLucky.getCurrentHp(),drLucky.getCurrentRoomNumber()));
+    }
+    playerRoomInfo.append("\n"+playerRoom.toString() + "\n"); //add room#, name and items in room.
     playerRoomInfo.append("Neighbor Rooms: " + String.join(", ", neighborRooms) + "\n");
 
     return playerRoomInfo.toString();
@@ -307,7 +311,7 @@ public class WorldImplement implements World {
           g2d.drawString(player.getPlayerName(), colX + scale / 2,
               rowY + scale / 2 + count * scale / 2);
           g2d.setColor(Color.BLUE); // Set line back to Blue!
-          count++; // makesure the draw do not overlap
+          count++; // make sure the draw do not overlap
         }
       }
       g2d.drawRect(colX, rowY, scale * roomW, scale * roomH);
@@ -398,10 +402,12 @@ public class WorldImplement implements World {
     }
     this.totalAllowedPlayers = totalAllowedPlayers;
   }
+
   @Override
   public int getTotalAllowedPlayers() {
     return totalAllowedPlayers;
   }
+
   @Override
   public void setTotalAllowedTurns(int totalAllowedTurns) {
     if (totalAllowedTurns <= 0) {
@@ -409,6 +415,7 @@ public class WorldImplement implements World {
     }
     this.totalAllowedTurns = totalAllowedTurns;
   }
+
   @Override
   public int getTotalAllowedTurns() {
     return totalAllowedTurns;
@@ -432,7 +439,7 @@ public class WorldImplement implements World {
     for (Player player : playerList) {
       if (player.getPlayerName().equals(name)) {
         throw new IllegalArgumentException(String.format("Error: Player Name: %s already taken, " +
-                "try a different name!", name));
+            "try a different name!", name));
       }
     }
     if (initialRoomNum < 0 || initialRoomNum >= this.totalRooms) {
@@ -446,7 +453,7 @@ public class WorldImplement implements World {
   }
 
   public void cmdPlayerMove(String roomName)
-      throws IllegalAccessException, IllegalStateException, IllegalArgumentException{
+      throws IllegalAccessException, IllegalStateException, IllegalArgumentException {
     // 记得mock model
     if (this.checkGameOver()) {
       throw new IllegalStateException("Error: Game Over cannot MOVE!\n");
@@ -466,31 +473,69 @@ public class WorldImplement implements World {
           curPlayer.getPlayerName(), roomName, curRoom.getRoomName()));
     }
   }
-  public String cmdPlayerLook()
-      throws IllegalStateException, IllegalArgumentException {
+
+  /**
+   * Gets information about the player's current room and surroundings.
+   *
+   * @return A string containing information about the player's current room and its neighbors,
+   * along with
+   * any other players in the same room.
+   * @throws IllegalStateException    If the game is over and the player cannot look.
+   * @throws IllegalArgumentException If there are issues with the room or player data.
+   */
+  public String cmdPlayerLook() throws IllegalStateException, IllegalArgumentException {
     if (this.checkGameOver()) {
       throw new IllegalStateException("Error: Game Over cannot LOOK!\n");
     }
+
     Player curPlayer = this.playerList.get(this.curPlayerIndex);
     String curRoomName = this.roomList.get(curPlayer.getCurrentRoomNumber()).getRoomName();
+    Room curRoom = this.roomList.get(curPlayer.getCurrentRoomNumber());
     List<String> curPlayerNeighboringRooms = getNeighborsRoomList(curRoomName);
-    String lookResult = String.format("You(player: %s) are currently in %s and can been seen from" +
-        " rooms: %s\n", curPlayer.getPlayerName(),curRoomName, curPlayerNeighboringRooms);
+
+    // Create a StringBuilder to build the lookResult string
+    StringBuilder lookResultBuilder = new StringBuilder();
+    lookResultBuilder.append(String.format(
+        "You (player: %s) are currently in room #%d %s and can be seen from rooms: %s\n%s\n",
+        curPlayer.getPlayerName(), curPlayer.getCurrentRoomNumber(), curRoomName,
+        curPlayerNeighboringRooms, curRoom.toString()));
+
+    // Check if Dr. Lucky is in the same room
+    if (this.drLucky.getCurrentRoomNumber() == curRoom.getRoomNumber()) {
+      lookResultBuilder.append(
+          String.format("**Dr. Lucky is in the room: %s", drLucky.toString()));
+    }
+
+    // Check if other players are in the same room
+    lookResultBuilder.append("Players in the same room: ");
+    for (Player player : this.playerList) {
+      if (player.getCurrentRoomNumber() == curPlayer.getCurrentRoomNumber() && !player.equals(
+          curPlayer)) {
+        // Append the player's name to the lookResult
+        lookResultBuilder.append(player.getPlayerName()).append(", ");
+      }
+    }
+    lookResultBuilder.append("\n");
+
+    // Update the lookResult string
+    String lookResult = lookResultBuilder.toString();
+
     changeTurn();
     return lookResult;
   }
 
+
   /**
-   *
    * @param inputItemName
-   * @throws NullPointerException  if the input item name is Null.
+   * @throws NullPointerException     if the input item name is Null.
    * @throws IllegalArgumentException if player already have duplicated item, cannot pick up.
-   * @throws IllegalAccessException if player meet bag limit cannot pick any more item.
-   * @throws IllegalStateException if Game Over cannot pick up.
+   * @throws IllegalAccessException   if player meet bag limit cannot pick any more item.
+   * @throws IllegalStateException    if Game Over cannot pick up.
    */
   @Override
   public void cmdPlayerPick(String inputItemName)
-      throws NullPointerException, IllegalArgumentException, IllegalAccessException, IllegalStateException{
+      throws NullPointerException, IllegalArgumentException, IllegalAccessException,
+      IllegalStateException {
     if (checkGameOver()) {
       throw new IllegalStateException("Error: Game Over cannot PICK!\n");
     }
@@ -506,6 +551,7 @@ public class WorldImplement implements World {
    * Computer player would 1st check if can pick and then pick the most damage item in the room.
    * 2nd if cannot pick, then it will randomly move the next room.
    * 3rd if cannot move, it will look.
+   *
    * @return
    * @throws IllegalStateException
    */
@@ -520,8 +566,7 @@ public class WorldImplement implements World {
     Map<String, Integer> itemWithDamageInTheRoom = curRoom.getAllItemsWithDamage();
 
     // Check if the computer player can pick and there are items in the room
-    // Computer finish PICK & return String
-    // Change turn in here
+    // Computer finish PICK & return String, (Change turn separately in here)
     if (curPlayer.getCurrentCapacity() > 0 && !itemWithDamageInTheRoom.isEmpty()) {
       // Find the item with the highest damage
       String bestItem = null;
@@ -550,12 +595,13 @@ public class WorldImplement implements World {
         }
         changeTurn();
         curRoom.removeOneItem(item);
-        return String.format("**Computer player**: %s picked up %s with %d damage.\n",
+        return String.format("**Computer player**: %s PICK up %s with %d damage.\n",
             curPlayer.getPlayerName(), bestItem, maxDamage);
       }
     }
 
-    // If the computer player cannot pick the highest damage item, then attempt to move to a neighboring room.
+    // If the computer player cannot pick the highest damage item, then attempt to move to a
+    // neighboring room.
     // Computer finish MOVE & return String
     List<String> curRoomNeighbors = getNeighborsRoomList(curRoom.getRoomName());
     if (!curRoomNeighbors.isEmpty()) {
@@ -577,7 +623,6 @@ public class WorldImplement implements World {
   }
 
 
-
   public String getPlayerWhatCanPickInfo(String playerName) {
 
     // Find the player by name
@@ -588,13 +633,13 @@ public class WorldImplement implements World {
         break;
       }
     }
-    String playerRoomInfo=null;
+    String playerRoomInfo = null;
     if (player != null) {
       // Get the player's current room
       Room playerRoom = roomList.get(player.getCurrentRoomNumber());
-      if (playerRoom.getAllItemsWithDamage().size() == 0){
+      if (playerRoom.getAllItemsWithDamage().size() == 0) {
         playerRoomInfo = null;
-      }else{
+      } else {
         playerRoomInfo = playerRoom.toString();
       }
     } else {
@@ -603,8 +648,6 @@ public class WorldImplement implements World {
     }
     return playerRoomInfo;
   }
-
-
 
 
   private Room getRoomByName(String roomName) {
@@ -616,16 +659,16 @@ public class WorldImplement implements World {
     throw new IllegalArgumentException(String.format("Error: %s room does not exist!", roomName));
   }
 
-  private void changeTurn(){
-    if (this.playerList.size() ==0){
+  private void changeTurn() {
+    if (this.playerList.size() == 0) {
       return;
     }
-    if (checkGameOver()){
+    if (checkGameOver()) {
       this.winnerPlayer = this.playerList.get(curPlayerIndex);
     }
-    if(this.curPlayerIndex+1>=playerList.size()){
+    if (this.curPlayerIndex + 1 >= playerList.size()) {
       this.curPlayerIndex = 0;
-    }else {
+    } else {
       this.curPlayerIndex++;
     }
     moveDrLucky(); // 每一次 player 动一次 drlucky也动一次
@@ -634,10 +677,10 @@ public class WorldImplement implements World {
 
   @Override
   public boolean checkGameOver() {
-    if (this.drLucky.getCurrentHp() <=0){
+    if (this.drLucky.getCurrentHp() <= 0) {
       return true;
     }
-    if(this.curTurn > totalAllowedTurns){
+    if (this.curTurn > totalAllowedTurns) {
       return true;
     }
     return false;
@@ -651,6 +694,7 @@ public class WorldImplement implements World {
     }
     return playerNames;
   }
+
   @Override
   public String getAllPlayerInfo() {
     StringBuilder playerInfo = new StringBuilder();
@@ -683,7 +727,8 @@ public class WorldImplement implements World {
           return roomList.get(currentRoomNumber).getRoomName();
         } else {
           // Handle invalid room number (out of bounds)
-          throw new IllegalArgumentException("Invalid current room number for player: " + playerName);
+          throw new IllegalArgumentException(
+              "Invalid current room number for player: " + playerName);
         }
       }
     }
@@ -700,11 +745,10 @@ public class WorldImplement implements World {
   }
 
   /**
-   *
    * @return
    */
   @Override
-  public boolean isCurrentPlayerComputer(){
+  public boolean isCurrentPlayerComputer() {
     boolean isComputer = this.playerList.get(curPlayerIndex).checkComputer();
     return isComputer;
   }
@@ -724,8 +768,4 @@ public class WorldImplement implements World {
   public int getCurrentTurnNumber() {
     return this.curTurn;
   }
-
-
-
-
 }

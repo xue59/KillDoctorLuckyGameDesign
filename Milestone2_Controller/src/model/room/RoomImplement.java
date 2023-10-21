@@ -255,6 +255,7 @@ public class RoomImplement implements Room {
    */
   @Override
   public String toString() {
-    return String.format("#%d Room: %s, has : %s", this.roomNumber, this.roomName, this.itemList);
+    return String.format("#%d Room: %s, has items: %s", this.roomNumber, this.roomName,
+        this.itemList);
   }
 }
