@@ -215,6 +215,12 @@ public class WorldImplement implements World {
     return roomInfo.toString();
   }
 
+  /**
+   * Gets information about a specific player and their current room.
+   *
+   * @param playerName The name of the player for which to retrieve information.
+   * @return Information about the specified player and their current room.
+   */
   @Override
   public String getOnePlayerAndRoomInfo(String playerName)
       throws IllegalArgumentException, NullPointerException {
@@ -395,6 +401,11 @@ public class WorldImplement implements World {
     }
   }
 
+  /**
+   * Sets the total allowed number of players in the game.
+   *
+   * @param totalAllowedPlayers The total number of players allowed in the game.
+   */
   @Override
   public void setTotalAllowedPlayers(int totalAllowedPlayers) {
     if (totalAllowedPlayers <= 0) {
@@ -403,11 +414,21 @@ public class WorldImplement implements World {
     this.totalAllowedPlayers = totalAllowedPlayers;
   }
 
+  /**
+   * Gets the total number of players allowed in the game.
+   *
+   * @return The total number of players allowed in the game.
+   */
   @Override
   public int getTotalAllowedPlayers() {
     return totalAllowedPlayers;
   }
 
+  /**
+   * Sets the total allowed number of turns in the game.
+   *
+   * @param totalAllowedTurns The total number of turns allowed in the game.
+   */
   @Override
   public void setTotalAllowedTurns(int totalAllowedTurns) {
     if (totalAllowedTurns <= 0) {
@@ -416,19 +437,25 @@ public class WorldImplement implements World {
     this.totalAllowedTurns = totalAllowedTurns;
   }
 
+  /**
+   * Gets the total number of turns allowed in the game.
+   *
+   * @return The total number of turns allowed in the game.
+   */
   @Override
   public int getTotalAllowedTurns() {
     return totalAllowedTurns;
   }
 
-
   /**
-   * @param name
-   * @param initialRoomNum
-   * @param limit
-   * @param checkComputer
-   * @throws IllegalArgumentException
-   * @throws NullPointerException
+   * Add a human or computer player into the game world.
+   *
+   * @param name            String of the player name.
+   * @param initialRoomNum Int of player's initial room number index base 0.
+   * @param limit          Player's limit for carrying number of items.
+   * @param checkComputer  Ture if it is a computer player, otherwise false.
+   * @throws IllegalArgumentException Due to invalid input.
+   * @throws NullPointerException Due to invalid input.
    */
   @Override
   public void addOnePlayer(String name, int initialRoomNum, boolean checkComputer, int limit)
@@ -452,6 +479,13 @@ public class WorldImplement implements World {
 //    this.createGraphBufferedImage();
   }
 
+  /**
+   * Move the current player to the specified room.
+   *
+   * @param roomName The name of the room to which the player should move.
+   * @throws IllegalArgumentException If the provided room name is not valid.
+   * @throws IllegalAccessException If there is an illegal access attempt during the move.
+   */
   public void cmdPlayerMove(String roomName)
       throws IllegalAccessException, IllegalStateException, IllegalArgumentException {
     // 记得mock model
@@ -468,18 +502,16 @@ public class WorldImplement implements World {
       changeTurn();
     } else {
       throw new IllegalAccessException(String.format(
-          "Player: %s can't move to %s, the target room is not a neighbor of its current room: " +
-              "%s!\n",
-          curPlayer.getPlayerName(), roomName, curRoom.getRoomName()));
+          "Player: %s can't move to %s, the target room is not a neighbor of its current room: "
+              + "%s!\n", curPlayer.getPlayerName(), roomName, curRoom.getRoomName()));
     }
   }
 
   /**
    * Gets information about the player's current room and surroundings.
    *
-   * @return A string containing information about the player's current room and its neighbors,
-   * along with
-   * any other players in the same room.
+   * @return A string containing information about the player's current room and its neighbors.
+   * along with any other players in the same room.
    * @throws IllegalStateException    If the game is over and the player cannot look.
    * @throws IllegalArgumentException If there are issues with the room or player data.
    */
@@ -526,11 +558,13 @@ public class WorldImplement implements World {
 
 
   /**
-   * @param inputItemName
-   * @throws NullPointerException     if the input item name is Null.
-   * @throws IllegalArgumentException if player already have duplicated item, cannot pick up.
-   * @throws IllegalAccessException   if player meet bag limit cannot pick any more item.
-   * @throws IllegalStateException    if Game Over cannot pick up.
+   * Allow the current player to pick up an item in the room.
+   *
+   * @param inputItemName             The name of the item to be picked up.
+   * @throws NullPointerException     If the input item name is Null.
+   * @throws IllegalArgumentException If player already have duplicated item, cannot pick up.
+   * @throws IllegalAccessException   If player meet bag limit cannot pick any more item.
+   * @throws IllegalStateException    If Game Over cannot pick up.
    */
   @Override
   public void cmdPlayerPick(String inputItemName)
@@ -548,12 +582,16 @@ public class WorldImplement implements World {
   }
 
   /**
-   * Computer player would 1st check if can pick and then pick the most damage item in the room.
-   * 2nd if cannot pick, then it will randomly move the next room.
-   * 3rd if cannot move, it will look.
-   *
-   * @return
-   * @throws IllegalStateException
+   * Computer player would 1st check:.
+   * 1st. if player can pick and then pick the most damage item in the
+   * room.
+   * 2nd if player cannot pick, then it will randomly move the next room.
+   * 3rd if player cannot move,
+   * it will look.
+   * Perform a computer player's action in the game and return the result.
+   * @return The result of the computer player's action.
+   * @throws IllegalStateException If the game is illegal state for the computer player's action.
+   * @throws IllegalAccessException If there is an illegal access attempt during the action.
    */
   @Override
   public String cmdComputerPlayerAction() throws IllegalStateException, IllegalAccessException {
@@ -623,6 +661,12 @@ public class WorldImplement implements World {
   }
 
 
+  /**
+   * Get information about the items that a player can pick up in the current room.
+   *
+   * @param playerName The name of the player for which to retrieve item information.
+   * @return Information about the items that the player can pick up in the room.
+   */
   public String getPlayerWhatCanPickInfo(String playerName) {
 
     // Find the player by name
@@ -649,6 +693,11 @@ public class WorldImplement implements World {
     return playerRoomInfo;
   }
 
+  /**
+   *
+   * @param roomName String or the room name input.
+   * @return Room a Room type of the finding room.
+   */
 
   private Room getRoomByName(String roomName) {
     for (Room room : roomList) {
@@ -659,6 +708,9 @@ public class WorldImplement implements World {
     throw new IllegalArgumentException(String.format("Error: %s room does not exist!", roomName));
   }
 
+  /**
+   * Update the game turn, and update DrLucky Location every round.
+   */
   private void changeTurn() {
     if (this.playerList.size() == 0) {
       return;
@@ -671,10 +723,15 @@ public class WorldImplement implements World {
     } else {
       this.curPlayerIndex++;
     }
-    moveDrLucky(); // 每一次 player 动一次 drlucky也动一次
+    moveDrLucky(); // 每一次 player 动一次 Dr Lucky也动一次
     this.curTurn++;
   }
 
+  /**
+   * Check if the game is over.
+   *
+   * @return True if the game is over, false otherwise.
+   */
   @Override
   public boolean checkGameOver() {
     if (this.drLucky.getCurrentHp() <= 0) {
@@ -686,6 +743,11 @@ public class WorldImplement implements World {
     return false;
   }
 
+  /**
+   * Gets a list of names of all players in the game world.
+   *
+   * @return A list of player names.
+   */
   @Override
   public List<String> getAllPlayerNames() {
     List<String> playerNames = new ArrayList<>();
@@ -695,6 +757,11 @@ public class WorldImplement implements World {
     return playerNames;
   }
 
+  /**
+   * Gets information about all players in the game world.
+   *
+   * @return Information about all players.
+   */
   @Override
   public String getAllPlayerInfo() {
     StringBuilder playerInfo = new StringBuilder();
@@ -706,6 +773,11 @@ public class WorldImplement implements World {
     return playerInfo.toString();
   }
 
+  /**
+   * Gets a list of names of all rooms in the game world.
+   *
+   * @return A list of room names.
+   */
   @Override
   public List<String> getAllRoomNames() {
     List<String> roomNames = new ArrayList<>();
@@ -716,6 +788,11 @@ public class WorldImplement implements World {
     return roomNames;
   }
 
+  /**
+   * Gets the room name of the current player in the game.
+   *
+   * @return The room name string of where the current player is in.
+   */
   @Override
   public String getOnePlayerCurrentRoomName(String playerName) {
     for (Player player : playerList) {
@@ -737,7 +814,9 @@ public class WorldImplement implements World {
   }
 
   /**
-   * @return
+   * Gets the name of the current player in the game.
+   *
+   * @return The name String of the current player.
    */
   @Override
   public String getCurrentPlayerName() {
@@ -745,7 +824,9 @@ public class WorldImplement implements World {
   }
 
   /**
-   * @return
+   * Checks if the current player is a computer player.
+   *
+   * @return True if the current player is a computer player, false otherwise.
    */
   @Override
   public boolean isCurrentPlayerComputer() {
@@ -754,7 +835,9 @@ public class WorldImplement implements World {
   }
 
   /**
-   * @return
+   * Gets the index of the current player.
+   *
+   * @return The index of the current player.
    */
   @Override
   public int getCurrentPlayerIndex() {
@@ -762,7 +845,9 @@ public class WorldImplement implements World {
   }
 
   /**
-   * @return
+   * Gets the current turn number in the game.
+   *
+   * @return The current turn number.
    */
   @Override
   public int getCurrentTurnNumber() {

@@ -1,13 +1,27 @@
-package test;
 import model.world.World;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class WorldMockModel implements World {
+  private final Appendable output;
+  private int totalAllowedTurns;
+
+  /**
+   * Create the mock world model for testing purpose.
+   * @param output Appendable output for testing purpose.
+   */
+  public WorldMockModel(Appendable output) {
+    Objects.requireNonNull(output);
+    this.totalAllowedTurns = 9;
+    this.output = output;
+  }
+
   @Override
   public List<String> getNeighborsRoomList(String roomName)
       throws IllegalArgumentException, NullPointerException {
-    return null;
+    return new ArrayList<>(List.of("Neighbors"));
   }
 
   @Override
