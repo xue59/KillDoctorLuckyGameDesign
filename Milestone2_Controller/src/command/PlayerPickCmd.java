@@ -22,7 +22,7 @@ public class PlayerPickCmd implements WorldCommand {
       throws NullPointerException, IllegalArgumentException, IllegalAccessException,
       IllegalStateException {
     try {
-      model.cmdPlayerMove(this.inputItemName);
+      model.cmdPlayerPick(this.inputItemName);
       return "Player PICK execute success!\n";
     } catch (IllegalAccessException e) {
       throw e;
