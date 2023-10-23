@@ -599,6 +599,12 @@ public class WorldImplement implements World {
       throw new IllegalStateException("Error: Game Over, Computer player cannot take action!\n");
     }
 
+    if ( !isCurrentPlayerComputer()){
+      throw new IllegalStateException(
+          String.format("Error: the cur player: %s is not a computer.\n",
+              this.playerList.get(curPlayerIndex).getPlayerName()));
+    }
+
     Player curPlayer = (Player) this.playerList.get(curPlayerIndex);
     Room curRoom = (Room) this.roomList.get(curPlayer.getCurrentRoomNumber());
     Map<String, Integer> itemWithDamageInTheRoom = curRoom.getAllItemsWithDamage();

@@ -34,7 +34,7 @@ public class ItemImplementTest {
   @Test
   public void testToString() {
     Item item = new ItemImplement("Shield", 5);
-    assertEquals("Shield Damage=5 ", item.toString());
+    assertEquals("Shield(Damage=5)", item.toString());
   }
 
   /**

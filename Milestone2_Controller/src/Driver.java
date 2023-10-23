@@ -2,7 +2,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import controller.Controller;
-import controller.ControllerImplement;
+import controller.CmdControllerImplement;
 import model.world.CreateWorldHelper;
 import model.world.World;
 
@@ -53,7 +53,7 @@ public class Driver {
       Readable input = new InputStreamReader(System.in);
       Appendable output = System.out;
 
-      Controller consoleController = new ControllerImplement(input,output
+      Controller consoleController = new CmdControllerImplement(input,output
           ,mainWorld);
       consoleController.startGame();
     } catch (IOException e) {

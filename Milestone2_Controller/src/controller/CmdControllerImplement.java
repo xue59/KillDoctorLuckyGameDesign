@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Scanner;
 import model.world.World;
 
-public class ControllerImplement implements Controller {
+public class CmdControllerImplement implements Controller {
   private World world;
   private final Scanner scanner;
   private final Appendable output;
   private final int totalAllowedPlayers;
   private final int totalAllowedTurns;
 
-  public ControllerImplement(Readable input, Appendable output, World world) {
+  public CmdControllerImplement(Readable input, Appendable output, World world) {
     this.scanner = new Scanner(input);
     this.output = output;
     this.world = world;

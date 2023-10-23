@@ -1,10 +1,15 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import model.player.PlayerImplement;
+import model.item.Item;
 import model.item.ItemImplement;
+import model.player.Player;
+import model.player.PlayerImplement;
 import org.junit.Before;
 import org.junit.Test;
-import model.item.Item;
 
 public class PlayerImplementTest {
   private PlayerImplement player;
@@ -20,9 +25,17 @@ public class PlayerImplementTest {
   }
 
   @Test
+  public void testGetInitialRoomNumber(){
+    Player playerTest = new PlayerImplement("Ben", 5, false, 5);
+    assertEquals(5,playerTest.getCurrentRoomNumber());
+
+  }
+  @Test
   public void testGetCurrentRoomNumber() {
     assertEquals(0, player.getCurrentRoomNumber());
   }
+
+
 
   @Test
   public void testCheckComputer() {
@@ -36,7 +49,7 @@ public class PlayerImplementTest {
     assertTrue(player.getItemListMapInfo().containsKey("Sword"));
   }
 
-  @Test
+  @Test (expected = IllegalAccessException.class)
   public void testPickUpOneItemWithLimitExceeded() throws IllegalAccessException {
     Item item = new ItemImplement("Sword", 10);
     for (int i = 0; i < 5; i++) {
@@ -47,6 +60,7 @@ public class PlayerImplementTest {
       fail("Expected IllegalStateException");
     } catch (IllegalStateException e) {
       // This exception is expected
+      throw e;
     }
   }
 
@@ -99,7 +113,7 @@ public class PlayerImplementTest {
 
   @Test
   public void testToStringForHumanPlayer() {
-    String expectedHumanString = "Player Info String: \n"
+    String expectedHumanString = "Player type: Human Player\n"
         + "Player's Name: John \n"
         + "Player's limit: 5, can still carry: 5\n"
         + "Carrying: [] \n";
@@ -113,7 +127,7 @@ public class PlayerImplementTest {
     // Create a computer player
     PlayerImplement computerPlayer = new PlayerImplement("Alice", 1, true, 3);
 
-    String expectedComputerString = "Player Info String: **ComputerPlayer**\n"
+    String expectedComputerString = "Player type: **Computer Player**\n"
         + "Player's Name: Alice \n"
         + "Player's limit: 3, can still carry: 3\n"
         + "Carrying: [] \n";
