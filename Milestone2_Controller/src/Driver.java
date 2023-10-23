@@ -45,7 +45,7 @@ public class Driver {
       CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(fileReader);
       World mainWorld = createHelper.createWorld();
 //      mainWorld.printWorld2dArray(); // print 2d world
-      mainWorld.setTotalAllowedPlayers(totalPlayers); //set totoal players
+      mainWorld.setTotalAllowedPlayers(totalPlayers); //set total players
       mainWorld.setTotalAllowedTurns(totalTurns); //set total turns
       System.out.println("Starting Game in console command Line >>>>>>>>>>:");
 

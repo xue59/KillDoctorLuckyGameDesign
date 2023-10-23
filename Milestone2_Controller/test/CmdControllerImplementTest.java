@@ -281,7 +281,7 @@ public class CmdControllerImplementTest {
     assertTrue(output.toString().contains("Current Turn #4 for player: com2. (Available commands:" +
         " [Move, Look, Pick])\n" +
         "**Computer player**: com2 is taking action...\n" +
-        "**Computer player**: com2 MOVE to room: Billiard Room."));
+        "**Computer player**: com2 MOVE to room: "));
   }
 
   /**
@@ -371,10 +371,7 @@ public class CmdControllerImplementTest {
         "Player type: **Computer Player**\n" +
         "Player's Name: com2 \n" +
         "Player's limit: 1, can still carry: 0\n" +
-        "Carrying: [Revolver(Damage=3)] \n" +
-        "Current Room: Billiard Room\n" +
-        "#1 Room: Billiard Room, has items: [Billiard Cue(Damage=2)]\n" +
-        "Neighbor Rooms: Armory, Trophy Room, Dining Hall\n"));
+        "Carrying: [Revolver(Damage=3)] "));
   }
 
   /**

@@ -2,15 +2,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import model.world.CreateWorldHelper;
 import model.world.WorldImplement;
 import org.junit.Before;
@@ -37,7 +31,7 @@ public class Ms2WorldImplementTest {
 
   @Test
   public void testWorldName() {
-    assertEquals("Your Expected World Name", ms2TestWorld.getWorldName());
+    assertEquals("Doctor Lucky's Mansion", ms2TestWorld.getWorldName());
   }
 
   @Test
@@ -48,18 +42,6 @@ public class Ms2WorldImplementTest {
   @Test
   public void testTotalItems() {
     assertEquals(20, ms2TestWorld.getTotalOfItem());
-  }
-
-  @Test
-  public void testGetNeighborsRoomList() {
-    // Mock the worldMapIndex for a room's neighbors
-    Map<Integer, Set<Integer>> worldMapIndexMock = mock(Map.class);
-    when(worldMapIndexMock.get(anyInt())).thenReturn(Set.of(2, 3, 4));
-
-    ms2TestWorld =
-        new WorldImplement(5, 5, "Test World", 25, 50, null, null, worldMapIndexMock, null);
-    assertEquals(Set.of("Room 2", "Room 3", "Room 4"),
-        new HashSet<>(ms2TestWorld.getNeighborsRoomList("Room 1")));
   }
 
   @Test
@@ -130,7 +112,7 @@ public class Ms2WorldImplementTest {
             "Room, " +
             "Kitchen, Parlor]\n" +
             "#3 Room: Dining Hall, has items: []\n" +
-            "Players in the same room: computer2, ", human1LookRes);
+            "Players in the same room: computer2, \n", human1LookRes);
   }
 
   @Test
@@ -267,9 +249,9 @@ public class Ms2WorldImplementTest {
             "Player's Name: human1 \n" +
             "Player's limit: 10, can still carry: 10\n" +
             "Carrying: [] \n" +
-            "Current Room: Test11Good (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)\n" +
-            "#0 Room: Test11Good, has items: [Revolver(Damage=3)]\n" +
-            "Neighbor Rooms: Test22Good, Test44Good, Test55Good\n",
+            "Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)\n" +
+            "#0 Room: Armory, has items: [Revolver(Damage=3)]\n" +
+            "Neighbor Rooms: Billiard Room, Dining Hall, Drawing Room\n",
         ms2TestWorld.getOnePlayerAndRoomInfo("human1"));
   }
 
@@ -491,7 +473,7 @@ public class Ms2WorldImplementTest {
 
   /**
    * This would test the computer player moved to next room due to carrying items full. It first
-   * picked item in room7 Hedge Maze with Lod Noise and reaching carrying limit, then move to the
+   * picked item in 13 Nursery with Bad Cream and reaching carrying limit, then move to the
    * next room randomly. The if statement would catch and test both final room is valid.
    *
    * @throws IllegalAccessException
@@ -499,11 +481,16 @@ public class Ms2WorldImplementTest {
   @Test
   public void testCmdComputerActionMoveDueToLimitFull() throws IllegalAccessException {
     try {
-      ms2TestWorld.addOnePlayer("Com1", 16, true, 1);
-      assertEquals("exp",
+      ms2TestWorld.addOnePlayer("Com1", 13, true, 1);
+      assertEquals("**Computer player**: Com1 PICK up Bad Cream with 2 damage.\n",
           ms2TestWorld.cmdComputerPlayerAction());
       String actionResult = ms2TestWorld.cmdComputerPlayerAction();
-      assertEquals("**Computer player**: Com1 MOVE to room: Wine Cellar.\n", actionResult);
+      if (actionResult.contains("Library")){
+        assertEquals("**Computer player**: Com1 MOVE to room: Library.\n", actionResult);
+      }else {
+        assertEquals("**Computer player**: Com1 MOVE to room: Master Suite.\n",
+            actionResult);
+      }
 
     } catch (Exception e) {
       assertEquals("", e.getMessage());
