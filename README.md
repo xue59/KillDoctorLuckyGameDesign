@@ -51,13 +51,12 @@ Line 244: User executes command 66 to quit the program.
 5.6: The world map file will be generated at a fixed path with a fixed file name.
 5.7: Any other necessary limitations that are needed to run my game design of killing Dr. Lucky.
 
-6. Change and Version History v2.0: 
-6.1: From v1.0 the milestone 1, players models are introduced. 
-6.2: Controller introduced.
-6.3: Necessary changes in World and World Implementation to accommodate the Synchronous Controller introduced in this version. 
-6.3: The controller would run the program and play the game in a command line interface. 
-6.4: All other necessary reversion and changes to accommodate the new introduced feature and requirements. For more details please refer to the Project GitHub Repository for detailed commit history: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone2 
-
+6. Change and Version History v2.0:
+6.1: From v1.0 the milestone 1, players models are introduced.
+6.2: Synchronous Controller Controller introduced along with MockWorld testing method.
+6.3: Necessary changes in World and World Implementation to accommodate the Synchronous Controller introduced in this version.
+6.3: The controller would run the program and play the game in a command line interface.
+6.4: All other necessary reversion and changes to accommodate the new introduced feature and requirements. For more details please refer to the Project GitHub Repository for detailed commit history: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone2
 
 References:
 - https://www.youtube.com/watch?v=9hsPLAB5a9s&ab_channel=fenirob
