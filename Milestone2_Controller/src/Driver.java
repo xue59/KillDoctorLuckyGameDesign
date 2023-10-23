@@ -31,8 +31,8 @@ public class Driver {
         System.out.println(String.format("Less than 3 arguments found! Staring game with "
             + "default file, %d players, %d total turns!", totalPlayers, totalTurns));
         System.out.println(
-            "ex: Example run command: java -jar ms2_Controller.jar <$ModuleFileDir$/mansion2023" +
-                ".txt> "
+            "ex: Example run command: java -jar ms2_Controller.jar <$ModuleFileDir$/mansion2023"
+                +".txt> "
                 + "{totalPlayersNumber} {totalMaxTurnNumber}");
         System.out.println(String.format("Initiating with Default File.....>>>> %s  ", fileName));
       } else {
