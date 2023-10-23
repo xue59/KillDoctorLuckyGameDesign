@@ -23,8 +23,8 @@ public class Driver {
     // The default file name path & name
     // CustomerMap input file path: $ContentRoot$/res/customerWorld.txt
     String fileName = "res/mansion2023.txt";
-    int totalPlayers = 3;
-    int totalTurns = 9;
+    int totalPlayers = 2;
+    int totalTurns = 4;
 
     try {
       if (args.length < 3) {

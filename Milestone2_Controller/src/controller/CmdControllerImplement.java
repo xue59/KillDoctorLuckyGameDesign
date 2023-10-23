@@ -15,13 +15,14 @@ public class CmdControllerImplement implements Controller {
   private final Appendable output;
   private final int totalAllowedPlayers;
   private final int totalAllowedTurns;
-
+  private boolean quitFlag;
   public CmdControllerImplement(Readable input, Appendable output, World world) {
     this.scanner = new Scanner(input);
     this.output = output;
     this.world = world;
     this.totalAllowedPlayers = world.getTotalAllowedPlayers();
     this.totalAllowedTurns = world.getTotalAllowedTurns();
+    this.quitFlag = false;
   }
 
   /**
@@ -29,7 +30,8 @@ public class CmdControllerImplement implements Controller {
    */
   @Override
   public void startGame() throws IOException {
-    while (true) {
+
+    while (!quitFlag) {
       this.output.append(String.format("Welcome to the Game World of %s:\n",
           world.getWorldName()));
       this.output.append("(To quit: Ctrl + C) \n");
@@ -53,9 +55,16 @@ public class CmdControllerImplement implements Controller {
           break;
         case 3: //3-Find a Player (Display information about specified player in the world)
           this.loopToDisplayOnePlayerInfo();
+          break;
         case 4: //4-Start game turns to play (Must setup all the players before play!)
           this.loopToStartTurns();
           break;
+        case 66:
+          //Execute order 66 to kill the program and Quit. Lol
+          this.output.append("Executed Order 66 to kill and eliminate ALL controller program "
+              +"and Quit!\n");
+          quitFlag=true;
+          return;
 
         default:
           this.output.append("Please select from Main Menu:(0-4)\n");
@@ -72,7 +81,8 @@ public class CmdControllerImplement implements Controller {
             + "1-Setup game by adding all " + totalAllowedPlayers + " players.\n"
             + "2-Find a Room (Display information about specified room in the world).\n"
             + "3-Find a Player (Display information about specified player in the world).\n"
-            + "4-Start game turns to play (Must setup all the players before play!)\n");
+            + "4-Start game turns to play (Must setup all the players before play!)\n"
+            + "66-Quit and kill the program by using Order 66.\n");
   }
 
   private void loopToSelectMainMenu() throws IOException {
@@ -413,6 +423,5 @@ public class CmdControllerImplement implements Controller {
     }
     throw new IllegalArgumentException("Only enter yes or no, y/n!!\n");
   }
-
 
 }
