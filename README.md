@@ -1,3 +1,5 @@
+KillDoctorLuckyGameDesign Readme
+
 Author: Zack-Haowen Xue
 Project Github: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone2
 
