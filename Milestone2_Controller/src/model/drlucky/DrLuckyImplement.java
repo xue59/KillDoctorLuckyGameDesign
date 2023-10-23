@@ -6,8 +6,8 @@ package model.drlucky;
  */
 public class DrLuckyImplement implements DrLucky {
   private final String name;        // The name of Dr. Lucky.
-  private int curHp;                // The current health points of Dr. Lucky.
   private final int maxRoomIndex;   // The maximum room index reflecting the total number of rooms.
+  private int curHp;                // The current health points of Dr. Lucky.
   private int curRoomNum;           // The current room number where Dr. Lucky is located.
 
   /**

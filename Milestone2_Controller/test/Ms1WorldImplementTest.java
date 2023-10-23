@@ -45,17 +45,17 @@ public class Ms1WorldImplementTest {
     //random select 3 the room info(location & name) make sure they are match
     // the 3 room expected values are achieved from manually running Driver.java separately.
     assertEquals("#8 Room: Kitchen, has items: [Crepe Pan(Damage=3), "
-            +"Sharp Knife(Damage=3)]\n"
-            +"Players in this room: \n"
-            +"Room neighbors: Test44Good,Wine Cellar,Parlor,\n",
+            + "Sharp Knife(Damage=3)]\n"
+            + "Players in this room: \n"
+            + "Room neighbors: Test44Good,Wine Cellar,Parlor,\n",
         this.testGoodWorld1.getOneRoomInfo("Kitchen"));
     assertEquals("#1 Room: Test22Good, has items: [Billiard Cue(Damage=2)]\n"
-            +"Players in this room: \n"
-            +"Room neighbors: Test11Good,Trophy Room,Test44Good,\n",
+            + "Players in this room: \n"
+            + "Room neighbors: Test11Good,Trophy Room,Test44Good,\n",
         this.testGoodWorld1.getOneRoomInfo("Test22Good"));
     assertEquals("#4 Room: Test55Good, has items: [Letter Opener(Damage=2)]\n"
-            +"Players in this room: \n"
-            +"Room neighbors: Test11Good,Test44Good,Wine Cellar,Foyer,\n",
+            + "Players in this room: \n"
+            + "Room neighbors: Test11Good,Test44Good,Wine Cellar,Foyer,\n",
         this.testGoodWorld1.getOneRoomInfo("Test55Good"));
   }
 
@@ -66,9 +66,9 @@ public class Ms1WorldImplementTest {
   public void testGoodWorldWithOneNeighborAndItems() throws FileNotFoundException {
     String greenHouseString = this.testGoodWorld1.getOneRoomInfo("Green House");
     assertEquals("#6 Room: Green House, has items: [Trowel(Damage=2), "
-        +"Pinking Shears(Damage=2)]\n"
-        +"Players in this room: \n"
-        +"Room neighbors: Hedge Maze,\n", greenHouseString);
+        + "Pinking Shears(Damage=2)]\n"
+        + "Players in this room: \n"
+        + "Room neighbors: Hedge Maze,\n", greenHouseString);
   }
 
   /**
@@ -164,8 +164,9 @@ public class Ms1WorldImplementTest {
     String roomWithNoItem = this.testGoodWorld1.getOneRoomInfo("Parlor");
     // following assert can see the Neighbors string is empty.
     assertEquals("#14 Room: Parlor, has items: []\n"
-        +"Players in this room: \n"
-        +"Room neighbors: Servants' Quarters,Tennessee Room,Test44Good,Kitchen,\n", roomWithNoItem);
+            + "Players in this room: \n"
+            + "Room neighbors: Servants' Quarters,Tennessee Room,Test44Good,Kitchen,\n",
+        roomWithNoItem);
   }
 
   /**
@@ -177,8 +178,8 @@ public class Ms1WorldImplementTest {
     // following assert can see the Neighbors string is empty.
     // There is only 1 BroomStick in the room.
     assertEquals("#16 Room: Servants' Quarters, has items: [Broom Stick(Damage=2)]\n"
-        +"Players in this room: \n"
-        +"Room neighbors: Lancaster Room,Lilac Room,Parlor,\n", roomWithOnlyOneItem);
+        + "Players in this room: \n"
+        + "Room neighbors: Lancaster Room,Lilac Room,Parlor,\n", roomWithOnlyOneItem);
   }
 
   /**
@@ -191,9 +192,9 @@ public class Ms1WorldImplementTest {
     // There are two item in the room.
     assertEquals(
         "#19 Room: Wine Cellar, has items: [Rat Poison(Damage=2), "
-            +"Piece of Rope(Damage=2)]\n"
-            +"Players in this room: \n"
-            +"Room neighbors: Test44Good,Test55Good,Kitchen,\n", roomWithTwoItem);
+            + "Piece of Rope(Damage=2)]\n"
+            + "Players in this room: \n"
+            + "Room neighbors: Test44Good,Test55Good,Kitchen,\n", roomWithTwoItem);
   }
 
   /**

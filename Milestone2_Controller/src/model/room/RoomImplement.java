@@ -86,8 +86,7 @@ public class RoomImplement implements Room {
   /**
    * Gets the coordinates of the room.
    *
-   * @return An array of integers representing the room's coordinates in the format [topColX,
-   * topRowY, botColX, botRowY].
+   * @return An array of integers coordinates in the format [topColX, topRowY, botColX, botRowY].
    */
   @Override
   public int[] getRoomCoordinate() {

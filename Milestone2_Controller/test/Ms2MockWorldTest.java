@@ -210,10 +210,10 @@ public class Ms2MockWorldTest {
     world.cmdComputerPlayerAction();
     assertTrue(world.checkGameOver());
     assertEquals("setTotalAllowedTurns executed: "
-        +"totalAllowedTurns=5cmdComputerPlayerAction "
-        +"executed!cmdComputerPlayerAction executed!cmdComputerPlayerAction "
-        +"executed!cmdComputerPlayerAction executed!checkGameOver executed!\n"
-        +"cmdComputerPlayerAction executed!checkGameOver executed!\n", log.toString());
+        + "totalAllowedTurns=5cmdComputerPlayerAction "
+        + "executed!cmdComputerPlayerAction executed!cmdComputerPlayerAction "
+        + "executed!cmdComputerPlayerAction executed!checkGameOver executed!\n"
+        + "cmdComputerPlayerAction executed!checkGameOver executed!\n", log.toString());
   }
 
   /**

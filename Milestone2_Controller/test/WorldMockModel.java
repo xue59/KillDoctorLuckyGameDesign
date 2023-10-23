@@ -1,8 +1,9 @@
-import model.world.World;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import model.world.World;
+
 
 /**
  * A mock model of the World interface for testing purposes.
@@ -152,15 +153,14 @@ public class WorldMockModel implements World {
   }
 
   /**
-   * Sets the total allowed number of turns in the game.
+   * Gets the total number of players allowed in the game.
    *
-   * @param totalAllowedTurns The total number of turns allowed in the game.
+   * @return The total number of players allowed in the game.
    */
   @Override
-  public void setTotalAllowedTurns(int totalAllowedTurns) {
-    this.log.append(String.format("setTotalAllowedTurns executed: totalAllowedTurns=%d",
-        totalAllowedTurns));
-    this.totalAllowedTurns = totalAllowedTurns;
+  public int getTotalAllowedPlayers() {
+    this.log.append("getTotalAllowedPlayers executed!");
+    return this.totalAllowedPlayers; // Change the return value as needed.
   }
 
   /**
@@ -176,17 +176,6 @@ public class WorldMockModel implements World {
   }
 
   /**
-   * Gets the total number of players allowed in the game.
-   *
-   * @return The total number of players allowed in the game.
-   */
-  @Override
-  public int getTotalAllowedPlayers() {
-    this.log.append("getTotalAllowedPlayers executed!");
-    return this.totalAllowedPlayers; // Change the return value as needed.
-  }
-
-  /**
    * Gets the total number of turns allowed in the game.
    *
    * @return The total number of turns allowed in the game.
@@ -195,6 +184,18 @@ public class WorldMockModel implements World {
   public int getTotalAllowedTurns() {
     this.log.append("getTotalAllowedTurns executed!");
     return this.totalAllowedTurns; // Change the return value as needed.
+  }
+
+  /**
+   * Sets the total allowed number of turns in the game.
+   *
+   * @param totalAllowedTurns The total number of turns allowed in the game.
+   */
+  @Override
+  public void setTotalAllowedTurns(int totalAllowedTurns) {
+    this.log.append(String.format("setTotalAllowedTurns executed: totalAllowedTurns=%d",
+        totalAllowedTurns));
+    this.totalAllowedTurns = totalAllowedTurns;
   }
 
   /**
@@ -330,7 +331,7 @@ public class WorldMockModel implements World {
   /**
    * Gets the room name of the current player in the game.
    *
-   * @param playerName
+   * @param playerName input player name string.
    * @return The room name string of where the current player is in.
    */
   @Override

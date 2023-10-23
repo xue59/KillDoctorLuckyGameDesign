@@ -9,6 +9,18 @@ import java.util.List;
 import java.util.Scanner;
 import model.world.World;
 
+/**
+ * The CmdControllerImplement class is responsible for controlling and managing the command-line
+ * interface (CLI) for interacting with a game world.
+ * It provides methods for processing user input and generating output to the specified Appendable.
+ * This controller handles commands to move players, perform actions, look around, and pick up
+ * items in the game world.
+ * <p>
+ * The controller communicates with the provided World model to execute commands and retrieve game
+ * state information.
+ *
+ * @see Controller
+ */
 public class CmdControllerImplement implements Controller {
   private final World world;
   private final Scanner scanner;
@@ -17,6 +29,13 @@ public class CmdControllerImplement implements Controller {
   private final int totalAllowedTurns;
   private boolean quitFlag;
 
+  /**
+   * Constructs a CmdControllerImplement with the specified input, output, and game world.
+   *
+   * @param input  A Readable input source, typically a user input stream, for receiving commands.
+   * @param output An Appendable output destination, typically a console or a text-based interface.
+   * @param world  The game World model that provides methods for executing commands interactions.
+   */
   public CmdControllerImplement(Readable input, Appendable output, World world) {
     this.scanner = new Scanner(input);
     this.output = output;
@@ -50,7 +69,7 @@ public class CmdControllerImplement implements Controller {
 
       switch (select) {
         case 0: // 0-Create a graphical representation of the world map PNG.
-          this.createWorldMapPNG();
+          this.createWorldMapPng();
           break;
         case 1: // 1-Setup game by adding all " + totalAllowedPlayers + " players.
           this.loopToAddAllPlayers();
@@ -87,13 +106,12 @@ public class CmdControllerImplement implements Controller {
   private void displayMainMenuOptions() throws IOException {
     this.output.append("Main Menu: \n");
     this.output.append("(Select following operation (integer only)!)\n");
-    this.output.append
-        (String.format("0-Create a graphical representation of the world map PNG.\n"
-            + "1-Setup game by adding all %d players.\n"
-            + "2-Find a Room (Display information about specified room in the world).\n"
-            + "3-Find a Player (Display information about specified player in the world).\n"
-            + "4-Start game turns to play (Must setup all the players before play!)\n"
-            + "66-Quit and kill the program by using Order 66.\n", totalAllowedPlayers));
+    this.output.append(String.format("0-Create a graphical representation of the world map PNG.\n"
+        + "1-Setup game by adding all %d players.\n"
+        + "2-Find a Room (Display information about specified room in the world).\n"
+        + "3-Find a Player (Display information about specified player in the world).\n"
+        + "4-Start game turns to play (Must setup all the players before play!)\n"
+        + "66-Quit and kill the program by using Order 66.\n", totalAllowedPlayers));
   }
 
   /**
@@ -106,7 +124,7 @@ public class CmdControllerImplement implements Controller {
       output.append("Enter 'm' or 'M' to go back to Main Menu: ");
       String userInput = scanner.nextLine().trim();
 
-      if (userInput.equalsIgnoreCase("m")) {
+      if ("m".equalsIgnoreCase(userInput)) {
         // Go back to the main menu
         startGame();
       } else {
@@ -185,7 +203,7 @@ public class CmdControllerImplement implements Controller {
    *
    * @throws IOException if an I/O error occurs while interacting with the game.
    */
-  private void createWorldMapPNG() throws IOException {
+  private void createWorldMapPng() throws IOException {
     this.world.createGraphBufferedImage();
     this.output.append("The world map png created in above directory.\n");
     loopToSelectMainMenu();
@@ -262,18 +280,18 @@ public class CmdControllerImplement implements Controller {
       // Convert the input to ALL UPPER CASE for case-insensitivity
       command = scanner.nextLine().trim().toUpperCase();
       try {
-        if (command.equals("MOVE")) {
+        if ("MOVE".equals(command)) {
           this.consolePlayerMove(curTurnPlayerName);
           break;
-        } else if (command.equals("LOOK")) {
+        } else if ("LOOK".equals(command)) {
           this.consolePlayerLook();
           break;
-        } else if (command.equals("PICK")) {
+        } else if ("PICK".equals(command)) {
           this.consolePlayerPick(curTurnPlayerName);
           break;
         } else { // Default base case nothing match input & loop back to let user input selection
-          this.output.append("No match command found! Please enter exact command: [Move, Look, " +
-              "Pick].\n");
+          this.output.append("No match command found! Please enter exact command: [Move, Look, "
+              + "Pick].\n");
         }
       } catch (IllegalStateException e) {    // Turn max reached & Game over!
         this.output.append(e.getMessage());
@@ -347,10 +365,10 @@ public class CmdControllerImplement implements Controller {
       } catch (IllegalAccessException e) {
         output.append(e.getMessage());
         throw new IllegalAccessException("Can't PICK, your bag is Full, try other commands!\n");
-      } catch (IllegalStateException e) {
-        throw new IllegalStateException( // Game Over state!
-            String.format("Game Over! Player:%s Cannot pick up item! %s", curTurnPlayerName,
-                inputItemName));
+      } catch (IllegalStateException e) { // Game Over state!
+        throw new IllegalStateException(String.format("Game Over! Player:%s Cannot pick up item!"
+                + " %s", curTurnPlayerName,
+            inputItemName));
       } catch (IllegalArgumentException e) {
         output.append(e.getMessage());
         output.append("\nCheck the item name for typos and case sensitivity!\n");
@@ -446,23 +464,23 @@ public class CmdControllerImplement implements Controller {
   private void addOnePlayer() throws IOException {
     try {
       String playerName;
-      int playerLimit;
-      int playerInitialRoom;
-      boolean isComputer;
       this.output.append("Give a name for this Player:\n");
       playerName = scanner.nextLine().trim(); // get player name
 
       this.output.append(String.format("Set Player: %s's carrying limit(Integer only!):\n",
           playerName));
+      int playerLimit;
       playerLimit = Integer.parseInt(scanner.nextLine().trim()); // get player limit
 
       this.output.append(String.format("Set Player: %s's initial room index (0 to %d):\n",
           playerName, world.getTotalOfRoom() - 1));
+      int playerInitialRoom;
       playerInitialRoom = Integer.parseInt(scanner.nextLine().trim()); // get player limit
 
       this.output.append(String.format("Set Player: is this %s a computer player?:(Y/N)\n",
           playerName));
       // if user input Y for isComputer True; N for isComputer False.
+      boolean isComputer;
       isComputer = this.checkInputStringTrueFalse(scanner.nextLine().trim());
 
       // call world method to create the player & add into game world
@@ -495,9 +513,9 @@ public class CmdControllerImplement implements Controller {
   private boolean checkInputStringTrueFalse(String in) {
     if (in != null) {
       in = in.toLowerCase(); // Convert the input to lowercase for case-insensitivity
-      if (in.equals("yes") || in.equals("y")) {
+      if ("yes".equals(in) || "y".equals(in)) {
         return true;
-      } else if (in.equals("no") || in.equals("n")) {
+      } else if ("no".equals(in) || "n".equals(in)) {
         return false;
       }
     }

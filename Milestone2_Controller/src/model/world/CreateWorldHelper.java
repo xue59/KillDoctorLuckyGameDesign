@@ -21,16 +21,16 @@ import model.room.RoomImplement;
  * with rooms, items, and Dr. Lucky based on the provided information.
  */
 public class CreateWorldHelper {
+  private final Map<Integer, Set<Integer>> worldNeighborMap;
+  private final List<Room> roomListRoom;
+  private final List<String> itemListString;
+  private final List<Item> itemListItem;
   private int totalRooms;
   private int totalItems;
   private int rowSize;
   private int colSize;
   private String name; // World Name
   private DrLucky drLucky;
-  private final Map<Integer, Set<Integer>> worldNeighborMap;
-  private final List<Room> roomListRoom;
-  private final List<String> itemListString;
-  private final List<Item> itemListItem;
   private Integer[][] worldMap2dRmIndex;
 
   /**
@@ -298,7 +298,7 @@ public class CreateWorldHelper {
    *                                  size is too large.
    */
   private Room createAroom(String roomName, int roomNumber, int topRowY, int topColX, int botRowY,
-      int botColX) {
+                           int botColX) {
     //check if room already exist
     if (this.checkIfRoomAlreadyExist(roomName)) {
       throw new IllegalArgumentException(
@@ -365,7 +365,7 @@ public class CreateWorldHelper {
    * @throws IllegalArgumentException If room overlap is detected.
    */
   private boolean checkIfRoomOverLapAndFillWorldMap(int topRowY, int topColX, int botRowY,
-      int botColX, int rmNumber) {
+                                                    int botColX, int rmNumber) {
     //    System.out.println(String.format("roomNumber: %d", rmNumber));
     for (int row = topRowY; row <= botRowY; row++) {
       for (int col = topColX; col <= botColX; col++) {

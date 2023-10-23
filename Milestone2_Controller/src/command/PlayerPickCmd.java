@@ -28,7 +28,7 @@ public class PlayerPickCmd implements WorldCommand {
    * @return A message indicating the success of the pick-up action.
    * @throws IllegalAccessException   If there's a security or access violation during the pick-up.
    * @throws IllegalStateException    If the game world is in an invalid state for the pick-up
-   * action.
+   *                                  action.
    * @throws IllegalArgumentException If the input item name is not valid.
    * @throws NullPointerException     If the input item name is blank or null.
    */

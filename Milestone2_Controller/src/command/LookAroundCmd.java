@@ -20,7 +20,7 @@ public class LookAroundCmd implements WorldCommand {
    * @param model The world on which the look around command will be executed.
    * @return A message or information about the player's surroundings.
    * @throws IllegalStateException    If the command execution encounters an illegal state or
-   * game over
+   *                                  game over
    *                                  condition.
    * @throws IllegalArgumentException If the command execution encounters an invalid argument or
    *                                  operation.

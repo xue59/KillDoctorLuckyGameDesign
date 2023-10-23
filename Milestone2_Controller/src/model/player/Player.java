@@ -1,7 +1,7 @@
 package model.player;
 
-import model.item.Item;
 import java.util.Map;
+import model.item.Item;
 
 /**
  * The {@code Player} interface represents a player in the game world. Players can interact with
@@ -19,8 +19,7 @@ public interface Player {
   /**
    * Check if the player is controlled by a computer (AI).
    *
-   * @return {@code true} if the player is controlled by a computer; {@code false} if it's a
-   * human player.
+   * @return {@code true} if the player is controlled by a computer; {@code false} if it's a human.
    */
   boolean checkComputer();
 
@@ -45,7 +44,7 @@ public interface Player {
    * @throws NullPointerException     If the provided item is null.
    * @throws IllegalArgumentException If the item cannot be picked up for any reason.
    * @throws IllegalAccessException   If the player's inventory is full and cannot pick up more
-   * items.
+   *                                  items.
    */
   void pickUpOneItem(Item item)
       throws NullPointerException, IllegalArgumentException, IllegalAccessException;
@@ -68,8 +67,8 @@ public interface Player {
    * Get a map containing information about the items in the player's inventory. The map associates
    * item names with their respective quantities.
    *
-   * @return A map where keys are item names, and values are the quantities of those items in the
-   * player's inventory.
+   * @return A map where keys are item names, values are the quantities of those items player has.
+
    */
   Map<String, Integer> getItemListMapInfo();
 }

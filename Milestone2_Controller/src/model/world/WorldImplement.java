@@ -34,9 +34,9 @@ public class WorldImplement implements World {
   private final DrLucky drLucky;                     // The character DrLucky.
   private final Map<Integer, Set<Integer>> worldMapIndex; // A map representing neighbor index.
   private final Integer[][] world2dArray;            // A 2D array representation of the world.
+  private final List<Player> playerList;
   private int totalAllowedPlayers;
   private int totalAllowedTurns;
-  private final List<Player> playerList;
   private int curPlayerIndex;
   private int curTurn;
   private Player winnerPlayer;
@@ -245,7 +245,6 @@ public class WorldImplement implements World {
     Room playerRoom = roomList.get(player.getCurrentRoomNumber());
 
     // Get the player's neighboring rooms
-    List<String> neighborRooms = getNeighborsRoomList(playerRoom.getRoomName());
 
     // Build the player and room information string
     StringBuilder playerRoomInfo = new StringBuilder();
@@ -257,6 +256,7 @@ public class WorldImplement implements World {
     }
     playerRoomInfo.append(String.format("\n%s\n", playerRoom.toString())); //add room#, name
     // and items in room.
+    List<String> neighborRooms = getNeighborsRoomList(playerRoom.getRoomName());
     playerRoomInfo.append(String.format("Neighbor Rooms: %s\n",
         String.join(", ", neighborRooms)));
 
@@ -298,8 +298,6 @@ public class WorldImplement implements World {
     for (Room room : roomList) {
       int rowY = room.getTopRowY() * scale + padding;
       int colX = room.getTopColX() * scale + padding;
-      int roomH = (room.getBotRowY() - room.getTopRowY() + 1);
-      int roomW = (room.getBotColX() - room.getTopColX() + 1);
       int roomNumber = room.getRoomNumber();
       String roomName = room.getRoomName();
       g2d.drawString(String.format("#%d.%s", roomNumber, roomName), colX + scale / 2,
@@ -325,6 +323,8 @@ public class WorldImplement implements World {
           count++; // make sure the draw do not overlap
         }
       }
+      int roomH = (room.getBotRowY() - room.getTopRowY() + 1);
+      int roomW = (room.getBotColX() - room.getTopColX() + 1);
       g2d.drawRect(colX, rowY, scale * roomW, scale * roomH);
     }
     g2d.dispose();
@@ -407,6 +407,16 @@ public class WorldImplement implements World {
   }
 
   /**
+   * Gets the total number of players allowed in the game.
+   *
+   * @return The total number of players allowed in the game.
+   */
+  @Override
+  public int getTotalAllowedPlayers() {
+    return totalAllowedPlayers;
+  }
+
+  /**
    * Sets the total allowed number of players in the game.
    *
    * @param totalAllowedPlayers The total number of players allowed in the game.
@@ -420,13 +430,13 @@ public class WorldImplement implements World {
   }
 
   /**
-   * Gets the total number of players allowed in the game.
+   * Gets the total number of turns allowed in the game.
    *
-   * @return The total number of players allowed in the game.
+   * @return The total number of turns allowed in the game.
    */
   @Override
-  public int getTotalAllowedPlayers() {
-    return totalAllowedPlayers;
+  public int getTotalAllowedTurns() {
+    return totalAllowedTurns;
   }
 
   /**
@@ -440,16 +450,6 @@ public class WorldImplement implements World {
       throw new IllegalArgumentException("Error: totalAllowedTurns must larger than 0!");
     }
     this.totalAllowedTurns = totalAllowedTurns;
-  }
-
-  /**
-   * Gets the total number of turns allowed in the game.
-   *
-   * @return The total number of turns allowed in the game.
-   */
-  @Override
-  public int getTotalAllowedTurns() {
-    return totalAllowedTurns;
   }
 
   /**
@@ -470,18 +470,17 @@ public class WorldImplement implements World {
     }
     for (Player player : playerList) {
       if (player.getPlayerName().equals(name)) {
-        throw new IllegalArgumentException(String.format("Error: Player Name: %s already taken, " +
-            "try a different name!", name));
+        throw new IllegalArgumentException(String.format("Error: Player Name: %s already taken, "
+            + "try a different name!", name));
       }
     }
     if (initialRoomNum < 0 || initialRoomNum >= this.totalRooms) {
-      throw new IllegalArgumentException(String.format("Initial Room index invalid, must within " +
-          "totalRooms: %d", this.totalRooms));
+      throw new IllegalArgumentException(String.format("Initial Room index invalid, must within "
+          + "totalRooms: %d", this.totalRooms));
     }
 
     Player newPlayer = new PlayerImplement(name, initialRoomNum, checkComputer, limit);
     this.playerList.add(newPlayer);
-//    this.createGraphBufferedImage();
   }
 
   /**
@@ -516,7 +515,6 @@ public class WorldImplement implements World {
    * Gets information about the player's current room and surroundings.
    *
    * @return A string containing information about the player's current room and its neighbors.
-   * along with any other players in the same room.
    * @throws IllegalStateException    If the game is over and the player cannot look.
    * @throws IllegalArgumentException If there are issues with the room or player data.
    */
@@ -705,6 +703,7 @@ public class WorldImplement implements World {
   }
 
   /**
+   * This function get Room Object by giving the room name string.
    * @param roomName String or the room name input.
    * @return Room a Room type of the finding room.
    */

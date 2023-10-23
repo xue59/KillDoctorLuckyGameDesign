@@ -1,8 +1,8 @@
+import controller.CmdControllerImplement;
+import controller.Controller;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import controller.Controller;
-import controller.CmdControllerImplement;
 import model.world.CreateWorldHelper;
 import model.world.World;
 
@@ -28,11 +28,11 @@ public class Driver {
 
     try {
       if (args.length < 3) {
-        System.out.println(String.format("Less than 3 arguments found! Staring game with " +
-            "default file, %d players, %d total turns!", totalPlayers, totalTurns));
+        System.out.println(String.format("Less than 3 arguments found! Staring game with "
+            + "default file, %d players, %d total turns!", totalPlayers, totalTurns));
         System.out.println(
-            "ex: Example run command: java -jar sampleRun.jar <$ModuleFileDir$/mansion2023.txt> " +
-                "{totalPlayersNumber} {totalMaxTurnNumber}");
+            "ex: Example run command: java -jar sampleRun.jar <$ModuleFileDir$/mansion2023.txt> "
+                + "{totalPlayersNumber} {totalMaxTurnNumber}");
         System.out.println(String.format("Initiating with Default File.....>>>> %s  ", fileName));
       } else {
         fileName = args[0];

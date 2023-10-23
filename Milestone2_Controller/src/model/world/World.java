@@ -100,11 +100,11 @@ public interface World {
       throws IllegalArgumentException, NullPointerException;
 
   /**
-   * Sets the total allowed number of turns in the game.
+   * Gets the total number of players allowed in the game.
    *
-   * @param totalAllowedTurns The total number of turns allowed in the game.
+   * @return The total number of players allowed in the game.
    */
-  void setTotalAllowedTurns(int totalAllowedTurns);
+  int getTotalAllowedPlayers();
 
   /**
    * Sets the total allowed number of players in the game.
@@ -114,18 +114,18 @@ public interface World {
   void setTotalAllowedPlayers(int totalAllowedPlayers);
 
   /**
-   * Gets the total number of players allowed in the game.
-   *
-   * @return The total number of players allowed in the game.
-   */
-  int getTotalAllowedPlayers();
-
-  /**
    * Gets the total number of turns allowed in the game.
    *
    * @return The total number of turns allowed in the game.
    */
   int getTotalAllowedTurns();
+
+  /**
+   * Sets the total allowed number of turns in the game.
+   *
+   * @param totalAllowedTurns The total number of turns allowed in the game.
+   */
+  void setTotalAllowedTurns(int totalAllowedTurns);
 
   /**
    * Perform a computer player's action in the game and return the result.
@@ -217,6 +217,7 @@ public interface World {
   /**
    * Gets the room name of the current player in the game.
    *
+   * @param playerName The name of the player for which to retrieve information.
    * @return The room name string of where the current player is in.
    */
   String getOnePlayerCurrentRoomName(String playerName);

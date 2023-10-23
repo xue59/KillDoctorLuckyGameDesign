@@ -1,9 +1,9 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import model.world.CreateWorldHelper;
 import model.world.WorldImplement;
@@ -22,17 +22,13 @@ public class Ms2WorldImplementTest {
    * Sets up the test environment by creating a test world with specific properties.
    */
   @Before
-  public void setUp() {
-    try {
-      FileReader fileReader = new FileReader("res/testRes/mansion2023.txt");
-      BufferedReader br = new BufferedReader(fileReader);
-      CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-      this.ms2TestWorld = (WorldImplement) createHelper.createWorld();
-      this.ms2TestWorld.setTotalAllowedPlayers(3);
-      this.ms2TestWorld.setTotalAllowedTurns(9);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+  public void setUp() throws FileNotFoundException {
+    FileReader fileReader = new FileReader("res/testRes/mansion2023.txt");
+    BufferedReader br = new BufferedReader(fileReader);
+    CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
+    this.ms2TestWorld = (WorldImplement) createHelper.createWorld();
+    this.ms2TestWorld.setTotalAllowedPlayers(3);
+    this.ms2TestWorld.setTotalAllowedTurns(9);
   }
 
   /**
@@ -79,13 +75,13 @@ public class Ms2WorldImplementTest {
     ms2TestWorld.addOnePlayer("computer2", 4, true, 11);
     String playerInfo = ms2TestWorld.getOnePlayerAndRoomInfo("human1");
     assertNotNull(playerInfo);
-    assertEquals("Player type: Human Player\n" 
-      +"Player's Name: human1 \n" 
-      +"Player's limit: 10, can still carry: 10\n" 
-      +"Carrying: [] \n" 
-      +"Current Room: Drawing Room\n" 
-      +"#4 Room: Drawing Room, has items: [Letter Opener(Damage=2)]\n" 
-      +"Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
+    assertEquals("Player type: Human Player\n"
+        + "Player's Name: human1 \n"
+        + "Player's limit: 10, can still carry: 10\n"
+        + "Carrying: [] \n"
+        + "Current Room: Drawing Room\n"
+        + "#4 Room: Drawing Room, has items: [Letter Opener(Damage=2)]\n"
+        + "Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
 
   }
 
@@ -99,13 +95,13 @@ public class Ms2WorldImplementTest {
     ms2TestWorld.cmdPlayerPick("Letter Opener");
     String playerInfo = ms2TestWorld.getOnePlayerAndRoomInfo("human1");
     assertNotNull(playerInfo);
-    assertEquals("Player type: Human Player\n" 
-      +"Player's Name: human1 \n" 
-      +"Player's limit: 10, can still carry: 9\n" 
-      +"Carrying: [Letter Opener(Damage=2)] \n" 
-      +"Current Room: Drawing Room\n" 
-      +"#4 Room: Drawing Room, has items: []\n" 
-      +"Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
+    assertEquals("Player type: Human Player\n"
+        + "Player's Name: human1 \n"
+        + "Player's limit: 10, can still carry: 9\n"
+        + "Carrying: [Letter Opener(Damage=2)] \n"
+        + "Current Room: Drawing Room\n"
+        + "#4 Room: Drawing Room, has items: []\n"
+        + "Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
   }
 
   /**
@@ -118,13 +114,13 @@ public class Ms2WorldImplementTest {
     ms2TestWorld.cmdPlayerPick("Pinking Shears");
     String playerInfo = ms2TestWorld.getOnePlayerAndRoomInfo("human1");
     assertNotNull(playerInfo);
-    assertEquals("Player type: Human Player\n" 
-      +"Player's Name: human1 \n" 
-      +"Player's limit: 10, can still carry: 8\n" 
-      +"Carrying: [Trowel(Damage=2), Pinking Shears(Damage=2)] \n" 
-      +"Current Room: Green House\n" 
-      +"#6 Room: Green House, has items: []\n" 
-      +"Neighbor Rooms: Hedge Maze\n", playerInfo);
+    assertEquals("Player type: Human Player\n"
+        + "Player's Name: human1 \n"
+        + "Player's limit: 10, can still carry: 8\n"
+        + "Carrying: [Trowel(Damage=2), Pinking Shears(Damage=2)] \n"
+        + "Current Room: Green House\n"
+        + "#6 Room: Green House, has items: []\n"
+        + "Neighbor Rooms: Hedge Maze\n", playerInfo);
   }
 
   /**
@@ -137,12 +133,12 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-      "You (player: human1) are currently in room #3 Dining Hall and can be seen from "
-          +"rooms: [Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing " 
-          +"Room, " 
-          +"Kitchen, Parlor]\n" 
-          +"#3 Room: Dining Hall, has items: []\n" 
-          +"Players in the same room: computer2, \n", human1LookRes);
+        "You (player: human1) are currently in room #3 Dining Hall and can be seen from "
+            + "rooms: [Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing "
+            + "Room, "
+            + "Kitchen, Parlor]\n"
+            + "#3 Room: Dining Hall, has items: []\n"
+            + "Players in the same room: computer2, \n", human1LookRes);
   }
 
   /**
@@ -155,12 +151,12 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-      "You (player: human1) are currently in room #2 Carriage "
-          +"House and can be seen from rooms:" 
-          +" [Winter Garden]\n" 
-          +"#2 Room: Carriage House, has items: [Chain Saw(Damage=4), " 
-          +"Big Red Hammer(Damage=4)]\n" 
-          +"Players in the same room: computer2, \n", human1LookRes);
+        "You (player: human1) are currently in room #2 Carriage "
+            + "House and can be seen from rooms:"
+            + " [Winter Garden]\n"
+            + "#2 Room: Carriage House, has items: [Chain Saw(Damage=4), "
+            + "Big Red Hammer(Damage=4)]\n"
+            + "Players in the same room: computer2, \n", human1LookRes);
   }
 
   /**
@@ -173,10 +169,10 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-      "You (player: human1) are currently in room #15 Piazza "
-          +"and can be seen from rooms: [Winter Garden, Foyer, Hedge Maze]\n" 
-          +"#15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n" 
-          +"Players in the same room: computer2, \n", human1LookRes);
+        "You (player: human1) are currently in room #15 Piazza "
+            + "and can be seen from rooms: [Winter Garden, Foyer, Hedge Maze]\n"
+            + "#15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n"
+            + "Players in the same room: computer2, \n", human1LookRes);
   }
 
   /**
@@ -189,10 +185,10 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-      "You (player: human1) are currently in room #15 Piazza "
-          +"and can be seen from rooms: [Winter Garden, Foyer, Hedge Maze]\n" 
-          +"#15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n" 
-          +"Players in the same room: computer2, \n", human1LookRes);
+        "You (player: human1) are currently in room #15 Piazza "
+            + "and can be seen from rooms: [Winter Garden, Foyer, Hedge Maze]\n"
+            + "#15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n"
+            + "Players in the same room: computer2, \n", human1LookRes);
   }
 
   /**
@@ -204,13 +200,13 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-      "You (player: human1) are currently in "
-          +"room #0 Armory and can be seen from rooms: " 
-          +"[Billiard Room, Dining Hall, Drawing Room]\n" 
-          +"#0 Room: Armory, has items: [Revolver(Damage=3)]\n" 
-          +"**Dr. Lucky is in the room: Target name: Doctor Lucky, " 
-          +"Current HP: 50, Current room " 
-          +"index: 0\nPlayers in the same room: \n", human1LookRes);
+        "You (player: human1) are currently in "
+            + "room #0 Armory and can be seen from rooms: "
+            + "[Billiard Room, Dining Hall, Drawing Room]\n"
+            + "#0 Room: Armory, has items: [Revolver(Damage=3)]\n"
+            + "**Dr. Lucky is in the room: Target name: Doctor Lucky, "
+            + "Current HP: 50, Current room "
+            + "index: 0\nPlayers in the same room: \n", human1LookRes);
   }
 
   /**
@@ -222,11 +218,11 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals("You (player: human1) are currently in room #2 Carriage "
-          +"House and can be seen from rooms:" 
-          +" [Winter Garden]\n" 
-          +"#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" 
-          +"]\n" 
-          +"Players in the same room: \n", human1LookRes);
+        + "House and can be seen from rooms:"
+        + " [Winter Garden]\n"
+        + "#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)"
+        + "]\n"
+        + "Players in the same room: \n", human1LookRes);
 
   }
 
@@ -241,11 +237,11 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals("You (player: human1) are currently in room #2 "
-          + "Carriage House and can be seen from rooms:"
-          +" [Winter Garden]\n" 
-          +"#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" 
-          +"]\n" 
-          +"Players in the same room: human2, \n", human1LookRes);
+        + "Carriage House and can be seen from rooms:"
+        + " [Winter Garden]\n"
+        + "#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)"
+        + "]\n"
+        + "Players in the same room: human2, \n", human1LookRes);
 
   }
 
@@ -261,11 +257,11 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-      "You (player: human1) are currently in room #2 Carriage "
-          +"House and can be seen from rooms:" 
-          +" [Winter Garden]\n" 
-          +"#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" 
-          +"]\nPlayers in the same room: human2, human3, \n", human1LookRes);
+        "You (player: human1) are currently in room #2 Carriage "
+            + "House and can be seen from rooms:"
+            + " [Winter Garden]\n"
+            + "#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)"
+            + "]\nPlayers in the same room: human2, human3, \n", human1LookRes);
 
   }
 
@@ -307,13 +303,13 @@ public class Ms2WorldImplementTest {
     ms2TestWorld.addOnePlayer("human1", 0, false, 10);
     // Add assertions for verifying the player addition
     assertEquals(1 + totalPlayerBefore, ms2TestWorld.getAllPlayerNames().size());
-    assertEquals("Player type: Human Player\n" 
-          +"Player's Name: human1 \n" 
-          +"Player's limit: 10, can still carry: 10\n" 
-          +"Carrying: [] \n" 
-          +"Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)\n" 
-          +"#0 Room: Armory, has items: [Revolver(Damage=3)]\n" 
-          +"Neighbor Rooms: Billiard Room, Dining Hall, Drawing Room\n",
+    assertEquals("Player type: Human Player\n"
+            + "Player's Name: human1 \n"
+            + "Player's limit: 10, can still carry: 10\n"
+            + "Carrying: [] \n"
+            + "Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)\n"
+            + "#0 Room: Armory, has items: [Revolver(Damage=3)]\n"
+            + "Neighbor Rooms: Billiard Room, Dining Hall, Drawing Room\n",
         ms2TestWorld.getOnePlayerAndRoomInfo("human1"));
   }
 
@@ -321,43 +317,29 @@ public class Ms2WorldImplementTest {
    * Tests the "Move" command for a player, which is expected to be successful.
    */
   @Test
-  public void testCmdPlayerMoveSuccess() {
-    try {
-      ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
-      ms2TestWorld.cmdPlayerMove("Billiard Room");
-      assertEquals("Billiard Room",
-          ms2TestWorld.getOnePlayerCurrentRoomName("TestPlayer"));
-
-    } catch (Exception e) {
-      fail(String.format("Exception occurred while moving the player. %s", e.getMessage()));
-    }
+  public void testCmdPlayerMoveSuccess() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
+    ms2TestWorld.cmdPlayerMove("Billiard Room");
+    assertEquals("Billiard Room",
+        ms2TestWorld.getOnePlayerCurrentRoomName("TestPlayer"));
   }
 
   /**
    * Tests the "Move" command for a player, which fails because the target room is not a neighbor.
    */
-  @Test
+  @Test(expected = IllegalAccessException.class)
   public void testCmdPlayerMoveFailedNonNeighbor() throws IllegalAccessException {
-    try {
-      ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
-      ms2TestWorld.cmdPlayerMove("Parlor");
-    } catch (Exception e) {
-      assertEquals("Player: TestPlayer can't move to Parlor, the target " 
-        +"room is not a neighbor of its current room: Armory!\n", e.getMessage());
-    }
+    ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
+    ms2TestWorld.cmdPlayerMove("Parlor");
   }
 
   /**
    * Tests the "Move" command for a player, which fails because the target room does not exist.
    */
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testCmdPlayerMoveFailedRoomNotExist() throws IllegalAccessException {
-    try {
-      ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
-      ms2TestWorld.cmdPlayerMove("NotExistRoomName");
-    } catch (Exception e) {
-      assertEquals("Error: NotExistRoomName room does not exist!", e.getMessage());
-    }
+    ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
+    ms2TestWorld.cmdPlayerMove("NotExistRoomName");
   }
 
 
@@ -366,81 +348,63 @@ public class Ms2WorldImplementTest {
    */
   @Test
   public void testCmdPlayerPickSuccess() throws IllegalAccessException {
-    try {
-      ms2TestWorld.addOnePlayer("TestPlayer", 18, false, 10);
-      ms2TestWorld.cmdPlayerPick("Duck Decoy");
-      String playerRes = ms2TestWorld.getOnePlayerAndRoomInfo("TestPlayer");
-      assertEquals("Player type: Human Player\n" 
-        +"Player's Name: TestPlayer \n" 
-        +"Player's limit: 10, can still carry: 9\n" 
-        +"Carrying: [Duck Decoy(Damage=3)] \n" 
-        +"Current Room: Trophy Room\n" 
-        +"#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]\n" 
-        +"Neighbor Rooms: Tennessee Room, Billiard Room, Dining Hall, Library\n", playerRes);
-
-    } catch (Exception e) {
-      throw e;
-    }
+    ms2TestWorld.addOnePlayer("TestPlayer", 18, false, 10);
+    ms2TestWorld.cmdPlayerPick("Duck Decoy");
+    String playerRes = ms2TestWorld.getOnePlayerAndRoomInfo("TestPlayer");
+    assertEquals("Player type: Human Player\n"
+        + "Player's Name: TestPlayer \n"
+        + "Player's limit: 10, can still carry: 9\n"
+        + "Carrying: [Duck Decoy(Damage=3)] \n"
+        + "Current Room: Trophy Room\n"
+        + "#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]\n"
+        + "Neighbor Rooms: Tennessee Room, Billiard Room, Dining Hall, Library\n", playerRes);
   }
 
   /**
    * Tests the "Pick" command for a player, which fails because the item is not in the room.
    */
-  @Test
-  public void testCmdPlayerPickFailedItemNotInRoom() {
-    try {
-      ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
-      ms2TestWorld.cmdPlayerPick("Bad Cream");
+  @Test(expected = IllegalArgumentException.class)
+  public void testCmdPlayerPickFailedItemNotInRoom() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
+    ms2TestWorld.cmdPlayerPick("Bad Cream");
 
-    } catch (Exception e) {
-      assertEquals("Error: Bad Cream not in Room 0 Armory", e.getMessage());
-    }
+
   }
 
   /**
    * Tests the "Pick" command for a player, which fails because the item does not exist in the
    * world.
    */
-  @Test
-  public void testCmdPlayerPickFailedItemNotInWorld() {
-    try {
-      ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
-      ms2TestWorld.cmdPlayerPick("InvalidItemName");
+  @Test(expected = IllegalArgumentException.class)
+  public void testCmdPlayerPickFailedItemNotInWorld() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
+    ms2TestWorld.cmdPlayerPick("InvalidItemName");
 
-    } catch (Exception e) {
-      assertEquals("Error: InvalidItemName not in Room 0 Armory", e.getMessage());
-    }
+
   }
 
   /**
    * Tests the "Pick" command for a player, which fails because the item name is null.
    */
-  @Test
-  public void testCmdPlayerPickFailedNullItem() {
-    try {
-      ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
-      ms2TestWorld.cmdPlayerPick("");
+  @Test(expected = IllegalArgumentException.class)
+  public void testCmdPlayerPickFailedNullItem() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
+    ms2TestWorld.cmdPlayerPick("");
 
-    } catch (Exception e) {
-      assertEquals("Error: cannot input get a empty itemName", e.getMessage());
-    }
+
   }
 
   /**
    * Tests the "Pick" command for a player, which fails because the player has reached the carrying
    * limit.
    */
-  @Test
-  public void testCmdPlayerPickFailedOverLimit() {
-    try {
-      ms2TestWorld.addOnePlayer("TestPlayer", 19, false, 1);
-      ms2TestWorld.cmdPlayerPick("Rat Poison");
-      ms2TestWorld.cmdPlayerPick("Piece of Rope");
+  @Test(expected = IllegalAccessException.class)
+  public void testCmdPlayerPickFailedOverLimit() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("TestPlayer", 19, false, 1);
+    ms2TestWorld.cmdPlayerPick("Rat Poison");
+    ms2TestWorld.cmdPlayerPick("Piece of Rope");
 
-    } catch (Exception e) {
-      assertEquals("Error pickUpOneItem: player-TestPlayer item list is full, " 
-        +"can't pickup: Piece of Rope", e.getMessage());
-    }
+
   }
 
   /**
@@ -448,28 +412,25 @@ public class Ms2WorldImplementTest {
    * capacity to pick. After pick item they are carrying the item Shoe Horn, and the item would no
    * longer in the same room.
    *
-   * @throws IllegalAccessException
+   * @throws IllegalAccessException Throw IllegalAccessException from the model.
    */
   @Test
   public void testCmdComputerActionPick() throws IllegalAccessException {
-    try {
-      ms2TestWorld.addOnePlayer("Com1", 12, true, 1);
-      assertEquals("#12 Room: Master Suite, has items: [Shoe Horn(Damage=2)]",
-          ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
-      ms2TestWorld.cmdComputerPlayerAction();
-      assertEquals("Player type: **Computer Player**\n" 
-            +"Player's Name: Com1 \n" 
-            +"Player's limit: 1, can still carry: 0\n" 
-            +"Carrying: [Shoe Horn(Damage=2)] \n" 
-            +"Current Room: Master Suite\n" 
-            +"#12 Room: Master Suite, has items: []\n" 
-            +"Neighbor Rooms: Tennessee Room, Library, Lilac Room, Nursery\n",
-          ms2TestWorld.getOnePlayerAndRoomInfo("Com1"));
-      assertEquals(null, ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
+    ms2TestWorld.addOnePlayer("Com1", 12, true, 1);
+    assertEquals("#12 Room: Master Suite, has items: [Shoe Horn(Damage=2)]",
+        ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
+    ms2TestWorld.cmdComputerPlayerAction();
+    assertEquals("Player type: **Computer Player**\n"
+            + "Player's Name: Com1 \n"
+            + "Player's limit: 1, can still carry: 0\n"
+            + "Carrying: [Shoe Horn(Damage=2)] \n"
+            + "Current Room: Master Suite\n"
+            + "#12 Room: Master Suite, has items: []\n"
+            + "Neighbor Rooms: Tennessee Room, Library, Lilac Room, Nursery\n",
+        ms2TestWorld.getOnePlayerAndRoomInfo("Com1"));
+    assertEquals(null, ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
 
-    } catch (Exception e) {
-      assertEquals("", e.getMessage());
-    }
+
   }
 
   /**
@@ -483,25 +444,22 @@ public class Ms2WorldImplementTest {
    */
   @Test
   public void testCmdComputerActionPickHighestDamage() throws IllegalAccessException {
-    try {
-      ms2TestWorld.addOnePlayer("Com1", 18, true, 1);
-      assertEquals("#18 Room: Trophy Room, has items: [Duck Decoy(Damage=3), " 
-        +"Monkey Hand(Damage=2)]", ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
-      ms2TestWorld.cmdComputerPlayerAction();
-      assertEquals("Player type: **Computer Player**\n" 
-            +"Player's Name: Com1 \n" 
-            +"Player's limit: 1, can still carry: 0\n" 
-            +"Carrying: [Duck Decoy(Damage=3)] \n" 
-            +"Current Room: Trophy Room\n" 
-            +"#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]\n" 
-            +"Neighbor Rooms: Tennessee Room, Billiard Room, Dining Hall, Library\n",
-          ms2TestWorld.getOnePlayerAndRoomInfo("Com1"));
-      assertEquals("#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]",
-          ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
+    ms2TestWorld.addOnePlayer("Com1", 18, true, 1);
+    assertEquals("#18 Room: Trophy Room, has items: [Duck Decoy(Damage=3), "
+        + "Monkey Hand(Damage=2)]", ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
+    ms2TestWorld.cmdComputerPlayerAction();
+    assertEquals("Player type: **Computer Player**\n"
+            + "Player's Name: Com1 \n"
+            + "Player's limit: 1, can still carry: 0\n"
+            + "Carrying: [Duck Decoy(Damage=3)] \n"
+            + "Current Room: Trophy Room\n"
+            + "#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]\n"
+            + "Neighbor Rooms: Tennessee Room, Billiard Room, Dining Hall, Library\n",
+        ms2TestWorld.getOnePlayerAndRoomInfo("Com1"));
+    assertEquals("#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]",
+        ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
 
-    } catch (Exception e) {
-      throw e;
-    }
+
   }
 
   /**
@@ -509,25 +467,22 @@ public class Ms2WorldImplementTest {
    * the room what can be picked info, it is none and then chose to move to next room. It will move
    * randomly, so there are two possible moved rooms both are checked with the if statement.
    *
-   * @throws IllegalAccessException
+   * @throws IllegalAccessException Throw IllegalAccessException from the model.
    */
   @Test
   public void testCmdComputerActionMoveDueToNoItemCanPick() throws IllegalAccessException {
-    try {
-      ms2TestWorld.addOnePlayer("Com1", 20, true, 1);
-      assertEquals(null, ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
-      String actionResult = ms2TestWorld.cmdComputerPlayerAction();
-      if (actionResult.contains("Piazza")) {
-        assertEquals("**Computer player**: Com1 MOVE to room: Piazza.\n",
-            actionResult);
-      } else {
-        assertEquals("**Computer player**: Com1 MOVE to room: Carriage House.\n",
-            actionResult);
-      }
-
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
+    ms2TestWorld.addOnePlayer("Com1", 20, true, 1);
+    assertEquals(null, ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
+    String actionResult = ms2TestWorld.cmdComputerPlayerAction();
+    if (actionResult.contains("Piazza")) {
+      assertEquals("**Computer player**: Com1 MOVE to room: Piazza.\n",
+          actionResult);
+    } else {
+      assertEquals("**Computer player**: Com1 MOVE to room: Carriage House.\n",
+          actionResult);
     }
+
+
   }
 
 
@@ -536,28 +491,25 @@ public class Ms2WorldImplementTest {
    * the room what can be picked info, it is none and then chose to move to next room. It will move
    * randomly, so there are two possible moved rooms both are checked with the if statement.
    *
-   * @throws IllegalAccessException
+   * @throws IllegalAccessException Throw IllegalAccessException from the model.
    */
-  @Test
+  @Test()
   public void testCmdComputerActionMoveDueToOverLimit() throws IllegalAccessException {
-    try {
-      ms2TestWorld.addOnePlayer("Com1", 7, true, 1);
-      String actionResult1 = ms2TestWorld.cmdComputerPlayerAction();
-      assertEquals("**Computer player**: Com1 PICK up Loud Noise with 2 damage.\n",
-          actionResult1);
+    ms2TestWorld.addOnePlayer("Com1", 7, true, 1);
+    String actionResult1 = ms2TestWorld.cmdComputerPlayerAction();
+    assertEquals("**Computer player**: Com1 PICK up Loud Noise with 2 damage.\n",
+        actionResult1);
 
-      String actionResult2 = ms2TestWorld.cmdComputerPlayerAction();
-      if (actionResult2.contains("Piazza")) {
-        assertEquals("**Computer player**: Com1 MOVE to room: Piazza.\n",
-            actionResult2);
-      } else {
-        assertEquals("**Computer player**: Com1 MOVE to room: Green House.\n",
-            actionResult2);
-      }
-
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
+    String actionResult2 = ms2TestWorld.cmdComputerPlayerAction();
+    if (actionResult2.contains("Piazza")) {
+      assertEquals("**Computer player**: Com1 MOVE to room: Piazza.\n",
+          actionResult2);
+    } else {
+      assertEquals("**Computer player**: Com1 MOVE to room: Green House.\n",
+          actionResult2);
     }
+
+
   }
 
   /**
@@ -565,29 +517,27 @@ public class Ms2WorldImplementTest {
    * picked item in 13 Nursery with Bad Cream and reaching carrying limit, then move to the
    * next room randomly. The if statement would catch and test both final room is valid.
    *
-   * @throws IllegalAccessException
+   * @throws IllegalAccessException Throw IllegalAccessException from the model.
    */
   @Test
   public void testCmdComputerActionMoveDueToLimitFull() throws IllegalAccessException {
-    try {
-      ms2TestWorld.addOnePlayer("Com1", 13, true, 1);
-      assertEquals("**Computer player**: Com1 PICK up Bad Cream with 2 damage.\n",
-          ms2TestWorld.cmdComputerPlayerAction());
-      String actionResult = ms2TestWorld.cmdComputerPlayerAction();
-      if (actionResult.contains("Library")){
-        assertEquals("**Computer player**: Com1 MOVE to room: Library.\n", actionResult);
-      }else {
-        assertEquals("**Computer player**: Com1 MOVE to room: Master Suite.\n",
-            actionResult);
-      }
-
-    } catch (Exception e) {
-      assertEquals("", e.getMessage());
+    ms2TestWorld.addOnePlayer("Com1", 13, true, 1);
+    assertEquals("**Computer player**: Com1 PICK up Bad Cream with 2 damage.\n",
+        ms2TestWorld.cmdComputerPlayerAction());
+    String actionResult = ms2TestWorld.cmdComputerPlayerAction();
+    if (actionResult.contains("Library")) {
+      assertEquals("**Computer player**: Com1 MOVE to room: Library.\n", actionResult);
+    } else {
+      assertEquals("**Computer player**: Com1 MOVE to room: Master Suite.\n",
+          actionResult);
     }
+
+
   }
 
   /**
-   * This test verifies that the game implementation properly enforces each player to take one action
+   * This test verifies that the game implementation properly enforces each player to take one
+   * action
    * at a time in a turn-based manner. Two players, "player1" and "player2," are added to the game.
    * The test ensures that after "player1" takes an action (LOOK, MOVE, or PICK), it is "player2's"
    * turn to perform the next action. This sequence is repeated with a combination of actions for
@@ -595,30 +545,27 @@ public class Ms2WorldImplementTest {
    *
    * @throws Exception if there's an exception during the test execution.
    */
-  @Test
-  public void testPlayerChangeTurnAfterOneAction() {
-    try {
-      ms2TestWorld.addOnePlayer("player1", 19, false, 1);
-      ms2TestWorld.addOnePlayer("player2", 15, false, 1);
+  @Test(expected = IllegalArgumentException.class)
+  public void testPlayerChangeTurnAfterOneAction() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("player1", 19, false, 1);
+    ms2TestWorld.addOnePlayer("player2", 15, false, 1);
 
-      // player1 LOOK then player2 action
-      ms2TestWorld.cmdPlayerLook();
-      assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // player1 LOOK then player2 action
+    ms2TestWorld.cmdPlayerLook();
+    assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-      // player1 MOVE then player2 action
-      ms2TestWorld.cmdPlayerMove("Kitchen");
-      assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // player1 MOVE then player2 action
+    ms2TestWorld.cmdPlayerMove("Kitchen");
+    assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-      // player1 PICK then player2 action
-      ms2TestWorld.cmdPlayerPick("Sharp Kinfe");
-      assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // player1 PICK then player2 action
+    ms2TestWorld.cmdPlayerPick("Sharp Kinfe");
+    assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
+
   }
 
   /**
@@ -632,36 +579,33 @@ public class Ms2WorldImplementTest {
    * @throws Exception if there's an exception during the test execution.
    */
   @Test
-  public void testPlayerChangeTurnOrderCorrect3() {
-    try {
-      ms2TestWorld.addOnePlayer("computer1", 19, true, 1);
-      ms2TestWorld.addOnePlayer("computer2", 15, true, 1);
-      ms2TestWorld.addOnePlayer("computer3", 15, true, 1);
+  public void testPlayerChangeTurnOrderCorrect3() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("computer1", 19, true, 1);
+    ms2TestWorld.addOnePlayer("computer2", 15, true, 1);
+    ms2TestWorld.addOnePlayer("computer3", 15, true, 1);
 
-      // The first computer player ("computer1") takes an action,
-      assertEquals("computer1", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
+    // The first computer player ("computer1") takes an action,
+    assertEquals("computer1", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
 
-      // then it's "computer2's" turn, 2 take action
-      assertEquals("computer2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
+    // then it's "computer2's" turn, 2 take action
+    assertEquals("computer2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
 
-      //then it's "computer3's" turn, 3 take action
-      assertEquals("computer3", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
+    //then it's "computer3's" turn, 3 take action
+    assertEquals("computer3", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
 
-      // Then back to 1's turn, 1 take action
-      assertEquals("computer1", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
+    // Then back to 1's turn, 1 take action
+    assertEquals("computer1", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
 
-      //Then 2's turn, after 2 is 3
-      assertEquals("computer2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
-      assertEquals("computer3", ms2TestWorld.getCurrentPlayerName());
+    //Then 2's turn, after 2 is 3
+    assertEquals("computer2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
+    assertEquals("computer3", ms2TestWorld.getCurrentPlayerName());
 
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
+
   }
 
   /**
@@ -671,31 +615,28 @@ public class Ms2WorldImplementTest {
    * @throws Exception if there's an exception during the test execution.
    */
   @Test
-  public void testTwoPlayersAlternateTurns4Actions() {
-    try {
-      // Add two players, "player1" and "player2."
-      ms2TestWorld.addOnePlayer("player1",0 , false, 1);
-      ms2TestWorld.addOnePlayer("player2", 14, false, 1);
+  public void testTwoPlayersAlternateTurns4Actions() throws IllegalAccessException {
+    // Add two players, "player1" and "player2."
+    ms2TestWorld.addOnePlayer("player1", 0, false, 1);
+    ms2TestWorld.addOnePlayer("player2", 14, false, 1);
 
-      // Player1's turn, take the first action (e.g., LOOK).
-      assertEquals("player1", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // Player1's turn, take the first action (e.g., LOOK).
+    assertEquals("player1", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-      // Player2's turn, they take the second action (e.g., MOVE).
-      assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerMove("Kitchen");
+    // Player2's turn, they take the second action (e.g., MOVE).
+    assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerMove("Kitchen");
 
-      // Player1's turn, they take the third action (e.g., PICK).
-      assertEquals("player1", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerPick("Revolver");
+    // Player1's turn, they take the third action (e.g., PICK).
+    assertEquals("player1", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerPick("Revolver");
 
-      // Player2's turn, they take the fourth action (e.g., LOOK).
-      assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // Player2's turn, they take the fourth action (e.g., LOOK).
+    assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-    }
+
   }
 
   /**
@@ -707,55 +648,53 @@ public class Ms2WorldImplementTest {
    *
    * @throws Exception if there's an exception during the test execution.
    */
-  @Test
-  public void testGameOverMaxTurnComputerPlayer() {
-    try {
-      ms2TestWorld.addOnePlayer("computer1", 19, true, 1);
-      ms2TestWorld.addOnePlayer("computer2", 15, true, 1);
-      ms2TestWorld.addOnePlayer("computer3", 15, true, 1);
+  @Test(expected = IllegalStateException.class)
+  public void testGameOverMaxTurnComputerPlayer() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("computer1", 19, true, 1);
+    ms2TestWorld.addOnePlayer("computer2", 15, true, 1);
+    ms2TestWorld.addOnePlayer("computer3", 15, true, 1);
 
-      // The first computer player ("computer1") takes an action,
-      assertEquals("computer1", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
+    // The first computer player ("computer1") takes an action,
+    assertEquals("computer1", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
 
-      // then it's "computer2's" turn, 2 takes an action
-      assertEquals("computer2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
+    // then it's "computer2's" turn, 2 takes an action
+    assertEquals("computer2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
 
-      // then it's "computer3's" turn, 3 takes an action
-      assertEquals("computer3", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
+    // then it's "computer3's" turn, 3 takes an action
+    assertEquals("computer3", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
 
-      // Then back to 1's turn, 1 takes an action
-      assertEquals("computer1", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
+    // Then back to 1's turn, 1 takes an action
+    assertEquals("computer1", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
 
-      // Then 2's turn, after 2, it's 3's turn
-      assertEquals("computer2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdComputerPlayerAction();
-      assertEquals("computer3", ms2TestWorld.getCurrentPlayerName());
+    // Then 2's turn, after 2, it's 3's turn
+    assertEquals("computer2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdComputerPlayerAction();
+    assertEquals("computer3", ms2TestWorld.getCurrentPlayerName());
 
-      // Turns 6-9:
-      ms2TestWorld.cmdComputerPlayerAction(); // turn 6
-      ms2TestWorld.cmdComputerPlayerAction(); // turn 7
-      ms2TestWorld.cmdComputerPlayerAction(); // turn 8
+    // Turns 6-9:
+    ms2TestWorld.cmdComputerPlayerAction(); // turn 6
+    ms2TestWorld.cmdComputerPlayerAction(); // turn 7
+    ms2TestWorld.cmdComputerPlayerAction(); // turn 8
 
-      // The total number of turns reaches the maximum limit (9).
-      // After this, any additional action attempt should result in the game ending.
-      assertEquals(ms2TestWorld.getTotalAllowedTurns(), ms2TestWorld.getCurrentTurnNumber());
+    // The total number of turns reaches the maximum limit (9).
+    // After this, any additional action attempt should result in the game ending.
+    assertEquals(ms2TestWorld.getTotalAllowedTurns(), ms2TestWorld.getCurrentTurnNumber());
 
-      // Attempting one more action after reaching the maximum turn limit should end the game.
-      ms2TestWorld.cmdComputerPlayerAction(); // turn 9
+    // Attempting one more action after reaching the maximum turn limit should end the game.
+    ms2TestWorld.cmdComputerPlayerAction(); // turn 9
 
-      // Verify that the game has ended.
-      assertEquals(true, ms2TestWorld.checkGameOver());
+    // Verify that the game has ended.
+    assertEquals(true, ms2TestWorld.checkGameOver());
 
-      // Attempting one more action after the game has ended should throw a game over error.
-      ms2TestWorld.cmdComputerPlayerAction(); // one more move (turn 10) would cause a Game Over message.
+    // Attempting one more action after the game has ended should throw a game over error.
+    ms2TestWorld.cmdComputerPlayerAction(); // one more move (turn 10) would cause a Game Over
+    // message.
 
-    } catch (Exception e) {
-      assertEquals("Error: Game Over, Computer player cannot take action!\n", e.getMessage());
-    }
+
   }
 
   /**
@@ -767,55 +706,52 @@ public class Ms2WorldImplementTest {
    *
    * @throws Exception if there's an exception during the test execution.
    */
-  @Test
+  @Test(expected = IllegalStateException.class)
   public void testGameOverMaxTurnHumanPlayerLook() {
-    try {
-      ms2TestWorld.addOnePlayer("player1", 19, false, 1);
-      ms2TestWorld.addOnePlayer("player2", 15, false, 1);
-      ms2TestWorld.addOnePlayer("player3", 15, false, 1);
+    ms2TestWorld.addOnePlayer("player1", 19, false, 1);
+    ms2TestWorld.addOnePlayer("player2", 15, false, 1);
+    ms2TestWorld.addOnePlayer("player3", 15, false, 1);
 
-      // The first human player ("player1") takes an action (LOOK).
-      assertEquals("player1", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // The first human player ("player1") takes an action (LOOK).
+    assertEquals("player1", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-      // Then it's "player2's" turn, 2 takes an action (LOOK).
-      assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // Then it's "player2's" turn, 2 takes an action (LOOK).
+    assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-      // Then it's "player3's" turn, 3 takes an action (LOOK).
-      assertEquals("player3", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // Then it's "player3's" turn, 3 takes an action (LOOK).
+    assertEquals("player3", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-      // Then back to 1's turn, 1 takes an action (LOOK).
-      assertEquals("player1", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
+    // Then back to 1's turn, 1 takes an action (LOOK).
+    assertEquals("player1", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
 
-      // Then 2's turn, after 2, it's 3's turn, and the cycle continues.
-      assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
-      ms2TestWorld.cmdPlayerLook();
-      assertEquals("player3", ms2TestWorld.getCurrentPlayerName());
+    // Then 2's turn, after 2, it's 3's turn, and the cycle continues.
+    assertEquals("player2", ms2TestWorld.getCurrentPlayerName());
+    ms2TestWorld.cmdPlayerLook();
+    assertEquals("player3", ms2TestWorld.getCurrentPlayerName());
 
-      // Turns 6-9 (LOOK actions):
-      ms2TestWorld.cmdPlayerLook(); // turn 6
-      ms2TestWorld.cmdPlayerLook(); // turn 7
-      ms2TestWorld.cmdPlayerLook(); // turn 8
+    // Turns 6-9 (LOOK actions):
+    ms2TestWorld.cmdPlayerLook(); // turn 6
+    ms2TestWorld.cmdPlayerLook(); // turn 7
+    ms2TestWorld.cmdPlayerLook(); // turn 8
 
-      // The total number of turns reaches the maximum limit (9).
-      // After this, any additional action attempt should result in the game ending.
-      assertEquals(ms2TestWorld.getTotalAllowedTurns(), ms2TestWorld.getCurrentTurnNumber());
+    // The total number of turns reaches the maximum limit (9).
+    // After this, any additional action attempt should result in the game ending.
+    assertEquals(ms2TestWorld.getTotalAllowedTurns(), ms2TestWorld.getCurrentTurnNumber());
 
-      // Attempting one more action after reaching the maximum turn limit should end the game.
-      ms2TestWorld.cmdPlayerLook(); // turn 9
+    // Attempting one more action after reaching the maximum turn limit should end the game.
+    ms2TestWorld.cmdPlayerLook(); // turn 9
 
-      // Verify that the game has ended.
-      assertEquals(true, ms2TestWorld.checkGameOver());
+    // Verify that the game has ended.
+    assertEquals(true, ms2TestWorld.checkGameOver());
 
-      // Attempting one more action after the game has ended should throw a game over error.
-      ms2TestWorld.cmdPlayerLook(); // one more move (turn 10) would cause a Game Over message.
+    // Attempting one more action after the game has ended should throw a game over error.
+    ms2TestWorld.cmdPlayerLook(); // one more move (turn 10) would cause a Game Over message.
 
-    } catch (Exception e) {
-      assertEquals("Error: Game Over cannot LOOK!\n", e.getMessage());
-    }
+
   }
 
 

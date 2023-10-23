@@ -2,6 +2,18 @@ package controller;
 
 import java.io.IOException;
 
+/**
+ * The CmdControllerImplement class is responsible for controlling and managing the command-line
+ * interface (CLI) for interacting with a game world.
+ * It provides methods for processing user input and generating output to the specified Appendable.
+ * This controller handles commands to move players, perform actions, look around, and pick up
+ * items in the game world.
+ * <p>
+ * The controller communicates with the provided World model to execute commands and retrieve game
+ * state information.
+ *
+ * @see Controller
+ */
 public interface Controller {
   /**
    * Starts the game loop, allowing the user to interact with the game world.

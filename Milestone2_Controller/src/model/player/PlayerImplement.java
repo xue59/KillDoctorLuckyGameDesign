@@ -1,22 +1,25 @@
 package model.player;
 
-import model.item.Item;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import model.item.Item;
 
+/**
+ * This is a Player implement model class. Implements interface Player to play the game kill dr
+ * lucky. It can create both human player or computer player.
+ */
 public class PlayerImplement implements Player {
   private final String name;
-  private int curRoomNum;
   private final boolean checkComputer;
   private final int limit;
   private final List<Item> itemList;
+  private int curRoomNum;
 
   /**
-   * Constructs a player with the specified name, initial room number, computer status, and item
-   * limit.
+   * Constructs a player with the specified name, initial room number, computer status, and limit.
    *
    * @param name           The name of the player.
    * @param initialRoomNum The initial room number where the player is located.
@@ -35,13 +38,13 @@ public class PlayerImplement implements Player {
     }
     // check room number is not negative
     if (initialRoomNum < 0) {
-      throw new IllegalArgumentException("PlayerImplement Error: initial room number cannot be " +
-          "negative!");
+      throw new IllegalArgumentException("PlayerImplement Error: initial room number cannot be "
+          + "negative!");
     }
     // check limit cannot be negative
     if (limit < 1) {
-      throw new IllegalArgumentException("PlayerImplement Error: player:" + name + " item " +
-          "limit cannot be negative or zero!!");
+      throw new IllegalArgumentException("PlayerImplement Error: player:" + name + " item "
+          + "limit cannot be negative or zero!!");
     }
     // assign to the local variable
     this.name = name;
@@ -74,8 +77,7 @@ public class PlayerImplement implements Player {
   /**
    * Check if the player is controlled by a computer (AI).
    *
-   * @return {@code true} if the player is controlled by a computer; {@code false} if it's a
-   * human player.
+   * @return {@code true} if the player is controlled by a computer; {@code false} if it's human.
    */
   @Override
   public boolean checkComputer() {
@@ -102,17 +104,19 @@ public class PlayerImplement implements Player {
     //check if the item player already duplicated, player cannot have two same item
     for (Item existItem : this.itemList) {
       if (existItem.equals(item)) {
-        throw new IllegalArgumentException(
-            "Error pickUpOneItem: player-" + this.name + " already " +
-                "have" + existItem.getName() + ", can't pickup!");
+        throw new IllegalArgumentException(String.format(
+            "Error pickUpOneItem: player-%s already has %s, can't pick up!",
+            this.name, existItem.getName()));
+
       }
     }
 
     // check new picked item cannot over player item limit
     if ((this.itemList.size() + 1) > this.limit) {
-      throw new IllegalAccessException(
-          "Error pickUpOneItem: player-" + this.name + " item list is " +
-              "full, can't pickup: " + item.getName());
+      throw new IllegalAccessException(String.format(
+          "Error pickUpOneItem: player-%s item list is full, can't pick up: %s",
+          this.name, item.getName()));
+
     }
     // pass all the check then add to item list
     this.itemList.add(item);
@@ -136,8 +140,7 @@ public class PlayerImplement implements Player {
    * Get a map containing information about the items in the player's inventory. The map associates
    * item names with their respective quantities.
    *
-   * @return A map where keys are item names, and values are the quantities of those items in the
-   * player's inventory.
+   * @param   destinationRoomNum Final target room number ot be moved to.
    */
   @Override
   public void moveToRoomNumber(int destinationRoomNum) {
@@ -152,8 +155,8 @@ public class PlayerImplement implements Player {
    * Get a map containing information about items in the player's inventory. The map associates
    * item names with their respective quantities.
    *
-   * @return A map where keys are item names, and values are the quantities of those items in the
-   * player's inventory.
+   * @return  A map where keys are item names, and values are the quantities of those items in the
+   *          player's inventory.
    */
   @Override
   public Map<String, Integer> getItemListMapInfo() {
@@ -225,8 +228,7 @@ public class PlayerImplement implements Player {
    * Checks if this player is equal to another object by comparing their hash codes.
    *
    * @param obj The object to compare with.
-   * @return {@code true} if the player is equal to the provided object based on their hash codes;
-   * {@code false} otherwise.
+   * @return {@code true} if the player is equal to the provided object based on their hash codes.
    */
   @Override
   public boolean equals(Object obj) {
