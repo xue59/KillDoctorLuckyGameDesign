@@ -22,16 +22,17 @@ public class Driver {
   public static void main(String[] args) throws IOException {
     // The default file name path & name
     // CustomerMap input file path: $ContentRoot$/res/customerWorld.txt
-    String fileName = "res/mansion2023.txt";
-    int totalPlayers = 2;
-    int totalTurns = 4;
+    String fileName = String.format("res/mansion2023.txt");
+    int totalPlayers = 3;
+    int totalTurns = 9;
 
     try {
       if (args.length < 3) {
-        System.out.println("Less than 3 arguments found! Staring game with default file, 2 " +
-            "players, 3 total turns!");
-//        System.out.println(
-//            "ex: Example run command: java -jar sampleRun.jar <$ModuleFileDir$/mansion2023.txt>");
+        System.out.println(String.format("Less than 3 arguments found! Staring game with " +
+            "default file, %d players, %d total turns!", totalPlayers, totalTurns));
+        System.out.println(
+            "ex: Example run command: java -jar sampleRun.jar <$ModuleFileDir$/mansion2023.txt> " +
+                "{totalPlayersNumber} {totalMaxTurnNumber}");
         System.out.println(String.format("Initiating with Default File.....>>>> %s  ", fileName));
       } else {
         fileName = args[0];
@@ -44,7 +45,7 @@ public class Driver {
       FileReader fileReader = new FileReader(fileName);
       CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(fileReader);
       World mainWorld = createHelper.createWorld();
-//      mainWorld.printWorld2dArray(); // print 2d world
+      //mainWorld.printWorld2dArray(); // print 2d world
       mainWorld.setTotalAllowedPlayers(totalPlayers); //set total players
       mainWorld.setTotalAllowedTurns(totalTurns); //set total turns
       System.out.println("Starting Game in console command Line >>>>>>>>>>:");
@@ -53,8 +54,7 @@ public class Driver {
       Readable input = new InputStreamReader(System.in);
       Appendable output = System.out;
 
-      Controller consoleController = new CmdControllerImplement(input,output
-          ,mainWorld);
+      Controller consoleController = new CmdControllerImplement(input, output, mainWorld);
       consoleController.startGame();
     } catch (IOException e) {
       throw new IOException("Error: unable to open file in Driver.");

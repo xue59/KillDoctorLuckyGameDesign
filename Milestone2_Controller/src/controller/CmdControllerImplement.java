@@ -10,12 +10,13 @@ import java.util.Scanner;
 import model.world.World;
 
 public class CmdControllerImplement implements Controller {
-  private World world;
+  private final World world;
   private final Scanner scanner;
   private final Appendable output;
   private final int totalAllowedPlayers;
   private final int totalAllowedTurns;
   private boolean quitFlag;
+
   public CmdControllerImplement(Readable input, Appendable output, World world) {
     this.scanner = new Scanner(input);
     this.output = output;
@@ -26,7 +27,11 @@ public class CmdControllerImplement implements Controller {
   }
 
   /**
+   * Starts the game loop, allowing the user to interact with the game world.
+   * Displays a menu with options to create a world map, add players, find a room,
+   * find a player, and start game turns. The user can also execute Order 66 to quit the program.
    *
+   * @throws IOException if an I/O error occurs while interacting with the game.
    */
   @Override
   public void startGame() throws IOException {
@@ -62,8 +67,8 @@ public class CmdControllerImplement implements Controller {
         case 66:
           //Execute order 66 to kill the program and Quit. Lol
           this.output.append("Executed Order 66 to kill and eliminate ALL controller program "
-              +"and Quit!\n");
-          quitFlag=true;
+              + "and Quit!\n");
+          quitFlag = true;
           return;
 
         default:
@@ -72,19 +77,30 @@ public class CmdControllerImplement implements Controller {
     }
   }
 
-
+  /**
+   * Displays the main menu options to the user, including creating a world map, adding players,
+   * finding a room,
+   * finding a player, starting game turns, and quitting the program.
+   *
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void displayMainMenuOptions() throws IOException {
     this.output.append("Main Menu: \n");
     this.output.append("(Select following operation (integer only)!)\n");
     this.output.append
-        ("0-Create a graphical representation of the world map PNG.\n"
-            + "1-Setup game by adding all " + totalAllowedPlayers + " players.\n"
+        (String.format("0-Create a graphical representation of the world map PNG.\n"
+            + "1-Setup game by adding all %d players.\n"
             + "2-Find a Room (Display information about specified room in the world).\n"
             + "3-Find a Player (Display information about specified player in the world).\n"
             + "4-Start game turns to play (Must setup all the players before play!)\n"
-            + "66-Quit and kill the program by using Order 66.\n");
+            + "66-Quit and kill the program by using Order 66.\n", totalAllowedPlayers));
   }
 
+  /**
+   * Loops to select an option from the main menu or return to the main menu.
+   *
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void loopToSelectMainMenu() throws IOException {
     try {
       output.append("Enter 'm' or 'M' to go back to Main Menu: ");
@@ -104,6 +120,11 @@ public class CmdControllerImplement implements Controller {
     }
   }
 
+  /**
+   * Loops to display information about a specific room in the world.
+   *
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void loopToDisplayOneRoomInfo() throws IOException {
     String inputName = null;
     try {
@@ -112,7 +133,8 @@ public class CmdControllerImplement implements Controller {
       this.output.append("\nWhich room do you want to check? "
           + "(Enter the exact room name from above list.)\n");
       inputName = this.scanner.nextLine().trim();
-      this.output.append(world.getOneRoomInfo(inputName) + "\n");
+      this.output.append(world.getOneRoomInfo(inputName));
+      this.output.append("\n");
       loopToSelectMainMenu();
     } catch (IllegalArgumentException e) {
       this.output.append(String.format("No room name found for: %s\n", inputName));
@@ -124,6 +146,11 @@ public class CmdControllerImplement implements Controller {
     }
   }
 
+  /**
+   * Loops to display information about a specific player in the world.
+   *
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void loopToDisplayOnePlayerInfo() throws IOException {
     //if no players added advise user go back to main menu to add players.
     if (world.getAllPlayerNames().size() == 0) {
@@ -140,7 +167,8 @@ public class CmdControllerImplement implements Controller {
       this.output.append("\nWhich player do you want to check? "
           + "(Enter the exact player name from the above list.)\n");
       inputName = this.scanner.nextLine().trim();
-      this.output.append(world.getOnePlayerAndRoomInfo(inputName) + "\n");
+      this.output.append(world.getOnePlayerAndRoomInfo(inputName));
+      this.output.append("\n");
       loopToSelectMainMenu();
     } catch (IllegalArgumentException e) {
       this.output.append(String.format("No player found for: %s\n", inputName));
@@ -152,13 +180,22 @@ public class CmdControllerImplement implements Controller {
     }
   }
 
-
+  /**
+   * Creates a graphical representation of the world map in PNG format.
+   *
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void createWorldMapPNG() throws IOException {
     this.world.createGraphBufferedImage();
     this.output.append("The world map png created in above directory.\n");
     loopToSelectMainMenu();
   }
 
+  /**
+   * Loops through the game turns and player actions.
+   *
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void loopToStartTurns() throws IOException {
 
     // if not enough player advise user to main to add more players
@@ -197,6 +234,12 @@ public class CmdControllerImplement implements Controller {
 
   }
 
+  /**
+   * Loops through a single player's turn during the game.
+   *
+   * @param curTurnNum the current turn number.
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void loopToOnePlayerTurn(int curTurnNum) throws IOException {
     String curTurnPlayerName = world.getCurrentPlayerName();
     boolean isCurPlayerComputer = world.isCurrentPlayerComputer();
@@ -237,11 +280,18 @@ public class CmdControllerImplement implements Controller {
         loopToSelectMainMenu();
         return;
       } catch (IllegalAccessException e) {
-        this.output.append(e.getMessage() + "Try a different command!\n");
+        this.output.append(e.getMessage());
+        this.output.append("Try a different command!\n");
       }
     }
   }
 
+  /**
+   * Handles the actions of a computer player during their turn.
+   *
+   * @param curTurnPlayerName the name of the current player.
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void computerPlayerTakeOneTurn(String curTurnPlayerName) throws IOException {
     this.output.append(String.format("**Computer player**: %s is taking action...\n",
         curTurnPlayerName));
@@ -261,10 +311,12 @@ public class CmdControllerImplement implements Controller {
   }
 
   /**
-   * @param curTurnPlayerName
-   * @throws IOException            IO Error
-   * @throws IllegalAccessException Error when cannot pick more item, player limit full.
-   * @throws IllegalStateException  Error when game is over.
+   * Allows a console player to pick up an item in the game.
+   *
+   * @param curTurnPlayerName the name of the current player.
+   * @throws IOException            if an I/O error occurs while interacting with the game.
+   * @throws IllegalAccessException if the player's bag is full.
+   * @throws IllegalStateException  if the game is over.
    */
   private void consolePlayerPick(String curTurnPlayerName)
       throws IOException, IllegalAccessException, IllegalStateException {
@@ -286,7 +338,7 @@ public class CmdControllerImplement implements Controller {
       PlayerPickCmd cmdPick = new PlayerPickCmd(inputItemName);
       try {
         cmdPickResult = cmdPick.execute(this.world);
-        if (!cmdPickResult.isEmpty()){
+        if (!cmdPickResult.isEmpty()) {
           output.append(cmdPickResult);
           output.append(String.format("Player: %s picked up item: %s SUCCESS!\n",
               curTurnPlayerName, inputItemName));
@@ -309,6 +361,12 @@ public class CmdControllerImplement implements Controller {
   }
 
 
+  /**
+   * Allows a console player to look around the room.
+   *
+   * @throws IOException            if an I/O error occurs while interacting with the game.
+   * @throws IllegalAccessException if the action is not allowed.
+   */
   private void consolePlayerLook()
       throws IOException, IllegalAccessException {
     // using command design pattern to execute the Look command
@@ -316,6 +374,12 @@ public class CmdControllerImplement implements Controller {
     output.append(cmdLook.execute(this.world));
   }
 
+  /**
+   * Allows a console player to move to a different room.
+   *
+   * @param curTurnPlayerName the name of the current player.
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void consolePlayerMove(String curTurnPlayerName) throws IOException {
     String playerCurRoom = world.getOnePlayerCurrentRoomName(curTurnPlayerName);
     output.append(
@@ -339,8 +403,8 @@ public class CmdControllerImplement implements Controller {
         output.append(e.getMessage());
         output.append("Check your room name for typo and case sensitivity!\n");
       } catch (NullPointerException e) {
-      output.append(e.getMessage());
-      output.append("Enter a valid room name again!\n");
+        output.append(e.getMessage());
+        output.append("Enter a valid room name again!\n");
       } catch (IllegalStateException e) {
         // Game Over state!
         throw new IllegalStateException(
@@ -353,7 +417,11 @@ public class CmdControllerImplement implements Controller {
     }
   }
 
-
+  /**
+   * Loops to add all players to the game.
+   *
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void loopToAddAllPlayers() throws IOException {
     int count = 1;
     while (world.getAllPlayerNames().size() < world.getTotalAllowedPlayers()) {
@@ -370,6 +438,11 @@ public class CmdControllerImplement implements Controller {
     loopToSelectMainMenu();
   }
 
+  /**
+   * Adds a single player to the game.
+   *
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void addOnePlayer() throws IOException {
     try {
       String playerName;
@@ -412,6 +485,13 @@ public class CmdControllerImplement implements Controller {
     }
   }
 
+  /**
+   * Checks if the user input string represents "true" or "false" and returns a boolean value.
+   *
+   * @param in the user input string.
+   * @return true if the input represents "true" or "yes," false if it represents "false" or "no."
+   * @throws IllegalArgumentException if the input is not recognized as a valid boolean value.
+   */
   private boolean checkInputStringTrueFalse(String in) {
     if (in != null) {
       in = in.toLowerCase(); // Convert the input to lowercase for case-insensitivity

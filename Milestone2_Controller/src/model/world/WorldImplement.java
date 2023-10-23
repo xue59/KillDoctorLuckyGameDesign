@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.imageio.ImageIO;
+import model.drlucky.DrLucky;
 import model.item.Item;
 import model.player.Player;
 import model.player.PlayerImplement;
-import model.drlucky.DrLucky;
 import model.room.Room;
 
 /**
@@ -186,7 +186,9 @@ public class WorldImplement implements World {
 
     //check find all the item in the room & append to the string
     StringBuilder roomInfo = new StringBuilder();
-    roomInfo.append(room.toString() + "\n");
+    roomInfo.append(room.toString());
+    roomInfo.append("\n");
+
 
     //check if DrLucky in this room
     Room drLuckyRoom = this.roomList.get(drLucky.getCurrentRoomNumber());
@@ -236,7 +238,7 @@ public class WorldImplement implements World {
     }
 
     if (player == null) {
-      throw new IllegalArgumentException("Player not found: " + playerName);
+      throw new IllegalArgumentException(String.format("Player not found: %s", playerName));
     }
 
     // Get the player's current room
@@ -248,13 +250,16 @@ public class WorldImplement implements World {
     // Build the player and room information string
     StringBuilder playerRoomInfo = new StringBuilder();
     playerRoomInfo.append(player.toString());
-    playerRoomInfo.append("Current Room: " + playerRoom.getRoomName());
-    if(drLucky.getCurrentRoomNumber() == playerRoom.getRoomNumber()){
+    playerRoomInfo.append(String.format("Current Room: %s", playerRoom.getRoomName()));
+    if (drLucky.getCurrentRoomNumber() == playerRoom.getRoomNumber()) {
       playerRoomInfo.append(String.format(" (**Dr.Lucky**(%s HP=%d) is in this #%d room.)",
-          drLucky.getName(), drLucky.getCurrentHp(),drLucky.getCurrentRoomNumber()));
+          drLucky.getName(), drLucky.getCurrentHp(), drLucky.getCurrentRoomNumber()));
     }
-    playerRoomInfo.append("\n"+playerRoom.toString() + "\n"); //add room#, name and items in room.
-    playerRoomInfo.append("Neighbor Rooms: " + String.join(", ", neighborRooms) + "\n");
+    playerRoomInfo.append(String.format("\n%s\n", playerRoom.toString())); //add room#, name
+    // and items in room.
+    playerRoomInfo.append(String.format("Neighbor Rooms: %s\n",
+        String.join(", ", neighborRooms)));
+
 
     return playerRoomInfo.toString();
   }
@@ -450,12 +455,12 @@ public class WorldImplement implements World {
   /**
    * Add a human or computer player into the game world.
    *
-   * @param name            String of the player name.
+   * @param name           String of the player name.
    * @param initialRoomNum Int of player's initial room number index base 0.
    * @param limit          Player's limit for carrying number of items.
    * @param checkComputer  Ture if it is a computer player, otherwise false.
    * @throws IllegalArgumentException Due to invalid input.
-   * @throws NullPointerException Due to invalid input.
+   * @throws NullPointerException     Due to invalid input.
    */
   @Override
   public void addOnePlayer(String name, int initialRoomNum, boolean checkComputer, int limit)
@@ -484,7 +489,7 @@ public class WorldImplement implements World {
    *
    * @param roomName The name of the room to which the player should move.
    * @throws IllegalArgumentException If the provided room name is not valid.
-   * @throws IllegalAccessException If there is an illegal access attempt during the move.
+   * @throws IllegalAccessException   If there is an illegal access attempt during the move.
    */
   public void cmdPlayerMove(String roomName)
       throws IllegalAccessException, IllegalStateException, IllegalArgumentException {
@@ -560,7 +565,7 @@ public class WorldImplement implements World {
   /**
    * Allow the current player to pick up an item in the room.
    *
-   * @param inputItemName             The name of the item to be picked up.
+   * @param inputItemName The name of the item to be picked up.
    * @throws NullPointerException     If the input item name is Null.
    * @throws IllegalArgumentException If player already have duplicated item, cannot pick up.
    * @throws IllegalAccessException   If player meet bag limit cannot pick any more item.
@@ -589,8 +594,9 @@ public class WorldImplement implements World {
    * 3rd if player cannot move,
    * it will look.
    * Perform a computer player's action in the game and return the result.
+   *
    * @return The result of the computer player's action.
-   * @throws IllegalStateException If the game is illegal state for the computer player's action.
+   * @throws IllegalStateException  If the game is illegal state for the computer player's action.
    * @throws IllegalAccessException If there is an illegal access attempt during the action.
    */
   @Override
@@ -599,7 +605,7 @@ public class WorldImplement implements World {
       throw new IllegalStateException("Error: Game Over, Computer player cannot take action!\n");
     }
 
-    if ( !isCurrentPlayerComputer()){
+    if (!isCurrentPlayerComputer()) {
       throw new IllegalStateException(
           String.format("Error: the cur player: %s is not a computer.\n",
               this.playerList.get(curPlayerIndex).getPlayerName()));
@@ -660,10 +666,9 @@ public class WorldImplement implements World {
     // If the computer player cannot move to a neighboring room.
     // Then perform a "look" action.
     String lookResult = cmdPlayerLook();
-    return ("**Computer player**: "
-        + curPlayer.getPlayerName()
-        + " performed a LOOK action.\n"
-        + lookResult);
+    return String.format("**Computer player**: %s performed a LOOK action.\n%s",
+        curPlayer.getPlayerName(), lookResult);
+
   }
 
 
@@ -700,7 +705,6 @@ public class WorldImplement implements World {
   }
 
   /**
-   *
    * @param roomName String or the room name input.
    * @return Room a Room type of the finding room.
    */

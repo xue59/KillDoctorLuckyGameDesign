@@ -89,12 +89,12 @@ public interface World {
   /**
    * Add a human or computer player into the game world.
    *
-   * @param name            String of the player name.
+   * @param name           String of the player name.
    * @param initialRoomNum Int of player's initial room number index base 0.
    * @param limit          Player's limit for carrying number of items.
    * @param checkComputer  Ture if it is a computer player, otherwise false.
    * @throws IllegalArgumentException Due to invalid input.
-   * @throws NullPointerException Due to invalid input.
+   * @throws NullPointerException     Due to invalid input.
    */
   void addOnePlayer(String name, int initialRoomNum, boolean checkComputer, int limit)
       throws IllegalArgumentException, NullPointerException;
@@ -131,7 +131,7 @@ public interface World {
    * Perform a computer player's action in the game and return the result.
    *
    * @return The result of the computer player's action.
-   * @throws IllegalStateException If the game is illegal state for the computer player's action.
+   * @throws IllegalStateException  If the game is illegal state for the computer player's action.
    * @throws IllegalAccessException If there is an illegal access attempt during the action.
    */
   String cmdComputerPlayerAction()
@@ -142,7 +142,7 @@ public interface World {
    *
    * @param roomName The name of the room to which the player should move.
    * @throws IllegalArgumentException If the provided room name is not valid.
-   * @throws IllegalAccessException If there is an illegal access attempt during the move.
+   * @throws IllegalAccessException   If there is an illegal access attempt during the move.
    */
   void cmdPlayerMove(String roomName)
       throws IllegalArgumentException, IllegalAccessException;
@@ -160,10 +160,10 @@ public interface World {
    * Allow the current player to pick up an item in the room.
    *
    * @param inputItemName The name of the item to be picked up.
-   * @throws NullPointerException If the item name is null.
+   * @throws NullPointerException     If the item name is null.
    * @throws IllegalArgumentException If item name is not valid, or if picking up is not allowed.
-   * @throws IllegalAccessException If there is an illegal access attempt during item pickup.
-   * @throws IllegalStateException If item pickup is not allowed in the current state.
+   * @throws IllegalAccessException   If there is an illegal access attempt during item pickup.
+   * @throws IllegalStateException    If item pickup is not allowed in the current state.
    */
   void cmdPlayerPick(String inputItemName)
       throws NullPointerException, IllegalArgumentException, IllegalAccessException,

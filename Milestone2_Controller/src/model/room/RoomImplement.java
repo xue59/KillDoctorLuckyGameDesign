@@ -33,7 +33,7 @@ public class RoomImplement implements Room {
    *                                  negative, or the coordinates are invalid.
    */
   public RoomImplement(String roomName, int roomNumber, int topRowY, int topColX, int botRowY,
-      int botColX) throws IllegalArgumentException {
+                       int botColX) throws IllegalArgumentException {
     //check room name cannot be empty or Null
     if (roomName.isEmpty() || roomName == null) {
       throw new IllegalArgumentException("Error: room name can not be empty or null.");
@@ -86,8 +86,8 @@ public class RoomImplement implements Room {
   /**
    * Gets the coordinates of the room.
    *
-   * @return  An array of integers representing the room's coordinates in the format [topColX,
-   *          topRowY, botColX, botRowY].
+   * @return An array of integers representing the room's coordinates in the format [topColX,
+   * topRowY, botColX, botRowY].
    */
   @Override
   public int[] getRoomCoordinate() {

@@ -36,6 +36,7 @@ public class CmdControllerImplementTest {
 
   /**
    * This method test the controller can start create a graph representation.
+   *
    * @throws IOException
    */
   @Test
@@ -50,6 +51,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test quit command can successfully quit.
+   *
    * @throws IOException
    */
   @Test
@@ -66,6 +68,7 @@ public class CmdControllerImplementTest {
 
   /**
    * This method test the controller can start successfully and enter welcome screen.
+   *
    * @throws IOException
    */
   @Test
@@ -74,7 +77,7 @@ public class CmdControllerImplementTest {
       Readable input = new StringReader(" \n");
       Controller cmdController = new CmdControllerImplement(input, this.outGameLog, this.realWorld);
       cmdController.startGame();
-    } catch (NoSuchElementException e){
+    } catch (NoSuchElementException e) {
       // End for waiting user input by catching no user input Exception error
       assertEquals("No line found", e.getMessage());
     }
@@ -95,6 +98,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test check one room command return correct room info with one item in the room.
+   *
    * @throws IOException
    */
   @Test
@@ -109,6 +113,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test check one room command return correct room info with one item in the room.
+   *
    * @throws IOException
    */
   @Test
@@ -121,12 +126,13 @@ public class CmdControllerImplementTest {
     // The correct return string should contain correct command result info
 //    assertEquals("exp",output.toString());
     assertTrue(output.toString().contains("#2 Room: Carriage House, has items: [Chain Saw"
-        +"(Damage=4), Big Red Hammer(Damage=4)]\n"));
+        + "(Damage=4), Big Red Hammer(Damage=4)]\n"));
   }
 
   /**
    * Test check one room command return correct room info.
    * This room contain other players and target, this case we checked room Armory.
+   *
    * @throws IOException
    */
   @Test
@@ -148,6 +154,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test to add 2 human player success.
+   *
    * @throws IOException
    */
   @Test
@@ -170,8 +177,10 @@ public class CmdControllerImplementTest {
         "Player's limit: 1, can still carry: 1\n" +
         "Carrying: [] "));
   }
+
   /**
    * Test add human player & computer player mixed success.
+   *
    * @throws IOException
    */
   @Test
@@ -197,6 +206,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test add 2 computer player mixed success.
+   *
    * @throws IOException
    */
   @Test
@@ -222,12 +232,14 @@ public class CmdControllerImplementTest {
 
   /**
    * Test human player can move by 1 success with Move command.
+   *
    * @throws IOException
    */
   @Test
   public void testHumanPlayerMove1() throws IOException {
-    Readable input = new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n" +
-        "move\n Kitchen\n m\n 66\n");
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n" +
+            "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
     Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
     testConsole.startGame();
@@ -250,12 +262,14 @@ public class CmdControllerImplementTest {
 
   /**
    * Test human player can move continuously in two turns.
+   *
    * @throws IOException
    */
   @Test
   public void testHumanPlayerMove2() throws IOException {
-    Readable input = new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n" +
-        "move\n Kitchen\n m\n 66\n");
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n" +
+            "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
     Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
     testConsole.startGame();
@@ -267,12 +281,14 @@ public class CmdControllerImplementTest {
 
   /**
    * Test computer player can move 1 turn.
+   *
    * @throws IOException
    */
   @Test
   public void testComputerPlayerMove() throws IOException {
-    Readable input = new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n" +
-        "move\n Kitchen\n m\n 66\n");
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n" +
+            "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
     Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
     testConsole.startGame();
@@ -286,12 +302,14 @@ public class CmdControllerImplementTest {
 
   /**
    * Test computer player can Pick Item when needed.
+   *
    * @throws IOException
    */
   @Test
   public void testComputerPlayerPick() throws IOException {
-    Readable input = new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n" +
-        "move\n Kitchen\n m\n 66\n");
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n" +
+            "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
     Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
     testConsole.startGame();
@@ -306,6 +324,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test human player can Pick Item when needed.
+   *
    * @throws IOException
    */
   @Test
@@ -329,6 +348,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test human player can use Look around command.
+   *
    * @throws IOException
    */
   @Test
@@ -353,6 +373,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test check info about one computer player.
+   *
    * @throws IOException
    */
   @Test
@@ -376,6 +397,7 @@ public class CmdControllerImplementTest {
 
   /**
    * Test check info about one Human player.
+   *
    * @throws IOException
    */
   @Test
@@ -403,7 +425,6 @@ public class CmdControllerImplementTest {
   }
 
 
-
   /**
    * Test method to ensure that an IllegalStateException is thrown when the Appendable fails.
    */
@@ -413,7 +434,7 @@ public class CmdControllerImplementTest {
     // Here we are passing it of an Appendable that always fails
     StringReader input = new StringReader("0876 2");
     Appendable gameLog = new FailingAppendable();
-    Controller c = new CmdControllerImplement(input,gameLog, this.realWorld);
+    Controller c = new CmdControllerImplement(input, gameLog, this.realWorld);
     try {
       c.startGame();
     } catch (IOException e) {

@@ -11,10 +11,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+/**
+ * This class contains unit tests for the `WorldImplement` class in the context of the Ms2 project.
+ */
 public class Ms2WorldImplementTest {
 
   private WorldImplement ms2TestWorld;
 
+  /**
+   * Sets up the test environment by creating a test world with specific properties.
+   */
   @Before
   public void setUp() {
     try {
@@ -29,21 +35,33 @@ public class Ms2WorldImplementTest {
     }
   }
 
+  /**
+   * Tests the retrieval of the world name.
+   */
   @Test
   public void testWorldName() {
     assertEquals("Doctor Lucky's Mansion", ms2TestWorld.getWorldName());
   }
 
+  /**
+   * Tests the retrieval of the total number of rooms in the world.
+   */
   @Test
   public void testTotalRooms() {
     assertEquals(21, ms2TestWorld.getTotalOfRoom());
   }
 
+  /**
+   * Tests the retrieval of the total number of items in the world.
+   */
   @Test
   public void testTotalItems() {
     assertEquals(20, ms2TestWorld.getTotalOfItem());
   }
 
+  /**
+   * Tests the retrieval of information about a specific room.
+   */
   @Test
   public void testGetOneRoomInfo() {
     String roomInfo = ms2TestWorld.getOneRoomInfo("Library");
@@ -52,22 +70,28 @@ public class Ms2WorldImplementTest {
     // Add more checks based on the expected format of room information
   }
 
+  /**
+   * Tests the retrieval of player and room information when the player is not carrying any items.
+   */
   @Test
   public void testGetOnePlayerAndRoomInfoNoCarryingItem() {
     ms2TestWorld.addOnePlayer("human1", 4, false, 10);
     ms2TestWorld.addOnePlayer("computer2", 4, true, 11);
     String playerInfo = ms2TestWorld.getOnePlayerAndRoomInfo("human1");
     assertNotNull(playerInfo);
-    assertEquals("Player type: Human Player\n" +
-        "Player's Name: human1 \n" +
-        "Player's limit: 10, can still carry: 10\n" +
-        "Carrying: [] \n" +
-        "Current Room: Drawing Room\n" +
-        "#4 Room: Drawing Room, has items: [Letter Opener(Damage=2)]\n" +
-        "Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
+    assertEquals("Player type: Human Player\n" 
+      +"Player's Name: human1 \n" 
+      +"Player's limit: 10, can still carry: 10\n" 
+      +"Carrying: [] \n" 
+      +"Current Room: Drawing Room\n" 
+      +"#4 Room: Drawing Room, has items: [Letter Opener(Damage=2)]\n" 
+      +"Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
 
   }
 
+  /**
+   * Tests the retrieval of player and room information when the player is carrying one item.
+   */
   @Test
   public void testGetOnePlayerAndRoomInfoCarrying1Item() throws IllegalAccessException {
     ms2TestWorld.addOnePlayer("human1", 4, false, 10);
@@ -75,15 +99,18 @@ public class Ms2WorldImplementTest {
     ms2TestWorld.cmdPlayerPick("Letter Opener");
     String playerInfo = ms2TestWorld.getOnePlayerAndRoomInfo("human1");
     assertNotNull(playerInfo);
-    assertEquals("Player type: Human Player\n" +
-        "Player's Name: human1 \n" +
-        "Player's limit: 10, can still carry: 9\n" +
-        "Carrying: [Letter Opener(Damage=2)] \n" +
-        "Current Room: Drawing Room\n" +
-        "#4 Room: Drawing Room, has items: []\n" +
-        "Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
+    assertEquals("Player type: Human Player\n" 
+      +"Player's Name: human1 \n" 
+      +"Player's limit: 10, can still carry: 9\n" 
+      +"Carrying: [Letter Opener(Damage=2)] \n" 
+      +"Current Room: Drawing Room\n" 
+      +"#4 Room: Drawing Room, has items: []\n" 
+      +"Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
   }
 
+  /**
+   * Tests the retrieval of player and room information when the player is carrying two items.
+   */
   @Test
   public void testGetOnePlayerAndRoomInfoCarrying2Items() throws IllegalAccessException {
     ms2TestWorld.addOnePlayer("human1", 6, false, 10);
@@ -91,15 +118,18 @@ public class Ms2WorldImplementTest {
     ms2TestWorld.cmdPlayerPick("Pinking Shears");
     String playerInfo = ms2TestWorld.getOnePlayerAndRoomInfo("human1");
     assertNotNull(playerInfo);
-    assertEquals("Player type: Human Player\n" +
-        "Player's Name: human1 \n" +
-        "Player's limit: 10, can still carry: 8\n" +
-        "Carrying: [Trowel(Damage=2), Pinking Shears(Damage=2)] \n" +
-        "Current Room: Green House\n" +
-        "#6 Room: Green House, has items: []\n" +
-        "Neighbor Rooms: Hedge Maze\n", playerInfo);
+    assertEquals("Player type: Human Player\n" 
+      +"Player's Name: human1 \n" 
+      +"Player's limit: 10, can still carry: 8\n" 
+      +"Carrying: [Trowel(Damage=2), Pinking Shears(Damage=2)] \n" 
+      +"Current Room: Green House\n" 
+      +"#6 Room: Green House, has items: []\n" 
+      +"Neighbor Rooms: Hedge Maze\n", playerInfo);
   }
 
+  /**
+   * Tests the "Look" command when there are no items available in the room.
+   */
   @Test
   public void testCmdLookNoItemAvailableInRoom() {
     ms2TestWorld.addOnePlayer("human1", 3, false, 10);
@@ -107,14 +137,17 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-        "You (player: human1) are currently in room #3 Dining Hall and can be seen from " +
-            "rooms: [Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing " +
-            "Room, " +
-            "Kitchen, Parlor]\n" +
-            "#3 Room: Dining Hall, has items: []\n" +
-            "Players in the same room: computer2, \n", human1LookRes);
+      "You (player: human1) are currently in room #3 Dining Hall and can be seen from "
+          +"rooms: [Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing " 
+          +"Room, " 
+          +"Kitchen, Parlor]\n" 
+          +"#3 Room: Dining Hall, has items: []\n" 
+          +"Players in the same room: computer2, \n", human1LookRes);
   }
 
+  /**
+   * Tests the "Look" command when there are two items in the room.
+   */
   @Test
   public void testCmdLookWith2ItemsSuccess() {
     ms2TestWorld.addOnePlayer("human1", 2, false, 10);
@@ -122,14 +155,17 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-        "You (player: human1) are currently in room #2 Carriage " +
-            "House and can be seen from rooms:" +
-            " [Winter Garden]\n" +
-            "#2 Room: Carriage House, has items: [Chain Saw(Damage=4), " +
-            "Big Red Hammer(Damage=4)]\n" +
-            "Players in the same room: computer2, \n", human1LookRes);
+      "You (player: human1) are currently in room #2 Carriage "
+          +"House and can be seen from rooms:" 
+          +" [Winter Garden]\n" 
+          +"#2 Room: Carriage House, has items: [Chain Saw(Damage=4), " 
+          +"Big Red Hammer(Damage=4)]\n" 
+          +"Players in the same room: computer2, \n", human1LookRes);
   }
 
+  /**
+   * Tests the "Look" command when there is one item in the room.
+   */
   @Test
   public void testCmdLookWith1ItemSuccess() {
     ms2TestWorld.addOnePlayer("human1", 15, false, 10);
@@ -137,12 +173,15 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-        "You (player: human1) are currently in room #15 Piazza " +
-            "and can be seen from rooms: [Winter Garden, Foyer, Hedge Maze]\n" +
-            "#15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n" +
-            "Players in the same room: computer2, \n", human1LookRes);
+      "You (player: human1) are currently in room #15 Piazza "
+          +"and can be seen from rooms: [Winter Garden, Foyer, Hedge Maze]\n" 
+          +"#15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n" 
+          +"Players in the same room: computer2, \n", human1LookRes);
   }
 
+  /**
+   * Tests the "Look" command when Dr. Lucky has appeared in the room.
+   */
   @Test
   public void testCmdLookWithNoDrLucky() {
     ms2TestWorld.addOnePlayer("human1", 15, false, 10);
@@ -150,42 +189,50 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-        "You (player: human1) are currently in room #15 Piazza " +
-            "and can be seen from rooms: [Winter Garden, Foyer, Hedge Maze]\n" +
-            "#15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n" +
-            "Players in the same room: computer2, \n", human1LookRes);
+      "You (player: human1) are currently in room #15 Piazza "
+          +"and can be seen from rooms: [Winter Garden, Foyer, Hedge Maze]\n" 
+          +"#15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n" 
+          +"Players in the same room: computer2, \n", human1LookRes);
   }
 
+  /**
+   * Tests the "Look" command when there are no other players in the room.
+   */
   @Test
   public void testCmdLookWithDrLuckyAppeared() {
     ms2TestWorld.addOnePlayer("human1", 0, false, 10);
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-        "You (player: human1) are currently in " +
-            "room #0 Armory and can be seen from rooms: " +
-            "[Billiard Room, Dining Hall, Drawing Room]\n" +
-            "#0 Room: Armory, has items: [Revolver(Damage=3)]\n" +
-            "**Dr. Lucky is in the room: Target name: Doctor Lucky, " +
-            "Current HP: 50, Current room " +
-            "index: 0\nPlayers in the same room: \n", human1LookRes);
+      "You (player: human1) are currently in "
+          +"room #0 Armory and can be seen from rooms: " 
+          +"[Billiard Room, Dining Hall, Drawing Room]\n" 
+          +"#0 Room: Armory, has items: [Revolver(Damage=3)]\n" 
+          +"**Dr. Lucky is in the room: Target name: Doctor Lucky, " 
+          +"Current HP: 50, Current room " 
+          +"index: 0\nPlayers in the same room: \n", human1LookRes);
   }
 
+  /**
+   * Tests the "Look" command when there are no other players in the room.
+   */
   @Test
   public void testCmdLookWithNoOtherPlayer() {
     ms2TestWorld.addOnePlayer("human1", 2, false, 10);
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room #2 Carriage " +
-            "House and can be seen from rooms:" +
-            " [Winter Garden]\n" +
-            "#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" +
-            "]\n" +
-            "Players in the same room: \n", human1LookRes);
+    assertEquals("You (player: human1) are currently in room #2 Carriage "
+          +"House and can be seen from rooms:" 
+          +" [Winter Garden]\n" 
+          +"#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" 
+          +"]\n" 
+          +"Players in the same room: \n", human1LookRes);
 
   }
 
+  /**
+   * Tests the "Look" command when there are 1 other players in the room.
+   */
   @Test
   public void testCmdLookWith1OtherPlayer() {
     ms2TestWorld.addOnePlayer("human1", 2, false, 10);
@@ -193,15 +240,18 @@ public class Ms2WorldImplementTest {
 
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room #2 Carriage House and can be seen from rooms:" +
-            " [Winter Garden]\n" +
-            "#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" +
-            "]\n" +
-            "Players in the same room: human2, \n", human1LookRes);
+    assertEquals("You (player: human1) are currently in room #2 "
+          + "Carriage House and can be seen from rooms:"
+          +" [Winter Garden]\n" 
+          +"#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" 
+          +"]\n" 
+          +"Players in the same room: human2, \n", human1LookRes);
 
   }
 
+  /**
+   * Tests the "Look" command when there are two other players in the room.
+   */
   @Test
   public void testCmdLookWith2OtherPlayer() {
     ms2TestWorld.addOnePlayer("human1", 2, false, 10);
@@ -211,15 +261,18 @@ public class Ms2WorldImplementTest {
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
     assertEquals(
-        "You (player: human1) are currently in room #2 Carriage " +
-            "House and can be seen from rooms:" +
-            " [Winter Garden]\n" +
-            "#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" +
-            "]\nPlayers in the same room: human2, human3, \n", human1LookRes);
+      "You (player: human1) are currently in room #2 Carriage "
+          +"House and can be seen from rooms:" 
+          +" [Winter Garden]\n" 
+          +"#2 Room: Carriage House, has items: [Chain Saw(Damage=4), Big Red Hammer(Damage=4)" 
+          +"]\nPlayers in the same room: human2, human3, \n", human1LookRes);
 
   }
 
 
+  /**
+   * Tests the retrieval of information about Dr. Lucky.
+   */
   @Test
   public void testGetDrLuckyInfo() {
     String drLuckyInfo = ms2TestWorld.getDrLuckyInfo();
@@ -227,57 +280,76 @@ public class Ms2WorldImplementTest {
     // Add checks for the expected format of DrLucky information
   }
 
+  /**
+   * Tests the setting of the total number of allowed players.
+   */
   @Test
   public void testSetTotalAllowedPlayers() {
     ms2TestWorld.setTotalAllowedPlayers(4);
     assertEquals(4, ms2TestWorld.getTotalAllowedPlayers());
   }
 
+  /**
+   * Tests the setting of the total number of allowed turns.
+   */
   @Test
   public void testSetTotalAllowedTurns() {
     ms2TestWorld.setTotalAllowedTurns(30);
     assertEquals(30, ms2TestWorld.getTotalAllowedTurns());
   }
 
+  /**
+   * Tests the addition of a new player to the world.
+   */
   @Test
   public void testAddOnePlayer() {
     int totalPlayerBefore = ms2TestWorld.getAllPlayerNames().size();
     ms2TestWorld.addOnePlayer("human1", 0, false, 10);
     // Add assertions for verifying the player addition
     assertEquals(1 + totalPlayerBefore, ms2TestWorld.getAllPlayerNames().size());
-    assertEquals("Player type: Human Player\n" +
-            "Player's Name: human1 \n" +
-            "Player's limit: 10, can still carry: 10\n" +
-            "Carrying: [] \n" +
-            "Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)\n" +
-            "#0 Room: Armory, has items: [Revolver(Damage=3)]\n" +
-            "Neighbor Rooms: Billiard Room, Dining Hall, Drawing Room\n",
+    assertEquals("Player type: Human Player\n" 
+          +"Player's Name: human1 \n" 
+          +"Player's limit: 10, can still carry: 10\n" 
+          +"Carrying: [] \n" 
+          +"Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)\n" 
+          +"#0 Room: Armory, has items: [Revolver(Damage=3)]\n" 
+          +"Neighbor Rooms: Billiard Room, Dining Hall, Drawing Room\n",
         ms2TestWorld.getOnePlayerAndRoomInfo("human1"));
   }
 
+  /**
+   * Tests the "Move" command for a player, which is expected to be successful.
+   */
   @Test
   public void testCmdPlayerMoveSuccess() {
     try {
       ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
       ms2TestWorld.cmdPlayerMove("Billiard Room");
-      assertEquals("Billiard Room", ms2TestWorld.getOnePlayerCurrentRoomName("TestPlayer"));
+      assertEquals("Billiard Room",
+          ms2TestWorld.getOnePlayerCurrentRoomName("TestPlayer"));
 
     } catch (Exception e) {
-      fail("Exception occurred while moving the player." + e.getMessage());
+      fail(String.format("Exception occurred while moving the player. %s", e.getMessage()));
     }
   }
 
+  /**
+   * Tests the "Move" command for a player, which fails because the target room is not a neighbor.
+   */
   @Test
   public void testCmdPlayerMoveFailedNonNeighbor() throws IllegalAccessException {
     try {
       ms2TestWorld.addOnePlayer("TestPlayer", 0, false, 10);
       ms2TestWorld.cmdPlayerMove("Parlor");
     } catch (Exception e) {
-      assertEquals("Player: TestPlayer can't move to Parlor, the target " +
-          "room is not a neighbor of its current room: Armory!\n", e.getMessage());
+      assertEquals("Player: TestPlayer can't move to Parlor, the target " 
+        +"room is not a neighbor of its current room: Armory!\n", e.getMessage());
     }
   }
 
+  /**
+   * Tests the "Move" command for a player, which fails because the target room does not exist.
+   */
   @Test
   public void testCmdPlayerMoveFailedRoomNotExist() throws IllegalAccessException {
     try {
@@ -289,25 +361,31 @@ public class Ms2WorldImplementTest {
   }
 
 
+  /**
+   * Tests the "Pick" command for a player, which is expected to be successful.
+   */
   @Test
   public void testCmdPlayerPickSuccess() throws IllegalAccessException {
     try {
       ms2TestWorld.addOnePlayer("TestPlayer", 18, false, 10);
       ms2TestWorld.cmdPlayerPick("Duck Decoy");
       String playerRes = ms2TestWorld.getOnePlayerAndRoomInfo("TestPlayer");
-      assertEquals("Player type: Human Player\n" +
-          "Player's Name: TestPlayer \n" +
-          "Player's limit: 10, can still carry: 9\n" +
-          "Carrying: [Duck Decoy(Damage=3)] \n" +
-          "Current Room: Trophy Room\n" +
-          "#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]\n" +
-          "Neighbor Rooms: Tennessee Room, Billiard Room, Dining Hall, Library\n", playerRes);
+      assertEquals("Player type: Human Player\n" 
+        +"Player's Name: TestPlayer \n" 
+        +"Player's limit: 10, can still carry: 9\n" 
+        +"Carrying: [Duck Decoy(Damage=3)] \n" 
+        +"Current Room: Trophy Room\n" 
+        +"#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]\n" 
+        +"Neighbor Rooms: Tennessee Room, Billiard Room, Dining Hall, Library\n", playerRes);
 
     } catch (Exception e) {
       throw e;
     }
   }
 
+  /**
+   * Tests the "Pick" command for a player, which fails because the item is not in the room.
+   */
   @Test
   public void testCmdPlayerPickFailedItemNotInRoom() {
     try {
@@ -319,6 +397,10 @@ public class Ms2WorldImplementTest {
     }
   }
 
+  /**
+   * Tests the "Pick" command for a player, which fails because the item does not exist in the
+   * world.
+   */
   @Test
   public void testCmdPlayerPickFailedItemNotInWorld() {
     try {
@@ -330,6 +412,9 @@ public class Ms2WorldImplementTest {
     }
   }
 
+  /**
+   * Tests the "Pick" command for a player, which fails because the item name is null.
+   */
   @Test
   public void testCmdPlayerPickFailedNullItem() {
     try {
@@ -341,6 +426,10 @@ public class Ms2WorldImplementTest {
     }
   }
 
+  /**
+   * Tests the "Pick" command for a player, which fails because the player has reached the carrying
+   * limit.
+   */
   @Test
   public void testCmdPlayerPickFailedOverLimit() {
     try {
@@ -349,8 +438,8 @@ public class Ms2WorldImplementTest {
       ms2TestWorld.cmdPlayerPick("Piece of Rope");
 
     } catch (Exception e) {
-      assertEquals("Error pickUpOneItem: player-TestPlayer item list is full, " +
-          "can't pickup: Piece of Rope", e.getMessage());
+      assertEquals("Error pickUpOneItem: player-TestPlayer item list is full, " 
+        +"can't pickup: Piece of Rope", e.getMessage());
     }
   }
 
@@ -368,13 +457,13 @@ public class Ms2WorldImplementTest {
       assertEquals("#12 Room: Master Suite, has items: [Shoe Horn(Damage=2)]",
           ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
       ms2TestWorld.cmdComputerPlayerAction();
-      assertEquals("Player type: **Computer Player**\n" +
-              "Player's Name: Com1 \n" +
-              "Player's limit: 1, can still carry: 0\n" +
-              "Carrying: [Shoe Horn(Damage=2)] \n" +
-              "Current Room: Master Suite\n" +
-              "#12 Room: Master Suite, has items: []\n" +
-              "Neighbor Rooms: Tennessee Room, Library, Lilac Room, Nursery\n",
+      assertEquals("Player type: **Computer Player**\n" 
+            +"Player's Name: Com1 \n" 
+            +"Player's limit: 1, can still carry: 0\n" 
+            +"Carrying: [Shoe Horn(Damage=2)] \n" 
+            +"Current Room: Master Suite\n" 
+            +"#12 Room: Master Suite, has items: []\n" 
+            +"Neighbor Rooms: Tennessee Room, Library, Lilac Room, Nursery\n",
           ms2TestWorld.getOnePlayerAndRoomInfo("Com1"));
       assertEquals(null, ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
 
@@ -396,16 +485,16 @@ public class Ms2WorldImplementTest {
   public void testCmdComputerActionPickHighestDamage() throws IllegalAccessException {
     try {
       ms2TestWorld.addOnePlayer("Com1", 18, true, 1);
-      assertEquals("#18 Room: Trophy Room, has items: [Duck Decoy(Damage=3), " +
-          "Monkey Hand(Damage=2)]", ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
+      assertEquals("#18 Room: Trophy Room, has items: [Duck Decoy(Damage=3), " 
+        +"Monkey Hand(Damage=2)]", ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));
       ms2TestWorld.cmdComputerPlayerAction();
-      assertEquals("Player type: **Computer Player**\n" +
-              "Player's Name: Com1 \n" +
-              "Player's limit: 1, can still carry: 0\n" +
-              "Carrying: [Duck Decoy(Damage=3)] \n" +
-              "Current Room: Trophy Room\n" +
-              "#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]\n" +
-              "Neighbor Rooms: Tennessee Room, Billiard Room, Dining Hall, Library\n",
+      assertEquals("Player type: **Computer Player**\n" 
+            +"Player's Name: Com1 \n" 
+            +"Player's limit: 1, can still carry: 0\n" 
+            +"Carrying: [Duck Decoy(Damage=3)] \n" 
+            +"Current Room: Trophy Room\n" 
+            +"#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]\n" 
+            +"Neighbor Rooms: Tennessee Room, Billiard Room, Dining Hall, Library\n",
           ms2TestWorld.getOnePlayerAndRoomInfo("Com1"));
       assertEquals("#18 Room: Trophy Room, has items: [Monkey Hand(Damage=2)]",
           ms2TestWorld.getPlayerWhatCanPickInfo("Com1"));

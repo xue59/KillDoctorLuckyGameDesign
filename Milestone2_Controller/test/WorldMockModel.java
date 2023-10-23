@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * A mock model of the World interface for testing purposes.
  */
-public class WorldMockModel implements World{
+public class WorldMockModel implements World {
   private final StringBuilder log;
   private int totalAllowedTurns;
   private int totalAllowedPlayers;
@@ -219,7 +219,8 @@ public class WorldMockModel implements World{
    * @throws IllegalAccessException   If there is an illegal access attempt during the move.
    */
   @Override
-  public void cmdPlayerMove(String roomName) throws IllegalArgumentException, IllegalAccessException {
+  public void cmdPlayerMove(String roomName)
+      throws IllegalArgumentException, IllegalAccessException {
     this.curTurn++;
     this.log.append(String.format("cmdPlayerMove executed: roomName=%s", roomName));
   }
@@ -248,7 +249,8 @@ public class WorldMockModel implements World{
    */
   @Override
   public void cmdPlayerPick(String inputItemName)
-      throws NullPointerException, IllegalArgumentException, IllegalAccessException, IllegalStateException {
+      throws NullPointerException, IllegalArgumentException, IllegalAccessException,
+      IllegalStateException {
     this.curTurn++;
     this.log.append(String.format("cmdPlayerPick executed: inputItemName=%s", inputItemName));
   }
@@ -333,7 +335,8 @@ public class WorldMockModel implements World{
    */
   @Override
   public String getOnePlayerCurrentRoomName(String playerName) {
-    this.log.append(String.format("getOnePlayerCurrentRoomName executed: playerName=%s", playerName));
+    this.log.append(
+        String.format("getOnePlayerCurrentRoomName executed: playerName=%s", playerName));
     return "currentRoomName"; // Change the return value as needed.
   }
 
