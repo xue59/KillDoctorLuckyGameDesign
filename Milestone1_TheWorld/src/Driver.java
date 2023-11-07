@@ -22,6 +22,7 @@ public class Driver {
    */
   public static void main(String[] args) throws IOException {
     // The default file name path & name
+    // CustomerMap input file path: $ContentRoot$/res/customerWorld.txt
     String fileName = "mansion2023.txt";
 
     try {
@@ -36,29 +37,29 @@ public class Driver {
       }
 
       FileReader fileReader = new FileReader(fileName);
-      BufferedReader br = new BufferedReader(fileReader);
-      CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
+      CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(fileReader);
       World mainWorld = createHelper.createWorld();
-      mainWorld.printWorldNeighborMap();
-      System.out.println(mainWorld.getDrLuckyInfo());
-      mainWorld.printAllRoomInfo();
-      mainWorld.moveDrLucky();
+      mainWorld.printWorld2dArray();
+//      mainWorld.printWorldNeighborMap();
+//      System.out.println(mainWorld.getDrLuckyInfo());
+//      mainWorld.printAllRoomInfo();
+//      mainWorld.moveDrLucky();
 
-      //      // After mainWorld created, add your example runs below:
-      //      // Example run 1 - Brand New World with mansion.txt
-      //                  System.out.println("#1 Example Run with new Mansion.txt just created: ");
-      //                  System.out.println(mainWorld.getDrLuckyInfo());
-      //                  mainWorld.printWorldNeighborMap();
-      //                  mainWorld.printAllRoomInfo();
+            // After mainWorld created, add your example runs below:
+             //Example run 1 - Brand New World with mansion.txt
+//                        System.out.println("#1 Example Run with new Mansion.txt just created: ");
+//                        System.out.println(mainWorld.getDrLuckyInfo());
+//                        mainWorld.printWorldNeighborMap();
+//                        mainWorld.printAllRoomInfo();
       //
       //      // Example run 2 -
-      //                  System.out.println("#2 Example Run with new Mansion.txt "
-      //                      + "DrLucky after move by 1: ");
-      //                  mainWorld.moveDrLucky();
-      //                  System.out.println(mainWorld.getDrLuckyInfo());
-      //                  mainWorld.printWorldNeighborMap();
-      //                  mainWorld.printAllRoomInfo();
-      //                  mainWorld.createGraphBufferedImage();
+                        System.out.println("#2 Example Run with new Mansion.txt "
+                            + "DrLucky after move by 1: ");
+                        mainWorld.moveDrLucky();
+                        System.out.println(mainWorld.getDrLuckyInfo());
+                        mainWorld.printWorldNeighborMap();
+                        mainWorld.printAllRoomInfo();
+                        mainWorld.createGraphBufferedImage();
       //
       //      // Example run 3 -
       //                  System.out.println("#3 Example Run with new Mansion.txt DrLucky after "

@@ -229,6 +229,8 @@ public class WorldImplement implements World {
       int roomW = (room.getBotColX() - room.getTopColX() + 1);
       g2d.drawString(room.getRoomName(), colX + scale / 2, rowY + scale / 2);
       int roomNumber = room.getRoomNumber();
+
+      // Check if DrLucky in room & display on map
       if (roomNumber == this.drLucky.getCurrentRoomNumber()) {
         String drLuckyWithHp = String.format("%s (hp:%d)", this.drLucky.getName(),
             this.drLucky.getCurrentHp());
@@ -264,7 +266,7 @@ public class WorldImplement implements World {
           System.out.print("——" + " ");
         } else {
           if (array[i][j] < 10) {
-            System.out.print("0" + array[i][j] + " ");
+            System.out.print(" " + array[i][j] + " ");
           } else {
             System.out.print(array[i][j] + " ");
           }
