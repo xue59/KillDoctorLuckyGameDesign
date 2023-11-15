@@ -1,0 +1,86 @@
+#2 Example Run with new Mansion.txt DrLucky after move by 1:
+Target name: Doctor Lucky(HP:50)currently in room #1-Billiard Room
+Room 0 Neighbors: 1 3 4
+Room 1 Neighbors: 0 18 3
+Room 2 Neighbors: 20
+Room 3 Neighbors: 0 17 1 18 19 4 8 14
+Room 4 Neighbors: 0 3 19 5
+Room 5 Neighbors: 4 15
+Room 6 Neighbors: 7
+Room 7 Neighbors: 6 15
+Room 8 Neighbors: 3 19 14
+Room 9 Neighbors: 16 11
+Room 10 Neighbors: 18 12 13
+Room 11 Neighbors: 16 17 9 12
+Room 12 Neighbors: 17 10 11 13
+Room 13 Neighbors: 10 12
+Room 14 Neighbors: 16 17 3 8
+Room 15 Neighbors: 20 5 7
+Room 16 Neighbors: 9 11 14
+Room 17 Neighbors: 18 3 11 12 14
+Room 18 Neighbors: 17 1 3 10
+Room 19 Neighbors: 3 4 8
+Room 20 Neighbors: 2 15
+#0 Room: Armory, has : [Revolver Damage=3 ]
+Neighbors: Billiard Room,Dining Hall,Drawing Room,
+
+#1 Room: Billiard Room, has : [Billiard Cue Damage=2 ]
+DrLucky(Doctor Lucky) in this room.
+Neighbors: Armory,Trophy Room,Dining Hall,
+
+#2 Room: Carriage House, has : [Chain Saw Damage=4 , Big Red Hammer Damage=4 ]
+Neighbors: Winter Garden,
+
+#3 Room: Dining Hall, has : []
+Neighbors: Armory,Tennessee Room,Billiard Room,Trophy Room,Wine Cellar,Drawing Room,Kitchen,Parlor,
+
+#4 Room: Drawing Room, has : [Letter Opener Damage=2 ]
+Neighbors: Armory,Dining Hall,Wine Cellar,Foyer,
+
+#5 Room: Foyer, has : []
+Neighbors: Drawing Room,Piazza,
+
+#6 Room: Green House, has : [Trowel Damage=2 , Pinking Shears Damage=2 ]
+Neighbors: Hedge Maze,
+
+#7 Room: Hedge Maze, has : [Loud Noise Damage=2 ]
+Neighbors: Green House,Piazza,
+
+#8 Room: Kitchen, has : [Crepe Pan Damage=3 , Sharp Knife Damage=3 ]
+Neighbors: Dining Hall,Wine Cellar,Parlor,
+
+#9 Room: Lancaster Room, has : [Silken Cord Damage=3 ]
+Neighbors: Servants' Quarters,Lilac Room,
+
+#10 Room: Library, has : []
+Neighbors: Trophy Room,Master Suite,Nursery,
+
+#11 Room: Lilac Room, has : [Tight Hat Damage=2 ]
+Neighbors: Servants' Quarters,Tennessee Room,Lancaster Room,Master Suite,
+
+#12 Room: Master Suite, has : [Shoe Horn Damage=2 ]
+Neighbors: Tennessee Room,Library,Lilac Room,Nursery,
+
+#13 Room: Nursery, has : [Bad Cream Damage=2 ]
+Neighbors: Library,Master Suite,
+
+#14 Room: Parlor, has : []
+Neighbors: Servants' Quarters,Tennessee Room,Dining Hall,Kitchen,
+
+#15 Room: Piazza, has : [Civil War Cannon Damage=3 ]
+Neighbors: Winter Garden,Foyer,Hedge Maze,
+
+#16 Room: Servants' Quarters, has : [Broom Stick Damage=2 ]
+Neighbors: Lancaster Room,Lilac Room,Parlor,
+
+#17 Room: Tennessee Room, has : []
+Neighbors: Trophy Room,Dining Hall,Lilac Room,Master Suite,Parlor,
+
+#18 Room: Trophy Room, has : [Duck Decoy Damage=3 , Monkey Hand Damage=2 ]
+Neighbors: Tennessee Room,Billiard Room,Dining Hall,Library,
+
+#19 Room: Wine Cellar, has : [Rat Poison Damage=2 , Piece of Rope Damage=2 ]
+Neighbors: Dining Hall,Drawing Room,Kitchen,
+
+#20 Room: Winter Garden, has : []
+Neighbors: Carriage House,Piazza,
