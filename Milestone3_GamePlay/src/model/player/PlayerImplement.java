@@ -215,6 +215,19 @@ public class PlayerImplement implements Player {
   }
 
   /**
+   * Return a String of item names currently carried by the player, with its damange.
+   *
+   * @return A String of item names with damage.
+   */
+  @Override
+  public String getAllCarryingItemStringWithDamage() {
+    StringBuilder res = new StringBuilder();
+    res.append(String.format("%s", itemList));
+    res.append("\n**Basic attack item: Poking(Damage=1)\n");
+    return res.toString();
+  }
+
+  /**
    * Computes the hash code for the player based on their name.
    *
    * @return The hash code of the player.
@@ -243,6 +256,30 @@ public class PlayerImplement implements Player {
       return false;
     }
   }
+
+  /**
+   * Retrieves the item with the specified name that is currently held by this player.
+   *
+   * @param name The name of the item to be retrieved.
+   * @return The {@code Item} object with the specified name.
+   * @throws IllegalArgumentException If the given item name is not found in player's inventory.
+   */
+  @Override
+  public Item getItemByName(String name) throws IllegalArgumentException {
+    // Iterate through the player's itemList to find the item with the specified name
+    for (Item item : this.itemList) {
+      if (item.getName().equals(name)) {
+        // Item found, return it
+        return item;
+      }
+    }
+
+    // Item with the specified name not found, throw an exception
+    throw new IllegalArgumentException(String.format(
+        "Error PlayerImpl: Item with name '%s' not found in player's inventory!\n", name));
+  }
+
+
 
 
 }

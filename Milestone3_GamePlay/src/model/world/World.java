@@ -148,6 +148,16 @@ public interface World {
       throws IllegalArgumentException, IllegalAccessException;
 
   /**
+   * Move the Pet to the specified room.
+   *
+   * @param roomName The name of the room to which the player should move.
+   * @throws IllegalArgumentException If the provided room name is not valid.
+   * @throws IllegalAccessException   If there is an illegal access attempt during the move.
+   */
+  void cmdPetMove(String roomName)
+      throws IllegalArgumentException, IllegalAccessException;
+
+  /**
    * Get information about the current player's current room.
    *
    * @return Information about the current player's current room.
@@ -249,4 +259,19 @@ public interface World {
    * @return The current turn number.
    */
   int getCurrentTurnNumber();
+
+  String getPetName();
+
+  /**
+   * Checks if the current player is in the same room as Dr. Lucky.
+   *
+   * @return {@code true} if the current player is in the same room as Dr. Lucky, false otherwise.
+   */
+  boolean checkCurPlayerSameRoomWithDrLucky();
+  boolean checkCurPlayerCanBeSeen();
+  String cmdPlayerKill(String itemName)
+      throws NullPointerException, IllegalArgumentException, IllegalAccessException;
+
+  String getPlayerAllCarryingItemStringWithDamage(String playerName);
+  String getWinnerName();
 }

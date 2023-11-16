@@ -71,5 +71,22 @@ public interface Player {
 
    */
   Map<String, Integer> getItemListMapInfo();
+
+  /**
+   * Retrieves the item with the specified name that is currently held by this player.
+   *
+   * @param name The name of the item to be retrieved.
+   * @return The {@code Item} object with the specified name.
+   * @throws IllegalArgumentException If the given item name is not found in player's inventory.
+   */
+  Item getItemByName(String name) throws IllegalArgumentException;
+
+  /**
+   * Return a String of item names currently carried by the player, with its damange.
+   *
+   * @return A String of item names with damage.
+   */
+  public String getAllCarryingItemStringWithDamage();
+
 }
 

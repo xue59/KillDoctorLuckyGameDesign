@@ -12,6 +12,8 @@ import model.drlucky.DrLucky;
 import model.drlucky.DrLuckyImplement;
 import model.item.Item;
 import model.item.ItemImplement;
+import model.pet.Pet;
+import model.pet.PetImplement;
 import model.room.Room;
 import model.room.RoomImplement;
 
@@ -32,6 +34,7 @@ public class CreateWorldHelper {
   private String name; // World Name
   private DrLucky drLucky;
   private Integer[][] worldMap2dRmIndex;
+  private Pet pet;
 
   /**
    * Constructs a new CreateWorldHelper instance.
@@ -65,22 +68,23 @@ public class CreateWorldHelper {
 
     int hp = Integer.parseInt(inputText.next());
     String drLuckyName = inputText.nextLine().trim();
-
+    String petName = inputText.nextLine().trim();  // scan read to get pet name
     int intTotalRooms = Integer.parseInt(inputText.next());
-
     //    System.out.println(String.format("%d, %d, %s", rows, cols, worldName));
     //    System.out.println(
     //    String.format("HP:%d, targetname: %s, total rooms: %d", hp, drLuckyName, intTotalRooms));
     this.createRowColSizeWorldName(rows, cols, worldName);    // create row col size
     this.createDrLucky(drLuckyName, hp, (intTotalRooms - 1)); // create Dr Lucky
+    this.pet = new PetImplement(petName); // create pet object in the map
     // create numbers of rooms and check valid?
     if (intTotalRooms <= 0) {
       throw new IllegalArgumentException("Error: Total Rooms cannot be Negative or Zero.");
     }
     this.totalRooms = intTotalRooms;                          // create total rooms
-    //以上代码 完成前三行 line 扫描 & 创建 Row, Col Size, Target 和 hp血量
 
-    //Now Scan throw room list and create rooms:
+    //以上代码 完成前三行 line 扫描 & 创建 Row, Col Size, Target 和 hp血量, 以及Pet创建
+
+    //Now Scan through room list and create rooms:
     if (Objects.isNull(worldMap2dRmIndex)) { // 创建 worldMap2dRmIndex
       this.worldMap2dRmIndex = new Integer[this.rowSize][this.colSize]; // init worldMap2dRmIndex
     }
@@ -150,6 +154,7 @@ public class CreateWorldHelper {
     List<Room> newRoomList = new ArrayList<>(this.roomListRoom);
     DrLucky newDr = new DrLuckyImplement(this.drLucky.getName(), this.drLucky.getCurrentHp(),
         this.totalRooms - 1);
+    Pet newPet = new PetImplement(this.pet.getName());
 
     // Create a new 2-Darray with the same dimensions as the original for return & create world
     Integer[][] new2dArray = new Integer[this.rowSize][this.colSize];
@@ -161,7 +166,7 @@ public class CreateWorldHelper {
     }
 
     return new WorldImplement(this.rowSize, this.colSize, newName, this.totalRooms, this.totalItems,
-        newRoomList, newDr, newMap, new2dArray);
+        newRoomList, newDr, newPet, newMap, new2dArray);
   }
 
   // following code create world adj neighbor map

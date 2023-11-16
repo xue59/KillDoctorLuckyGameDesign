@@ -3,6 +3,7 @@ package controller;
 import command.ComputerActionCmd;
 import command.LookAroundCmd;
 import command.MovePlayerCmd;
+import command.PetMoveCmd;
 import command.PlayerPickCmd;
 import java.io.IOException;
 import java.util.List;
@@ -229,6 +230,7 @@ public class CmdControllerImplement implements Controller {
       // True game is over
       this.output.append(
           String.format("Last game already finished, back to main menu to re-start a New Game.\n"));
+      this.output.append(String.format("Last game winner: %s!!!\n",world.getWinnerName()));
       loopToSelectMainMenu();
       return;
     }
@@ -259,13 +261,27 @@ public class CmdControllerImplement implements Controller {
    * @throws IOException if an I/O error occurs while interacting with the game.
    */
   private void loopToOnePlayerTurn(int curTurnNum) throws IOException {
+    // ms3 if game over when palyer killed dr lucky!
+    if (world.checkGameOver()){
+      output.append(String.format("Game Over, Winner: %s!!!\n", world.getWinnerName()));
+      loopToSelectMainMenu();
+    }
     String curTurnPlayerName = world.getCurrentPlayerName();
     boolean isCurPlayerComputer = world.isCurrentPlayerComputer();
     this.output.append(String.format("\nTurn #%d Current Player Status: \n%s",
         curTurnNum, world.getOnePlayerAndRoomInfo(curTurnPlayerName)));
-    this.output.append(
-        String.format("Current Turn #%d for player: %s. (Available commands: [Move, Look, Pick])\n",
-            curTurnNum, curTurnPlayerName));
+    if (this.world.checkCurPlayerSameRoomWithDrLucky()){
+      this.output.append(
+          String.format("Current Turn #%d for player: %s. (Available commands: "
+                  + "[Move, Look, Pick, PetMove, Attack])\n",
+              curTurnNum, curTurnPlayerName));
+    } else {
+      this.output.append(
+          String.format("Current Turn #%d for player: %s. (Available commands: "
+                  + "[Move, Look, Pick, PetMove] (Can not Attack, due to no Dr.Lucky))\n",
+              curTurnNum, curTurnPlayerName));
+    }
+
 
     //call to computer player logic
     if (isCurPlayerComputer) {
@@ -289,9 +305,26 @@ public class CmdControllerImplement implements Controller {
         } else if ("PICK".equals(command)) {
           this.consolePlayerPick(curTurnPlayerName);
           break;
+        } else if ("PETMOVE".equals(command) || "PET MOVE".equals(command)) {
+          this.consolePetMove(curTurnPlayerName);
+          break;
+        } else if ("ATTACK".equals(command) && this.world.checkCurPlayerSameRoomWithDrLucky()){
+          this.consolePlayerKill(curTurnPlayerName);
+          break;
         } else { // Default base case nothing match input & loop back to let user input selection
-          this.output.append("No match command found! Please enter exact command: [Move, Look, "
-              + "Pick].\n");
+          this.output.append("No match command found! Please enter exact command:\n");
+          if (this.world.checkCurPlayerSameRoomWithDrLucky()){
+            this.output.append(
+                String.format("Turn#%d player(%s). (Available commands: "
+                        + "[Move, Look, Pick, PetMove, Attack])\n",
+                    curTurnNum, curTurnPlayerName));
+          } else {
+            this.output.append(
+                String.format("Turn#%d player(%s). (Available commands: "
+                        + "[Move, Look, Pick, PetMove] "
+                        + "(Can not Attack, due to no Dr.Lucky in room.))\n",
+                    curTurnNum, curTurnPlayerName));
+          }
         }
       } catch (IllegalStateException e) {    // Turn max reached & Game over!
         this.output.append(e.getMessage());
@@ -326,6 +359,41 @@ public class CmdControllerImplement implements Controller {
       this.output.append(e.getMessage());
       loopToSelectMainMenu();
     }
+  }
+
+  private void consolePlayerKill(String curTurnPlayerName)
+      throws IOException, IllegalAccessException {
+    String curPlayerCarrying =
+        this.world.getPlayerAllCarryingItemStringWithDamage(curTurnPlayerName);
+    output.append(String.format(
+        "%s.\nChoose your carrying item to attack:\n%s ",
+        world.getDrLuckyInfo(), curPlayerCarrying));
+
+    while (true) {
+      String inputItemName;
+      String cmdKillResult;
+      inputItemName = scanner.nextLine().trim();
+      try{
+        cmdKillResult = world.cmdPlayerKill(inputItemName);
+        if (cmdKillResult == null || cmdKillResult.isEmpty() ){
+          output.append(String.format("Player(%s) Attack failed due to be seen!\n",
+              curTurnPlayerName));
+        } else {
+          output.append(cmdKillResult);
+        }
+        return;
+      } catch (IllegalStateException e){// Game Over state!
+        throw new IllegalStateException(String.format("Game Over! "
+            + "Player:%s Cannot Attack with item! %s\n", curTurnPlayerName, inputItemName));
+      } catch (IllegalAccessException e){
+        throw e; // player and drLucky are not in the same room
+      } catch (IllegalArgumentException e){
+        output.append(String.format("%s",e.getMessage()));
+        output.append("Check your item name for typos and case sensitivity!\n");
+      }
+
+    }
+
   }
 
   /**
@@ -367,8 +435,7 @@ public class CmdControllerImplement implements Controller {
         throw new IllegalAccessException("Can't PICK, your bag is Full, try other commands!\n");
       } catch (IllegalStateException e) { // Game Over state!
         throw new IllegalStateException(String.format("Game Over! Player:%s Cannot pick up item!"
-                + " %s", curTurnPlayerName,
-            inputItemName));
+                + " %s\n", curTurnPlayerName, inputItemName));
       } catch (IllegalArgumentException e) {
         output.append(e.getMessage());
         output.append("\nCheck the item name for typos and case sensitivity!\n");
@@ -377,7 +444,6 @@ public class CmdControllerImplement implements Controller {
       }
     }
   }
-
 
   /**
    * Allows a console player to look around the room.
@@ -390,6 +456,43 @@ public class CmdControllerImplement implements Controller {
     // using command design pattern to execute the Look command
     LookAroundCmd cmdLook = new LookAroundCmd();
     output.append(cmdLook.execute(this.world));
+  }
+
+  private void consolePetMove(String curTurnPlayerName) throws IOException {
+    String petName = world.getPetName();
+    output.append(
+        String.format("Available rooms for Pet(%s): \n ", petName));
+    output.append(String.format("%s",world.getAllRoomNames()));
+    output.append(String.format("To Player: %s, Which room do you want Pet to move to?\n",
+        curTurnPlayerName));
+    while (true) {
+      String inputRoomName;
+      inputRoomName = scanner.nextLine().trim();
+      try {
+        PetMoveCmd cmdPetMove = new PetMoveCmd(inputRoomName);
+        String moveResult;
+        moveResult = cmdPetMove.execute(this.world);
+        if (!moveResult.isEmpty()) {
+          output.append(String.format("Player: %s moved Pet(%s) to: %s SUCCESS!\n",
+              curTurnPlayerName, petName,inputRoomName));
+        }
+        return;
+      } catch (IllegalAccessException e) {
+        output.append(e.getMessage());
+        output.append("Check your room name for typo and case sensitivity!\n");
+      } catch (NullPointerException e) {
+        output.append(e.getMessage());
+        output.append("Enter a valid room name again!\n");
+      } catch (IllegalStateException e) {
+        // Game Over state!
+        throw new IllegalStateException(
+            String.format("Game Over! Player:%s Cannot move! %s\n", curTurnPlayerName,
+                e.getMessage()));
+      } catch (IllegalArgumentException e) {
+        output.append(e.getMessage());
+        output.append("\nCheck your room name for typo and case sensitivity!\n");
+      }
+    }
   }
 
   /**

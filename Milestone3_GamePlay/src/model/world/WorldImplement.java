@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 import model.drlucky.DrLucky;
 import model.item.Item;
+import model.pet.Pet;
 import model.player.Player;
 import model.player.PlayerImplement;
 import model.room.Room;
@@ -32,6 +33,7 @@ public class WorldImplement implements World {
   private final int totalItems;                      // The total number of items in the world.
   private final List<Room> roomList;                 // The list of rooms in the world.
   private final DrLucky drLucky;                     // The character DrLucky.
+  private final Pet pet;
   private final Map<Integer, Set<Integer>> worldMapIndex; // A map representing neighbor index.
   private final Integer[][] world2dArray;            // A 2D array representation of the world.
   private final List<Player> playerList;
@@ -40,6 +42,7 @@ public class WorldImplement implements World {
   private int curPlayerIndex;
   private int curTurn;
   private Player winnerPlayer;
+  private List<String> usedItemNames;
 
   /**
    * Constructs a WorldImplement object with the specified attributes.
@@ -51,6 +54,7 @@ public class WorldImplement implements World {
    * @param totalItems    The total number of items in the world.
    * @param roomList      The list of rooms in the world.
    * @param drLucky       The character DrLucky.
+   * @param pet           The character of DrLucky's pet.
    * @param worldMapIndex A map representing room indices and their neighbors.
    * @param world2dArray  A 2D array representation of the world.
    * @throws IllegalArgumentException If rowSize or colSize is non-positive, the world name is empty
@@ -58,7 +62,7 @@ public class WorldImplement implements World {
    * @throws NullPointerException     If roomList, drLucky, or worldMapIndex is null.
    */
   public WorldImplement(int rowSize, int colSize, String name, int totalRooms, int totalItems,
-                        List<Room> roomList, DrLucky drLucky,
+                        List<Room> roomList, DrLucky drLucky, Pet pet,
                         Map<Integer, Set<Integer>> worldMapIndex,
                         Integer[][] world2dArray)
       throws IllegalArgumentException, NullPointerException {
@@ -78,6 +82,7 @@ public class WorldImplement implements World {
     // Check that the input objects are not null.
     Objects.requireNonNull(roomList);
     Objects.requireNonNull(drLucky);
+    Objects.requireNonNull(pet);
     Objects.requireNonNull(worldMapIndex);
 
     // Assign values to class members.
@@ -88,11 +93,14 @@ public class WorldImplement implements World {
     this.totalRooms = totalRooms;
     this.roomList = roomList;
     this.drLucky = drLucky;
+    this.pet = pet; // ms3 added dr lucky's pet
     this.worldMapIndex = worldMapIndex;
     this.world2dArray = world2dArray;
     this.playerList = new ArrayList<>();
     this.curPlayerIndex = 0;
     this.curTurn = 1;
+    this.usedItemNames = new ArrayList<>();
+    this.winnerPlayer = null;
 
     // Generate an initial map representation with DrLucky's position and save it to an image.
     this.createGraphBufferedImage();
@@ -193,8 +201,14 @@ public class WorldImplement implements World {
     //check if DrLucky in this room
     Room drLuckyRoom = this.roomList.get(drLucky.getCurrentRoomNumber());
     if (drLuckyRoom.equals(room)) { // if dr lucky in the same room append the string
-      roomInfo.append(String.format("DrLucky(%s HP:%d) in this room.\n", this.drLucky.getName(),
+      roomInfo.append(String.format("**DrLucky(%s HP:%d) in this room.\n", this.drLucky.getName(),
           this.drLucky.getCurrentHp()));
+    }
+
+    //check if Pet in this room
+    Room petRoom = this.roomList.get(pet.getCurrentRoomNumber());
+    if (petRoom.equals(room)){
+      roomInfo.append(String.format("**Pet(%s) in this room.\n", pet.getName()));
     }
 
     //check if players in this room
@@ -212,6 +226,44 @@ public class WorldImplement implements World {
       roomInfo.append(neighbor);
       roomInfo.append(",");
     }
+    roomInfo.append("\n");
+
+    return roomInfo.toString();
+  }
+
+  public String getOneRoomInfoWithOutNeighbor(String roomName)
+      throws IllegalArgumentException, NullPointerException {
+    Objects.requireNonNull(roomName);
+    Room room = this.roomList.get(getRoomNumByNameString(roomName));
+
+    //check find all the item in the room & append to the string
+    StringBuilder roomInfo = new StringBuilder();
+    roomInfo.append(room.toString());
+    roomInfo.append("\n");
+
+
+    //check if DrLucky in this room
+    Room drLuckyRoom = this.roomList.get(drLucky.getCurrentRoomNumber());
+    if (drLuckyRoom.equals(room)) { // if dr lucky in the same room append the string
+      roomInfo.append(String.format("**DrLucky(%s HP:%d) in this room(%s).\n",
+          this.drLucky.getName(), this.drLucky.getCurrentHp(), roomName));
+    }
+
+    //check if Pet in this room
+    Room petRoom = this.roomList.get(pet.getCurrentRoomNumber());
+    if (petRoom.equals(room)){
+      roomInfo.append(String.format("Pet(%s) in this room.\n", pet.getName()));
+    }
+
+    //check if players in this room
+    roomInfo.append(String.format("Players in %s: ",roomName));
+    for (Player player : playerList) {
+      if (player.getCurrentRoomNumber() == room.getRoomNumber()) {
+        roomInfo.append(String.format("%s, ", player.getPlayerName()));
+      }
+    }
+
+    //check the rooms neighbors info - removed
     roomInfo.append("\n");
 
     return roomInfo.toString();
@@ -254,6 +306,10 @@ public class WorldImplement implements World {
       playerRoomInfo.append(String.format(" (**Dr.Lucky**(%s HP=%d) is in this #%d room.)",
           drLucky.getName(), drLucky.getCurrentHp(), drLucky.getCurrentRoomNumber()));
     }
+    if (pet.getCurrentRoomNumber() == playerRoom.getRoomNumber()) {
+      playerRoomInfo.append(String.format("(**Pet**(%s) in this room.)", pet.getName()));
+    }
+
     playerRoomInfo.append(String.format("\n%s\n", playerRoom.toString())); //add room#, name
     // and items in room.
     List<String> neighborRooms = getNeighborsRoomList(playerRoom.getRoomName());
@@ -312,6 +368,14 @@ public class WorldImplement implements World {
         g2d.drawString(drLuckyWithHp, colX + scale / 2, rowY + scale);
         g2d.setColor(Color.BLUE); // Set line back to Blue!
       }
+      // Check if Pet in the room display on map
+      if (roomNumber == this.pet.getCurrentRoomNumber()){
+        String petName = this.pet.getName();
+        g2d.setColor(Color.ORANGE); // Set line color as RED!
+        g2d.drawString(petName, colX + scale / 2, rowY + scale/2+scale);
+        g2d.setColor(Color.BLUE); // Set line back to Blue!
+      }
+
       // Check if Player in room & display on map
       int count = 1;
       for (Player player : this.playerList) {
@@ -494,6 +558,11 @@ public class WorldImplement implements World {
       throws IllegalAccessException, IllegalStateException, IllegalArgumentException {
     // 记得mock model
     if (this.checkGameOver()) {
+      if(this.winnerPlayer != null){
+        throw new IllegalStateException(String.format(
+                "Game Over cannot MOVE!\n"
+                + "Player(%s) WIN!!!\n", getWinnerName()));
+      }
       throw new IllegalStateException("Error: Game Over cannot MOVE!\n");
     }
 
@@ -512,6 +581,27 @@ public class WorldImplement implements World {
   }
 
   /**
+   * Move the Pet to the specified room.
+   *
+   * @param roomName The name of the room to which the player should move.
+   * @throws IllegalArgumentException If the provided room name is not valid.
+   * @throws IllegalAccessException   If there is an illegal access attempt during the move.
+   */
+  public void cmdPetMove(String roomName) throws IllegalAccessException{
+    if (this.checkGameOver()){
+      if(this.winnerPlayer != null){
+        throw new IllegalStateException(String.format(
+            "Game Over cannot PetMove!\n" + "Player(%s) WIN!!!\n", getWinnerName()));
+      }
+      throw new IllegalStateException("Error: Game Over cannot PET_MOVE!\n");
+    }
+
+    int distRoomNumber = this.getRoomNumByNameString(roomName);
+    this.pet.movePet(distRoomNumber);
+    this.changeTurn();
+  }
+
+  /**
    * Gets information about the player's current room and surroundings.
    *
    * @return A string containing information about the player's current room and its neighbors.
@@ -520,6 +610,10 @@ public class WorldImplement implements World {
    */
   public String cmdPlayerLook() throws IllegalStateException, IllegalArgumentException {
     if (this.checkGameOver()) {
+      if(this.winnerPlayer != null){
+        throw new IllegalStateException(String.format(
+            "Game Over cannot LOOK!\n" + "Player(%s) WIN!!!\n", getWinnerName()));
+      }
       throw new IllegalStateException("Error: Game Over cannot LOOK!\n");
     }
 
@@ -527,22 +621,30 @@ public class WorldImplement implements World {
     String curRoomName = this.roomList.get(curPlayer.getCurrentRoomNumber()).getRoomName();
     Room curRoom = this.roomList.get(curPlayer.getCurrentRoomNumber());
     List<String> curPlayerNeighboringRooms = getNeighborsRoomList(curRoomName);
+    Room curPetRoom = this.roomList.get(pet.getCurrentRoomNumber());
 
     // Create a StringBuilder to build the lookResult string
     StringBuilder lookResultBuilder = new StringBuilder();
     lookResultBuilder.append(String.format(
-        "You (player: %s) are currently in room #%d %s and can be seen from rooms: %s\n%s\n",
+        "You (player: %s) are currently in room #%d %s and neighboring rooms: %s\n"
+            + "Your current %s\n",
         curPlayer.getPlayerName(), curPlayer.getCurrentRoomNumber(), curRoomName,
         curPlayerNeighboringRooms, curRoom.toString()));
-
     // Check if Dr. Lucky is in the same room
     if (this.drLucky.getCurrentRoomNumber() == curRoom.getRoomNumber()) {
       lookResultBuilder.append(
-          String.format("**Dr. Lucky is in the room: %s", drLucky.toString()));
+          String.format("**Dr. Lucky is in your room(%s): %s", curRoom.getRoomName(),
+              drLucky.toString()));
+    }
+    //check if Pet in this room
+    Room petRoom = this.roomList.get(pet.getCurrentRoomNumber());
+    if (petRoom.equals(curRoom)){
+      lookResultBuilder.append(String.format("**Pet(%s) in this room(%s).\n", pet.getName(),
+          curRoom.getRoomName()));
     }
 
     // Check if other players are in the same room
-    lookResultBuilder.append("Players in the same room: ");
+    lookResultBuilder.append("Other players in the same room: ");
     for (Player player : this.playerList) {
       if (player.getCurrentRoomNumber() == curPlayer.getCurrentRoomNumber() && !player.equals(
           curPlayer)) {
@@ -551,6 +653,27 @@ public class WorldImplement implements World {
       }
     }
     lookResultBuilder.append("\n");
+
+    // Append neighbouring room info: players, items, DrLucky?
+    lookResultBuilder.append(
+        "Neighboring room info begin:----------------------------------------------------------\n");
+    int count = 1;
+    for (String neighborRoomName : curPlayerNeighboringRooms) {
+      lookResultBuilder.append(String.format("%d. Neighbor:\n",count));
+      if (curPetRoom.getRoomName().equals(neighborRoomName)){
+        //if pet in this neighbouring room
+        lookResultBuilder.append(
+            String.format("**Invisible inside/out Room** Pet(%s) in this room: %s\n",
+                pet.getName(),neighborRoomName));
+      } else { // pet not in this neighboring room
+        lookResultBuilder.append(String.format("%s",
+            this.getOneRoomInfoWithOutNeighbor(neighborRoomName)));
+      }
+      count++;
+    }
+    lookResultBuilder.append(
+        "Neighboring room info end:------------------------------------------------------------\n");
+
 
     // Update the lookResult string
     String lookResult = lookResultBuilder.toString();
@@ -574,6 +697,10 @@ public class WorldImplement implements World {
       throws NullPointerException, IllegalArgumentException, IllegalAccessException,
       IllegalStateException {
     if (checkGameOver()) {
+      if(this.winnerPlayer != null){
+        throw new IllegalStateException(String.format(
+            "Game Over cannot PICK!\n" + "Player(%s) WIN!!!\n", getWinnerName()));
+      }
       throw new IllegalStateException("Error: Game Over cannot PICK!\n");
     }
     Player curPlayer = (Player) this.playerList.get(curPlayerIndex);
@@ -582,6 +709,114 @@ public class WorldImplement implements World {
     curPlayer.pickUpOneItem(item);
     curRoom.removeOneItem(item);
     changeTurn();
+  }
+
+  @Override
+  public String cmdPlayerKill(String itemName)
+      throws NullPointerException, IllegalArgumentException, IllegalAccessException,
+      IllegalStateException {
+    if (checkGameOver()){
+      if(this.winnerPlayer != null){
+        throw new IllegalStateException(String.format(
+            "Game Over cannot Attack!\n" + "Player(%s) WIN!!!\n", getWinnerName()));
+      }
+      throw new IllegalStateException("Error: Game Over cannot KILL!\n");
+    } // if game over, throws IllegalStateException
+    if (checkCurPlayerSameRoomWithDrLucky() == false){
+      throw new IllegalAccessException("Error: Current player and DrLuck are not in same room!\n");
+    }// dr not exist, IllegalAccessException
+
+    Player curPlayer = (Player) this.playerList.get(curPlayerIndex);
+    Room   curRoom = (Room) this.roomList.get(curPlayer.getCurrentRoomNumber());
+    Item item = null;
+    if (itemName.toUpperCase().equals("POKING")){
+      item = null;
+      System.out.println("Poking dectect4ed : " + itemName);
+    } else{
+      try{
+        item= (Item) curPlayer.getItemByName(itemName); //no item found: IllegalArgumentException
+      } catch (IllegalArgumentException e){
+        if (this.usedItemNames.contains(itemName)){
+          throw new IllegalArgumentException(
+              String.format("%sError: item(%s) already used!\n",e.getMessage(), itemName));
+        } else {
+          throw e; // 如果是真的没找到item throw IllegalArgumentException
+        }
+      }
+    }
+
+    //check if current player can be seen, true=yes can be seen, false=cannot be seen
+    if (checkCurPlayerCanBeSeen()){
+      this.changeTurn();
+      return null;
+    }
+
+    StringBuilder killRes = new StringBuilder();
+    if (item == null){ // using poking into dr lucky's eye
+      this.drLucky.decreaseHp(1);
+      killRes.append(String.format(
+          "Player(%s) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)\n",
+          curPlayer.getPlayerName()));
+      killRes.append(String.format("Dr.Lucky(%s) HP: -1\n", drLucky.getName()));
+    } else { // use item to attach dr lucky
+      this.drLucky.decreaseHp(item.getDamage());
+      this.usedItemNames.add(item.getName()); // add used item into string
+      curPlayer.deleteOneItem(item);
+      killRes.append(String.format(
+          "Player(%s) attack Dr.Lucky SUCCESS with item: %s\n",
+          curPlayer.getPlayerName(), item.toString()));
+      killRes.append(String.format("Dr.Lucky(%s) was attacked by hp:-%d\n", drLucky.getName(),
+          item.getDamage()));
+    }
+    killRes.append(String.format("Dr.Lucky(%s) Current HP=%s\n",
+        drLucky.getName(), drLucky.getCurrentHp()));
+    // after success kill attempt update turns
+    this.changeTurn();
+    return killRes.toString();
+  }
+
+  /**
+   * Checks if the current player is in the same room as Dr. Lucky.
+   *
+   * @return {@code true} if the current player is in the same room as Dr. Lucky, false otherwise.
+   */
+  @Override
+  public boolean checkCurPlayerSameRoomWithDrLucky(){
+    Player curPlayer = (Player) this.playerList.get(curPlayerIndex);
+    if(curPlayer.getCurrentRoomNumber() == this.drLucky.getCurrentRoomNumber()){
+      return true;
+    }else {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean checkCurPlayerCanBeSeen(){
+    Player curPlayer = (Player) this.playerList.get(curPlayerIndex);
+    Room   curRoom = (Room) this.roomList.get(curPlayer.getCurrentRoomNumber());
+    Set<Integer> neighborRoomNums = this.worldMapIndex.get(curRoom.getRoomNumber());
+
+    int curPetRoomNum  = this.pet.getCurrentRoomNumber();
+    //无论如何 in same room 都能被看到，不能击杀 Dr.
+    for (Player player : this.playerList){
+      if (player.getCurrentRoomNumber() == curPlayer.getCurrentRoomNumber()
+          && !player.equals(curPlayer)){
+        return true; // true == can be seen
+      }
+    }
+
+    //如果pet迷雾在房间内，且房间内没有其他player 可以击杀
+    if (curPetRoomNum == curPlayer.getCurrentRoomNumber()){
+      return false; // false == cannot be seen
+    }
+
+    //检查其他neighbor房间是否有player, 如果其他playerRoomNumber==neighrborRoomNum return true=seen
+    for(Player player : this.playerList){
+      if (neighborRoomNums.contains(player.getCurrentRoomNumber())){
+        return true; // yes, can be seen
+      }
+    }
+    return false; // pass all check cannot be seen
   }
 
   /**
@@ -600,6 +835,10 @@ public class WorldImplement implements World {
   @Override
   public String cmdComputerPlayerAction() throws IllegalStateException, IllegalAccessException {
     if (checkGameOver()) {
+      if(this.winnerPlayer != null){
+        throw new IllegalStateException(String.format(
+            "Game Over!\n" + "Player(%s) WIN!!!\n", getWinnerName()));
+      }
       throw new IllegalStateException("Error: Game Over, Computer player cannot take action!\n");
     }
 
@@ -732,7 +971,7 @@ public class WorldImplement implements World {
     } else {
       this.curPlayerIndex++;
     }
-    moveDrLucky(); // 每一次 player 动一次 Dr Lucky也动一次
+    //moveDrLucky(); // 每一次 player 动一次 Dr Lucky也动一次
     this.curTurn++;
   }
 
@@ -750,6 +989,14 @@ public class WorldImplement implements World {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public String getWinnerName(){
+    if (this.winnerPlayer != null){
+      return winnerPlayer.getPlayerName();
+    }
+    return "Error: No winner name!";
   }
 
   /**
@@ -861,5 +1108,20 @@ public class WorldImplement implements World {
   @Override
   public int getCurrentTurnNumber() {
     return this.curTurn;
+  }
+
+  @Override
+  public String getPetName(){
+    return this.pet.getName();
+  }
+
+  @Override
+  public String getPlayerAllCarryingItemStringWithDamage(String playerName){
+    for(Player player : this.playerList){
+      if (player.getPlayerName().equals(playerName)){
+        return player.getAllCarryingItemStringWithDamage();
+      }
+    }
+    return ("Error in getPlayerAllCarryingItemStringWithDamage : No player found!\n");
   }
 }

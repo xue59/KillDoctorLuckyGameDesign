@@ -22,9 +22,9 @@ public class Driver {
   public static void main(String[] args) throws IOException {
     // The default file name path & name
     // CustomerMap input file path: $ContentRoot$/res/customerWorld.txt
-    String fileName = String.format("res/mansion2023.txt");
-    int totalPlayers = 3;
-    int totalTurns = 9;
+    String fileName = String.format("res/mansion2023Pet.txt");
+    int totalPlayers = 1;
+    int totalTurns = 4;
 
     try {
       if (args.length < 3) {
