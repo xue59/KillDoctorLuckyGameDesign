@@ -1,5 +1,6 @@
 36 30 Doctor Lucky's Mansion
 50 Doctor Lucky
+PetNametest
 21
 22 19 23 26 Armory
 16 21 21 28 Billiard Room

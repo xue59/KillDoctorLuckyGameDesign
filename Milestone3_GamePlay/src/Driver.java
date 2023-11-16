@@ -24,7 +24,7 @@ public class Driver {
     // CustomerMap input file path: $ContentRoot$/res/customerWorld.txt
     String fileName = String.format("res/mansion2023Pet.txt");
     int totalPlayers = 2;
-    int totalTurns = 4;
+    int totalTurns = 99;
 
     try {
       if (args.length < 3) {

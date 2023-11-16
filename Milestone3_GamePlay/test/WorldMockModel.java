@@ -227,6 +227,18 @@ public class WorldMockModel implements World {
   }
 
   /**
+   * Move the Pet to the specified room.
+   *
+   * @param roomName The name of the room to which the player should move.
+   * @throws IllegalArgumentException If the provided room name is not valid.
+   * @throws IllegalAccessException   If there is an illegal access attempt during the move.
+   */
+  @Override
+  public void cmdPetMove(String roomName) throws IllegalArgumentException, IllegalAccessException {
+
+  }
+
+  /**
    * Get information about the current player's current room.
    *
    * @return Information about the current player's current room.
@@ -275,12 +287,9 @@ public class WorldMockModel implements World {
    */
   @Override
   public boolean checkGameOver() {
-    this.log.append(String.format("checkGameOver executed!\n"));
+    this.log.append("checkGameOver executed!\n");
 
-    if (this.curTurn > totalAllowedTurns) {
-      return true;
-    }
-    return false;
+    return this.curTurn > totalAllowedTurns;
   }
 
   /**
@@ -383,5 +392,62 @@ public class WorldMockModel implements World {
   public int getCurrentTurnNumber() {
     this.log.append("getCurrentTurnNumber executed!");
     return 0; // Change the return value as needed.
+  }
+
+  @Override
+  public String getPetName() {
+    this.log.append("getPetName executed!");
+    return "getPetName";
+  }
+
+  /**
+   * Checks if the current player is in the same room as Dr. Lucky.
+   *
+   * @return {@code true} if the current player is in the same room as Dr. Lucky, false otherwise.
+   */
+  @Override
+  public boolean checkCurPlayerSameRoomWithDrLucky() {
+    this.log.append("checkCurPlayerSameRoomWithDrLucky executed!");
+
+    return false;
+  }
+
+  @Override
+  public boolean checkCurPlayerCanBeSeen() {
+    this.log.append("checkCurPlayerCanBeSeen executed!");
+
+    return false;
+  }
+
+  @Override
+  public String cmdPlayerKill(String itemName)
+      throws NullPointerException, IllegalArgumentException, IllegalAccessException {
+    this.log.append("cmdPlayerKill executed!");
+    return "cmdPlayerKill";
+  }
+
+  @Override
+  public String getPlayerAllCarryingItemStringWithDamage(String playerName) {
+    this.log.append("getPlayerAllCarryingItemStringWithDamage executed!");
+
+    return "getPlayerAllCarryingItemStringWithDamage";
+  }
+
+  @Override
+  public String getWinnerName() {
+    this.log.append("getWinnerName executed!");
+    return "getWinnerName";
+  }
+
+  @Override
+  public String getDrLuckyName() {
+    this.log.append("getDrLuckyName executed!");
+    return "getDrLuckyName";
+  }
+
+  @Override
+  public int getDrLuckyHp() {
+    this.log.append("getDrLuckyHp executed!");
+    return 0;
   }
 }

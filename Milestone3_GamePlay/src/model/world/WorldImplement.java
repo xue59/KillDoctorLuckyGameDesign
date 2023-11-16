@@ -1158,4 +1158,13 @@ public class WorldImplement implements World {
     }
     return ("Error in getPlayerAllCarryingItemStringWithDamage : No player found!\n");
   }
+
+  @Override
+  public String getDrLuckyName(){
+    return this.drLucky.getName();
+  }
+  @Override
+  public int getDrLuckyHp(){
+    return this.drLucky.getCurrentHp();
+  }
 }

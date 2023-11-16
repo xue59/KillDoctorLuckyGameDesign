@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,7 +25,7 @@ public class Ms1WorldImplementTest {
     FileReader fileReader = new FileReader("res/testRes/TestMansionGood.txt");
     BufferedReader br = new BufferedReader(fileReader);
     CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-    this.testGoodWorld1 = (World) createHelper.createWorld();
+    this.testGoodWorld1 = createHelper.createWorld();
 
     //manually set up the test benchMark, manually run separately from Driver.java
 
@@ -91,7 +92,7 @@ public class Ms1WorldImplementTest {
     FileReader fileReader = new FileReader("res/testRes/TestWorldNameNullFailed.txt");
     BufferedReader br = new BufferedReader(fileReader);
     CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-    World worldFailed = (World) createHelper.createWorld();
+    World worldFailed = createHelper.createWorld();
   }
 
   /**
@@ -102,7 +103,7 @@ public class Ms1WorldImplementTest {
     FileReader fileReader = new FileReader("res/testRes/TestWorldOverlap.txt");
     BufferedReader br = new BufferedReader(fileReader);
     CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-    World worldFailed = (World) createHelper.createWorld();
+    World worldFailed = createHelper.createWorld();
   }
 
   /**
@@ -113,7 +114,7 @@ public class Ms1WorldImplementTest {
     FileReader fileReader = new FileReader("res/testRes/TestWorldRoomOverSize.txt");
     BufferedReader br = new BufferedReader(fileReader);
     CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-    World worldFailed = (World) createHelper.createWorld();
+    World worldFailed = createHelper.createWorld();
   }
 
   /**
@@ -124,7 +125,7 @@ public class Ms1WorldImplementTest {
     FileReader fileReader = new FileReader("res/testRes/TestWorldRoomNegativeSize.txt");
     BufferedReader br = new BufferedReader(fileReader);
     CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-    World worldFailed = (World) createHelper.createWorld();
+    World worldFailed = createHelper.createWorld();
   }
 
   /**
@@ -135,7 +136,7 @@ public class Ms1WorldImplementTest {
     FileReader fileReader = new FileReader("res/testRes/TestWorldItemNotInWorld.txt");
     BufferedReader br = new BufferedReader(fileReader);
     CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-    World worldFailed = (World) createHelper.createWorld();
+    World worldFailed = createHelper.createWorld();
   }
 
   /**
@@ -148,7 +149,7 @@ public class Ms1WorldImplementTest {
     FileReader fileReader = new FileReader("res/testRes/TestIsolatedRoom.txt");
     BufferedReader br = new BufferedReader(fileReader);
     CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-    World testGoodWorldWitNoNeighbor = (World) createHelper.createWorld();
+    World testGoodWorldWitNoNeighbor = createHelper.createWorld();
     // following assert can see the Neighbors string is empty.
     assertEquals("#10 Room: Nursery, has items: []\n"
             + "Players in this room: \n"
@@ -293,7 +294,7 @@ public class Ms1WorldImplementTest {
       // create a new buffer image to see if it created the same png file name
       this.testGoodWorld1.createGraphBufferedImage();
       //same fileName should appear again.
-      assertEquals(true, fileToDelete.exists());
+      assertTrue(fileToDelete.exists());
     }
   }
 }

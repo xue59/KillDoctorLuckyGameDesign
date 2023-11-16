@@ -1,6 +1,7 @@
 package controller;
 
 import command.ComputerActionCmd;
+import command.KillCmd;
 import command.LookAroundCmd;
 import command.MovePlayerCmd;
 import command.PetMoveCmd;
@@ -59,7 +60,7 @@ public class CmdControllerImplement implements Controller {
     while (!quitFlag) {
       this.output.append(String.format("Welcome to the Game World of %s:\n",
           world.getWorldName()));
-      this.output.append("(To quit: Ctrl + C) \n");
+      //this.output.append("(To quit: Ctrl + C) \n");
       this.displayMainMenuOptions();
       int select = 0;
       try {
@@ -230,7 +231,13 @@ public class CmdControllerImplement implements Controller {
       // True game is over
       this.output.append(
           String.format("Last game already finished, back to main menu to re-start a New Game.\n"));
-      this.output.append(String.format("Last game winner: %s!!!\n",world.getWinnerName()));
+      if (!world.getWinnerName().isEmpty()) {
+        this.output.append(String.format("Last game winner: %s!!!\n", world.getWinnerName()));
+      } else {
+        this.output.append(String.format(
+            "Whoops, last game Dr.Lucky(%s HP=%s) escaped!!!\n",
+            world.getDrLuckyName(), world.getDrLuckyHp()));
+      }
       loopToSelectMainMenu();
       return;
     }
@@ -262,14 +269,26 @@ public class CmdControllerImplement implements Controller {
    */
   private void loopToOnePlayerTurn(int curTurnNum) throws IOException {
     // ms3 if game over when player killed dr lucky!
-    if (world.checkGameOver()){
-      output.append(String.format("Game Over, Winner: %s!!!\n", world.getWinnerName()));
+    if (world.checkGameOver()) {
+      // True game is over
+      this.output.append(
+          String.format("Game finished, back to main menu to 66-quit & re-start a New Game.\n"));
+      if (!world.getWinnerName().isEmpty()) {
+        this.output.append(String.format("Congratulation!!!!!!!!!\nGame Winner: %s \n\n",
+            world.getWinnerName()));
+      } else {
+        this.output.append(String.format(
+            "Whoops, Dr.Lucky(%s HP=%s) escaped!!!\n",
+            world.getDrLuckyName(), world.getDrLuckyHp()));
+      }
+      loopToSelectMainMenu();
       return;
     }
     String curTurnPlayerName = world.getCurrentPlayerName();
     boolean isCurPlayerComputer = world.isCurrentPlayerComputer();
     this.output.append(String.format("\nTurn #%d Current Player Status: \n%s",
         curTurnNum, world.getOnePlayerAndRoomInfo(curTurnPlayerName)));
+    this.output.append(String.format("%s\n", world.getDrLuckyInfo()));
     if (this.world.checkCurPlayerSameRoomWithDrLucky()){
       this.output.append(
           String.format("Current Turn #%d for player: %s. (Available commands: "
@@ -373,8 +392,9 @@ public class CmdControllerImplement implements Controller {
       String inputItemName;
       String cmdKillResult;
       inputItemName = scanner.nextLine().trim();
+      KillCmd cmdKill = new KillCmd(inputItemName);
       try{
-        cmdKillResult = world.cmdPlayerKill(inputItemName);
+        cmdKillResult = cmdKill.execute(this.world);
         if (cmdKillResult == null || cmdKillResult.isEmpty() ){
           output.append(String.format("Player(%s) Attack failed due to be seen!\n",
               curTurnPlayerName));

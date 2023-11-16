@@ -1,5 +1,6 @@
 45 40 NegativeSizeRoom
 4 DrUnlucky
+PetNametest
 11
  -3 -27  8 32 Room1
 20 -31 34 35 Room2

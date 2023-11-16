@@ -274,4 +274,7 @@ public interface World {
 
   String getPlayerAllCarryingItemStringWithDamage(String playerName);
   String getWinnerName();
+
+  String getDrLuckyName();
+  int getDrLuckyHp();
 }

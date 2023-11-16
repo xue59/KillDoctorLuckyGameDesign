@@ -16,7 +16,7 @@ import org.junit.Test;
 /**
  * This is a test method for testing the command line controller.
  */
-public class CmdControllerImplementTest {
+public class Ms2Ms3CmdControllerImplementTest {
   private World realWorld;
   private World mockWorld;
   private Appendable outGameLog;
@@ -356,6 +356,29 @@ public class CmdControllerImplementTest {
         + "#3 Room: Dining Hall, has items: []\n"
         + "Neighbor Rooms: Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing"
         + " Room, Kitchen, Parlor\n"));
+  }
+
+  //san testing start from here:
+
+  /**
+   * Test human player know target location from display info.
+   */
+  @Test
+  public void testHumanPlayerInfo() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
+            + "move\n Kitchen\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+
+    assertTrue(output.toString().contains("Current Turn #1 for player: hu1. (Available commands: " +
+        "[Move, Look, Pick, PetMove, Attack])\n" +
+        "Reachable Rooms: [Billiard Room, Dining Hall, Drawing Room]\n" +
+        "To Player: hu1, Which room do you want to move to?\n" +
+        "Player: hu1 moved to room: Dining Hall SUCCESS!"));
   }
 
 
