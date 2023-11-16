@@ -731,7 +731,7 @@ public class WorldImplement implements World {
     Item item = null;
     if (itemName.toUpperCase().equals("POKING")){
       item = null;
-      System.out.println("Poking dectect4ed : " + itemName);
+      //System.out.println("Poking dectect4ed : " + itemName);
     } else{
       try{
         item= (Item) curPlayer.getItemByName(itemName); //no item found: IllegalArgumentException
@@ -821,11 +821,11 @@ public class WorldImplement implements World {
 
   /**
    * Computer player would 1st check:.
-   * 1st. if player can pick and then pick the most damage item in the
-   * room.
-   * 2nd if player cannot pick, then it will randomly move the next room.
-   * 3rd if player cannot move,
-   * it will look.
+   * 1st. if the DrLucky in the room, if it is, will always attack with the highest damage item is
+   * has, or it will use poking.
+   * 2nd. if player can pick and then pick the most damage item in the room.
+   * 3rd if player cannot pick, then it will randomly move the next room.
+   * 4th if player cannot move, it will look.
    * Perform a computer player's action in the game and return the result.
    *
    * @return The result of the computer player's action.
@@ -851,6 +851,14 @@ public class WorldImplement implements World {
     Player curPlayer = (Player) this.playerList.get(curPlayerIndex);
     Room curRoom = (Room) this.roomList.get(curPlayer.getCurrentRoomNumber());
     Map<String, Integer> itemWithDamageInTheRoom = curRoom.getAllItemsWithDamage();
+
+    // if computer can attack, they will attack by using the highest damage item
+    // if computer does not have any item, it will use item name: POKING
+    if (checkCurPlayerSameRoomWithDrLucky() && !checkCurPlayerCanBeSeen()){
+      String computerKillRes = String.format(
+          "**Computer player**: %s",this.computerKillHelper());
+      return computerKillRes;
+    }
 
     // Check if the computer player can pick and there are items in the room
     // Computer finish PICK & return String, (Change turn separately in here)
@@ -905,6 +913,32 @@ public class WorldImplement implements World {
     String lookResult = cmdPlayerLook();
     return String.format("**Computer player**: %s performed a LOOK action.\n%s",
         curPlayer.getPlayerName(), lookResult);
+
+  }
+
+  private String computerKillHelper() throws IllegalAccessException {
+    Player curPlayer = (Player) this.playerList.get(curPlayerIndex);
+    Room curRoom = (Room) this.roomList.get(curPlayer.getCurrentRoomNumber());
+    Map<String, Integer> itemNameDamageMap = curPlayer.getItemListMapInfo();
+    String computerActionResult = "";
+    if (!itemNameDamageMap.isEmpty()) {
+      String maxItemName = null;
+      int maxItemDamage = Integer.MIN_VALUE;
+
+      for (Map.Entry<String, Integer> entry : itemNameDamageMap.entrySet()) {
+        String key = entry.getKey();
+        int value = entry.getValue();
+        if (value > maxItemDamage) {
+          maxItemName = key;
+          maxItemDamage = value;
+        }
+      }
+      computerActionResult = cmdPlayerKill(maxItemName);
+      return computerActionResult;
+    } else {
+      computerActionResult = cmdPlayerKill("Poking");
+      return computerActionResult;
+    }
 
   }
 
@@ -971,7 +1005,7 @@ public class WorldImplement implements World {
     } else {
       this.curPlayerIndex++;
     }
-    //moveDrLucky(); // 每一次 player 动一次 Dr Lucky也动一次
+    moveDrLucky(); // 每一次 player 动一次 Dr Lucky也动一次
     this.curTurn++;
   }
 
