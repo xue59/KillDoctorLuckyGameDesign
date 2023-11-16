@@ -996,7 +996,7 @@ public class WorldImplement implements World {
     if (this.winnerPlayer != null){
       return winnerPlayer.getPlayerName();
     }
-    return "Error: No winner name!";
+    return null;
   }
 
   /**

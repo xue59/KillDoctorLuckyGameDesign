@@ -247,7 +247,7 @@ public class CmdControllerImplement implements Controller {
       //last curTurnNum ++
       curTurnNum++;
     }
-    if (curTurnNum > world.getTotalAllowedTurns()) {
+    if (curTurnNum > world.getTotalAllowedTurns() && world.getWinnerName()==null) {
       output.append(String.format("Game Over: Max %d turns finished!\n", curTurnNum - 1));
       loopToSelectMainMenu();
     }
@@ -261,10 +261,10 @@ public class CmdControllerImplement implements Controller {
    * @throws IOException if an I/O error occurs while interacting with the game.
    */
   private void loopToOnePlayerTurn(int curTurnNum) throws IOException {
-    // ms3 if game over when palyer killed dr lucky!
+    // ms3 if game over when player killed dr lucky!
     if (world.checkGameOver()){
       output.append(String.format("Game Over, Winner: %s!!!\n", world.getWinnerName()));
-      loopToSelectMainMenu();
+      return;
     }
     String curTurnPlayerName = world.getCurrentPlayerName();
     boolean isCurPlayerComputer = world.isCurrentPlayerComputer();
