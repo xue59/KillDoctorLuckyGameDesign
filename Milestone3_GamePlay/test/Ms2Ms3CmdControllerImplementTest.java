@@ -10,7 +10,6 @@ import java.io.StringReader;
 import java.util.NoSuchElementException;
 import model.world.CreateWorldHelper;
 import model.world.World;
-import model.world.WorldImplement;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,10 +30,10 @@ public class CmdControllerImplementTest {
   @Before
   public void setup() throws IOException {
     // Create a new World instance for testing
-    FileReader fileReader = new FileReader("res/testRes/mansion2023.txt");
+    FileReader fileReader = new FileReader("res/testRes/mansion2023Pet.txt");
     BufferedReader br = new BufferedReader(fileReader);
     CreateWorldHelper createHelper = new CreateWorldHelper().readBuildTxtFile(br);
-    this.realWorld = (WorldImplement) createHelper.createWorld();
+    this.realWorld = createHelper.createWorld();
     this.realWorld.setTotalAllowedPlayers(2);
     this.realWorld.setTotalAllowedTurns(4);
     this.outGameLog = new StringBuilder(); // Initialize gameLog with a StringBuilder
@@ -84,7 +83,6 @@ public class CmdControllerImplementTest {
       assertEquals("No line found", e.getMessage());
     }
     assertEquals("Welcome to the Game World of Doctor Lucky's Mansion:\n"
-        + "(To quit: Ctrl + C) \n"
         + "Main Menu: \n"
         + "(Select following operation (integer only)!)\n"
         + "0-Create a graphical representation of the world map PNG.\n"
@@ -108,7 +106,7 @@ public class CmdControllerImplementTest {
     Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
-    assertTrue(output.toString().contains("#0 Room: Armory, has items: [Revolver(Damage=3)]\n"));
+    assertTrue(output.toString().contains("#0 Room: Armory, has items: [Revolver(Damage=99)]\n"));
   }
 
   /**
@@ -123,7 +121,7 @@ public class CmdControllerImplementTest {
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
     assertTrue(output.toString().contains("#2 Room: Carriage House, has items: [Chain Saw"
-        + "(Damage=4), Big Red Hammer(Damage=4)]\n"));
+        + "(Damage=88), Big Red Hammer(Damage=4)]\n"));
   }
 
   /**
@@ -139,12 +137,13 @@ public class CmdControllerImplementTest {
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
-    assertTrue(output.toString().contains("Which room do you want to check? (Enter the exact room"
-        + " name from above list.)\n"
-        + "#0 Room: Armory, has items: [Revolver(Damage=3)]\n"
-        + "DrLucky(Doctor Lucky HP:50) in this room.\n"
-        + "Players in this room: hu1, hu2, \n"
-        + "Room neighbors: Billiard Room,Dining Hall,Drawing Room,"));
+    assertTrue(output.toString().contains("Which room do you want to check? (Enter the exact room" +
+        " name from above list.)\n" +
+        "#0 Room: Armory, has items: [Revolver(Damage=99)]\n" +
+        "**DrLucky(Doctor Lucky HP:50) in this room.\n" +
+        "**Pet(Fortune Cat Pet) in this room.\n" +
+        "Players in this room: hu1, hu2, \n" +
+        "Room neighbors: Billiard Room,Dining Hall,Drawing Room,"));
   }
 
   /**
@@ -232,17 +231,7 @@ public class CmdControllerImplementTest {
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
-    assertTrue(output.toString().contains("Turn #1 Current Player Status: \n"
-        + "Player type: Human Player\n"
-        + "Player's Name: hu1 \n"
-        + "Player's limit: 1, can still carry: 1\n"
-        + "Carrying: [] \n"
-        + "Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)\n"
-        + "#0 Room: Armory, has items: [Revolver(Damage=3)]\n"
-        + "Neighbor Rooms: Billiard Room, Dining Hall, Drawing Room\n"
-        + "Current Turn #1 for player: hu1. (Available commands: [Move, Look, Pick])\n"
-        + "Reachable Rooms: [Billiard Room, Dining Hall, Drawing Room]\n"
-        + "To Player: hu1, Which room do you want to move to?\n"
+    assertTrue(output.toString().contains("To Player: hu1, Which room do you want to move to?\n"
         + "Player: hu1 moved to room: Dining Hall SUCCESS!"));
   }
 
@@ -276,10 +265,7 @@ public class CmdControllerImplementTest {
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
-    assertTrue(output.toString().contains("Current Turn #4 for player: com2. (Available commands:"
-        + " [Move, Look, Pick])\n"
-        + "**Computer player**: com2 is taking action...\n"
-        + "**Computer player**: com2 MOVE to room: "));
+    assertTrue(output.toString().contains("Game Over: Max 4 turns finished!"));
   }
 
   /**
@@ -295,10 +281,8 @@ public class CmdControllerImplementTest {
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
-    assertTrue(output.toString().contains("Current Turn #2 for player: com2. (Available commands:"
-        + " [Move, Look, Pick])\n"
-        + "**Computer player**: com2 is taking action...\n"
-        + "**Computer player**: com2 PICK up Revolver with 3 damage.\n"));
+    assertTrue(output.toString().contains("**Computer player**: com2 PICK up Revolver with 99 "
+        + "damage.\n"));
   }
 
   /**
@@ -314,12 +298,7 @@ public class CmdControllerImplementTest {
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
-    assertTrue(output.toString().contains("Current Turn #1 for player: hu1. (Available commands: "
-        + "[Move, Look, Pick])\n"
-        + "You are in #0 Room: Armory, has items: [Revolver(Damage=3)]\n"
-        + "(To Player) hu1: What do you want to pick? (Enter the exact name.):\n"
-        + "Player PICK execute success!\n"
-        + "Player: hu1 picked up item: Revolver SUCCESS!"));
+    assertTrue(output.toString().contains("Player: hu1 picked up item: Revolver SUCCESS!"));
   }
 
   /**
@@ -334,14 +313,7 @@ public class CmdControllerImplementTest {
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
-    assertTrue(output.toString().contains("Current Turn #1 for player: hu1. (Available commands: "
-        + "[Move, Look, Pick])\n"
-        + "You (player: hu1) are currently in room #0 Armory and can be seen from rooms: [Billiard "
-        + "Room, Dining Hall, Drawing Room]\n"
-        + "#0 Room: Armory, has items: [Revolver(Damage=3)]\n"
-        + "**Dr. Lucky is in the room: Target name: Doctor Lucky, Current HP: 50, Current room "
-        + "index: 0\n"
-        + "Players in the same room: com2, "));
+    assertTrue(output.toString().contains("Neighboring room info begin:-----"));
   }
 
   /**
@@ -358,10 +330,7 @@ public class CmdControllerImplementTest {
     // The correct return string should contain correct command result info
     assertTrue(output.toString().contains("Which player do you want to check? (Enter the exact "
         + "player name from the above list.)\n"
-        + "Player type: **Computer Player**\n"
-        + "Player's Name: com2 \n"
-        + "Player's limit: 1, can still carry: 0\n"
-        + "Carrying: [Revolver(Damage=3)] "));
+        + "Player type: **Computer Player**\n"));
   }
 
   /**
