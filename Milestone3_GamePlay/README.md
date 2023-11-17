@@ -2,7 +2,7 @@ KillDoctorLuckyGameDesign README
 Author: Zack-Haowen Xue
 Project Github: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone3
 
-Milestone2_Controller
+Milestone3_GamePlay
 
 1. Instructions on how to run:
    1.1 Once you clone or download the project Repo, unzip the Repo.  
