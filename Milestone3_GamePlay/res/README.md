@@ -107,13 +107,21 @@ Milestone2_Controller
    Lucky go escaped.
 6. Line 226: quit game successfully with order 66.  :)
 
+   **Ms3ExampleRunHumanRunAttackFailed.txt**
+1. This example run logged that the human player tried an attempt on attacking Dr. Lucky, but failed
+   due to be seen by other players in the neighbor room
+2. This can be found in log line 130: Player(hum222) Attack failed due to be seen!
+3. The player hum222 try attack Dr. Lucky using poking in room #1 Billiard Room, but it failed.
 
-4. Assumptions for the MS2:
+
+4. Assumptions for the MS2 and MS3:
    4.1: I assume that the visibility of the game for different players would be their neighboring
-   rooms.
+   rooms. Thus, players in neighboring room can see each other with out pet effect. If players can
+   be seen each other they can not execute the attack or the attack will be failed.
    4.2: Assume that the total number of players and total turns are set when starting to run the
    game program, and those settings cannot be changed during the game.
-   4.3: Assume the player can only choose from one of three commands: [Move, Pick, Look].
+   4.3: Assume the player can only choose from one of 5
+   commands: [Move, Pick, Look, PetMove, Attack].
    4.4: Assume each command would consume 1 turn, and each player can only take 1 command during
    their turn.
    4.5: Assume the turn takes place in the order when players were added.
@@ -121,8 +129,25 @@ Milestone2_Controller
    4.7: Other intuitive and necessary assumptions that are needed to run my game of killing Dr.
    Lucky.
    4.8: No duplicated item names, player names, room names, and other necessary objects in the game.
+   4.9: In real game play the Pet will not move in a DFS pattern, due to hard to play and
+   validation. But DFS for pet moving feature is programmed for extra credit and testing purpose.
+   The DFS implementation can be found in the source code.
+   4.10 Assume that when Dr. Lucky in are not in the room with players, the player cannot execute
+   attempt of attack Dr. Lucky. The system will not give the option for customers to attempt kill if
+   target is not in the same room with the player.
+   4.11 Assume the user can properly read and parse the English word game description on the command
+   line and make rational choices base on the game rule.
+   4.12 Assume the items in the game can all be consumed once, once used it will remove from the
+   game. Reuse the same item will cause error/warnings to the user.
+   4.13 Assume the Pet effect will be acting as a cloud in a single room, if a pet present in a room
+   this room’s item and players will not be seen from outside, but inside players can see each
+   other.
+   4.14. Assume if the Pet in neighboring room, and player execute look around command will still
+   see the room name as its neighbor, but will not be able seen its inside, the player inside will
+   not be seen, then the player inside room with pet can still kill Dr. Lucky if that is possible.
 
-5. Limitations for MS2:
+
+5. Limitations for MS2 and MS3:
    5.1: Include all assumptions from above.
    5.2: The game will only end when the maximum number of turns is reached.
    5.3: The players cannot stop the game during the gameplay turn. Players can quit the program in
@@ -131,26 +156,51 @@ Milestone2_Controller
    to play.
    5.5: Computer players will move randomly in the world and always pick items in the room starting
    with the highest damage on the item as long as it has carrying capacity.
-   5.6: The world map file will be generated at a fixed path with a fixed file name.
+   5.6: The world map file will be generated at a fixed path with a fixed file name base on given.
    5.7: Any other necessary limitations that are needed to run my game design of killing Dr. Lucky.
+   5.8: Computer player will be able to attempt attack target, and if it knows it will be seen it
+   will not attack the target. When computer attacks, it will always try to use its highest damage
+   item, it no items available, it will just use the basic poking attack.
+   5.9: Computer player will act command with following priority in order: attempt attack, pick,
+   move, and look around. The computer player will not move pet, as it’s not smart enough yet.
+   5.10: At beginning of each player’s turn, the system will remind the current player their room
+   info but will not show neighbor room info(such as items, players, those neighbor info need to be
+   get by look around command). But the customer will tell the user if the Dr. Lucky is in their
+   current room or not. This will make the game more playable and user-friendly.
+   5.11: If the attack failed due to item name input error or used item, the system will remind the
+   player try to use another item and try attack again.
+   5.12Pet remain stationary for most of the time unless move, or it can be activated for DFS move,
+   this will increase the game difficulty, and hard to valid on command line interface thus not
+   recommended in game play. But can be tested with test cases and unit test.  
+   5.13: If the attack failed due to be seen by others, the system will count this turn and pass,
+   let player know attack failed but will not remove item since the item did not take effect. The
+   player may use the item again next time.
 
-6. Change and Version History v2.0:
+
+6. Change and Version History v2.0 - v3.0:
    6.1: From v1.0 the milestone 1, players models are introduced.
-   6.2: Synchronous Controller Controller introduced along with MockWorld testing method.
+   6.2: Synchronous Controller introduced along with MockWorld testing method.
    6.3: Necessary changes in World and World Implementation to accommodate the Synchronous
    Controller introduced in this version.
    6.3: The controller would run the program and play the game in a command line interface.
    6.4: All other necessary reversion and changes to accommodate the new introduced feature and
    requirements. For more details please refer to the Project GitHub Repository for detailed commit
-   history: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone2
+   history: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone3
    6.5: Command instruction feature introduced to accommodate game play, players can give Move,
-   Look, Pick command during the game play, as well as enquiry a player or room specific
-   information.
-   6.6: Detailed design change please refer to Milestone2_ControllerUMLPreliminaryDesignV2.pdf in
+   Look, Pick, Attack, PetMove command during the game play, as well as enquiry a player or room
+   specific information.
+   6.6: Detailed design change please refer to Milestone3_PreliminaryDesignV3.pdf in
    the resource folder.
-   6.7: Mock World Molde also introduced and designed for testing purpose.
+   6.7: Mock World Model also introduced and designed for testing purpose.
+   6.8: In v3.0 game play is completed, the pet feature is added into the game.
+   6.9: Pet will affect the visibility, more detail see above assumption and limitation.
+   6.10: Pet can be moved by players, this count as a turn.
+   6.11: Pet remain stationary for most of the time unless move, or it can be activated for DFS
+   move, this will increase the game difficulty, and hard to valid on command line interface thus
+   not recommended in game play. But can be tested with test cases and unit test.  
+   6.12: Attack command introduced in the game, see rule in above assumption and limitation.
 
-References:
+**References:**
 
 - https://www.youtube.com/watch?v=9hsPLAB5a9s&ab_channel=fenirob
 - https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/Graphics.html
