@@ -212,4 +212,18 @@ Current Turn #10 for player: com2. (Available commands: [Move, Look, Pick, PetMo
 Game Over: Max 10 turns finished!
 Whoops, Dr.Lucky(Doctor Lucky HP=49) escaped!!!
 Game finished, back to main menu to 66-quit & re-start a New Game.
-Enter 'm' or 'M' to go back to Main Menu: 
+Enter 'm' or 'M' to go back to Main Menu: m
+
+Welcome to the Game World of Doctor Lucky's Mansion:
+Main Menu:
+(Select following operation (integer only)!)
+0-Create a graphical representation of the world map PNG.
+1-Setup game by adding all 2 players.
+2-Find a Room (Display information about specified room in the world).
+3-Find a Player (Display information about specified player in the world).
+4-Start game turns to play (Must setup all the players before play!)
+66-Quit and kill the program by using Order 66.
+66
+Executed Order 66 to kill and eliminate ALL controller program and Quit!
+
+Process finished with exit code 0

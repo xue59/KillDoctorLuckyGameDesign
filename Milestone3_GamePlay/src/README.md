@@ -1,53 +1,112 @@
-KillDoctorLuckyGameDesign Readme
+KillDoctorLuckyGameDesign README
 Author: Zack-Haowen Xue
-Project Github: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone2
+Project Github: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone3
 
 Milestone2_Controller
 
 1. Instructions on how to run:
-   1.1: Once you clone or download the project Repo, unzip the Repo.
-   1.2: Open the terminal under the folder of /Milestone2_Controller/res.
-   1.3: You will see that there is an ms2_Controller.jar available.
-   1.4: In the terminal, run the command: java -jar
-   ms2_Controller.jar [map txt file directory] [totalPlayersNumber] [totalMaxTurnNumber].
-   1.5: If no map file is provided, it will run the default map file mansion.txt with default game
-   settings: totalPlayers=3 and totalTurns=9.
+   1.1 Once you clone or download the project Repo, unzip the Repo.  
+   1.2 Open the terminal under the folder of /Milestone3_GamePlay/res
+   1.3 Find the jar file called ms3_GamePlay.jar.
+   1.4 In the terminal under the res folder, run the command: java -jar ms2_Controller.jar [map
+   txt file directory] [totalPlayersNumber] [totalMaxTurnNumber]
+   1.5: Please provide the map txt file, total player and max turn exact as above pattern, for
+   example: java -jar ms3_GamePlay.jar mansion2023Pet.txt 2 99 this would start with 2 players
+   and 99 turns.
    1.6: Once the game starts, you will see the Welcome Screen, and you can execute the following
-   commands: 0-create map graph, 1-setup all players, 2-Find info on a specific room, 3-Find info on
-   a specific player, 4-Start the game turns, 66-quit the program.
+   commands: 0-create map graph, 1-setup all players, 2-Find info on a specific room, 3-Find
+   info on a specific player, 4-Start the game turns, 66-quit the program.
    1.7: Once in the game, follow the instructions to take turns and play the game.
-   1.8: Currently, the game will only quit when the maximum number of turns is reached. Once the
-   game is over, you can use 'm' or 'M' to return to the main menu.
+   1.8: Currently, the game will over when the maximum number of turns is reached or target, Dr.
+   Lucky, got completely killed. Once the game is over, you can use 'm' or 'M' to return to the
+   main menu.
+   1.9: To exit the game program, in main menu execute 66 to kill the program. Enjoy the game!
+
 
 2. Example map txt file:
-   Example Map Files .txt can be found in the /res/ folder. There are 3 sample .txt map files you
-   can choose to start and run the Jar file:
-   mansion2023.txt - the standard Milestone 1 provided Dr. Lucky's Mansion file.
-   customerWorld.txt - slightly changed room names based on Dr. Lucky's Mansion.
-   myOwnWorldMapV1.txt - my designed map.txt file.
-   After each run, check the generated pictures in the same /res folder.
+   a. Example Map Files .txt can be found in the /res/ folder. There are 3 sample .txt map files
+   you can choose to start and run the Jar file:
+   b. mansion2023Pet.txt - the standard Milestone 1 provided Dr. Lucky's Mansion file with Pet
+   added and modified item damage, a few item damage are enhanced to make it easy on killing Dr.
+   Lucky.
+   c. customerWorld.txt - slightly changed room names based on Dr. Lucky's Mansion.
+   d. myOwnWorldMapV1.txt - my designed map.txt file.
+   e. After each run, check the generated pictures in the same /res folder.
 
-3. Example Runs:
-   The example runs can be found in the folder: /res/ExampleRun_MS2.
-   There are two example runs provided. I will take example run 1 as a demonstration here:
-   Line 1: indicates that the program started with the user running the Jar file and used
-   mansion2023 as the map.txt file, with input for a total of 3 players and a total of 6 turns. So,
-   3 players would share the 6 turns, with 2 turns per player to finish the game.
-   Line 4-14: displays the Main Menu for the user to select.
-   Line 15-64: The user is setting up the player info with player names, initial rooms, limits, and
-   choosing between computer or human players. This process finishes the player setup, and the user
-   confirms that all players were created successfully. The user selects 'm' to go back to the main
-   menu.
-   Line 75-16: The user starts the gameplay and takes turns from player #1 to #3 in the order that
-   they were created. For example, we can see that human1 moved to Armory successfully in line 91.
-   Human2 player performed a 'Look' command at turn #2. Human1 player picked up the item 'Revolver'
-   in Armory, and so on. Finally, the game ends by reaching the maximum turn number, 6.
-   Line 173: User checks player 'human1,' and the program displays the specific player info.
-   Line 197: User checks the room 'Parlor,' and the program displays the specific room info.
-   Line 217: User creates the map PNG file, and the program displays the path and directory where
-   the picture file is saved. (The PNG map file can be found in the same folder named:
-   ExampleRun1_WorldMap.png.)
-   Line 244: User executes command 66 to quit the program.
+
+3. Example run with explanations:
+   **Ms3ExampleRunHumanWin.txt**
+1. This example run logged that the Human players win the game by successfully killing Dr Lucky and
+   reduced target HP to 0.
+2. Line 16 – 35 shows two Human players are added into the game called p1 and p2.
+3. Line 66: the game officially started.
+4. Line 76: turn #1, the p1 player moved the pet to Drawing Room. (Pet move success confirmed in
+   line 182)
+5. Line 93: turn #2, the p2 picked Letter Opener(Damage=77).
+6. Line 182: turn #5, the Pet effected the visibility of a Look around command carried out by p1.
+   The P1 was trying to look around for room Dining Hall, but the Pet is the Drawing Room, thus the
+   outsit players (p1) cannot see inside conditions. Thus, players and items in Drawing Room in this
+   turn cannot be seen.
+7. Line 207-209: turn #6, the p2 player encountered Dr. Lucky, target, in the same room in room #5
+   Foyer and the p2 player successfully Poking attacked the target. It confirmed the attack and Dr.
+   Lucky recued HP by 1.
+8. Line 348: turn #14, p2 is in room Parlor with Pet, but Dr. Lucky not in the same room, thus
+   cannot attack.
+9. Line 443: turn #18, player p2 is in room #17 Tennessee Room with Dr. Lucky, (cannot be seen by
+   others, since no players around room) and player p2 successfully attacked the Dr. Lucky with
+   Letter Opener(Damage=77). This caused damage and 0 HP for the target. Thus game is over and p2
+   win.(confirmed by the system message line 452 & 451)
+10. Line 451-452: Congratulation!!!!!!!!! Game Winner: p2
+11. Line 468: user confirmed game result again: Last game already finished, back to main menu to
+    re-start a New Game. Last game winner: p2!!!
+12. Line 482: Line 235: quit game successfully with order 66. :)
+
+    **Ms3ExampleRunComputerWin.txt**
+1. This example run logged that the Computer players win the game by successfully killing Dr Lucky
+   and reduced target HP to 0.
+2. Line 16 – 35 shows two Computer players are added into the game called com1 and com2.
+3. Line 61: the game officially started.
+4. Line 97: turn #1, Player(com1) attacked Dr.Lucky SUCCESS with item: Poking(Damage=1) and causing
+   damage of hp reduced by 1. It is confirmed that the targeted hp reduced to 49 in line 99. This
+   shows that the computer attack logic is working as expected, as it will always try to attack
+   to Dr. Lucky whenever it’s possible. Even the computer player does not have items, it will use
+   the basic attack, poking, to attack. If they have items, they will always try to use the highest
+   damage item to attack. (This can be shown in turn #9, line 203).
+5. Line 125: turn #3, **Computer player**: com1 PICK up Revolver with 99 damage. This shows the
+   computer pick logic is working correctly, since it will always try to pick item when they
+   cannot attack and also having capacity. It also will try to pick the highest damage item in the
+   room floor.
+6. Line 138: turn #4, **Computer player**: com2 MOVE to room: Trophy Room. This shows the computer
+   move logic is correct. When the computer player cannot attack or pick it will try to move
+   randomly in the game world. In this case the com2 player moved to Trophy Room.
+7. Line 145: turn #5, Current Room: Armory(**Pet**(Fortune Cat Pet) in this room.) The computer
+   player com1 encountered the Pet, the Pet is taking effect, but there is no Dr. Lucky in the room
+   thus can not attack.
+8. Line 203: turn#9, **Computer player**: Player(com1) attack Dr.Lucky SUCCESS with item: Revolver(
+   Damage=99). This shows that the computer attack logic worked correctly, and it used the highest
+   item to attack Dr. Lucky when there is a chance to attack. And the Dr. Lucky is successfully
+   killed reduced HP to 0, thus, computer player com1 wins.
+9. Line 222: user can confirm that the computer player com1 won the game.
+10. Line 235: quit game successfully with order 66.  :)
+
+    **Ms3ExampleRunEscaped.txt**
+1. This example run logged that the max turns reached thus no winner for the game, and Dr. Lucky,
+   the target escaped successfully with positive HP.
+2. Line 33– 67: shows two Computer players are added into the game called com1 and com2, they are
+   both computer players in this case just to speed up the process and improve automation. Also
+   setting the computer players with less capacity for items, for example with capacity, this
+   ensured Dr. Lucky can have higher escape rate.
+3. Line 92: turn #1, since com1 are initially in the same with Dr. Lucky, so it attacked the
+   target with only Poking, it caused 1 damage, can be confirmed by: **Computer player**: Player(
+   com1) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)  Dr.Lucky(Doctor Lucky) HP: -1.
+   Dr.Lucky(Doctor Lucky) Current HP=49
+4. Line 95 – line 198: shows some players movement in turn#2 – turn#9, since there are total 10
+   turns in this Demo run. After next turn#10, the target will escape.
+5. Line 213: turn #10, Game Over: Max 10 turns finished! Whoops, Dr.Lucky(Doctor Lucky HP=49)
+   escaped!!!  This shows, the player failed kill Dr. Lucky within 10 turns of games and the Dr.
+   Lucky go escaped.
+6. Line 226: quit game successfully with order 66.  :)
+
 
 4. Assumptions for the MS2:
    4.1: I assume that the visibility of the game for different players would be their neighboring
