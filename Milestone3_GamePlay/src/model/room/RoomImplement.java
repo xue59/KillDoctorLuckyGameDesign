@@ -237,11 +237,7 @@ public class RoomImplement implements Room {
   public boolean equals(Object obj) {
     if (obj instanceof Room) {
       Room comparedRoom = (Room) obj;
-      if (this.hashCode() == comparedRoom.hashCode()) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.hashCode() == comparedRoom.hashCode();
     } else {
       return false;
     }

@@ -1,11 +1,22 @@
 package model.pet;
 
-public class PetImplement implements Pet{
+/**
+ * The Pet implements represents a general pet that can move between different rooms.
+ * Implementing classes should provide the necessary functionality for retrieving the pet's name,
+ * getting the current room number, and moving the pet to a new room.
+ */
+public class PetImplement implements Pet {
   private final String name;
   private int curRoomNum;
 
-  public PetImplement(String name) throws IllegalArgumentException{
-    if (name.isEmpty()){
+  /**
+   * Constructs a PetImplement object with the specified name. The initial room number is set to 0.
+   *
+   * @param name the name of the pet.
+   * @throws IllegalArgumentException if the provided pet name is empty or null.
+   */
+  public PetImplement(String name) throws IllegalArgumentException {
+    if (name.isEmpty()) {
       throw new IllegalArgumentException("Error in PetImplement: Pet name cannot be empty/null\n!");
     }
     this.name = name;
@@ -40,7 +51,7 @@ public class PetImplement implements Pet{
    */
   @Override
   public void movePet(int roomNumber) throws IllegalArgumentException {
-    if (roomNumber >=0){
+    if (roomNumber >= 0) {
       this.curRoomNum = roomNumber;
     } else {
       throw new IllegalArgumentException("Error in Pet movePet: input roomNum cannot be negative!");

@@ -6,7 +6,7 @@ import model.world.World;
  * A command class that represents a player's move action in the game world.
  */
 public class MovePlayerCmd implements WorldCommand {
-  private String inputRoomName;
+  private final String inputRoomName;
 
   /**
    * Constructs a new MovePlayerCmd object with the specified input room name.

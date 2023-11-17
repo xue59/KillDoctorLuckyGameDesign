@@ -22,24 +22,24 @@ public class Driver {
   public static void main(String[] args) throws IOException {
     // The default file name path & name
     // CustomerMap input file path: $ContentRoot$/res/customerWorld.txt
-    String fileName = String.format("res/mansion2023Pet.txt");
+    String fileName = "res/mansion2023Pet.txt";
     int totalPlayers = 2;
-    int totalTurns = 99;
+    int totalTurns = 10;
 
     try {
       if (args.length < 3) {
-        System.out.println(String.format("Less than 3 arguments found! Staring game with "
-            + "default file, %d players, %d total turns!", totalPlayers, totalTurns));
+        System.out.printf("Less than 3 arguments found! Staring game with "
+            + "default file, %d players, %d total turns!%n", totalPlayers, totalTurns);
         System.out.println(
             "ex: Example run command: java -jar ms2_Controller.jar <$ModuleFileDir$/mansion2023"
                 + ".txt> "
                 + "{totalPlayersNumber} {totalMaxTurnNumber}");
-        System.out.println(String.format("Initiating with Default File.....>>>> %s  ", fileName));
+        System.out.printf("Initiating with Default File.....>>>> %s  %n", fileName);
       } else {
         fileName = args[0];
         totalPlayers = Integer.parseInt(args[1]);
         totalTurns = Integer.parseInt(args[2]);
-        System.out.println(String.format("Input File args Found: %s", fileName));
+        System.out.printf("Input File args Found: %s%n", fileName);
       }
 
       //build world Implement

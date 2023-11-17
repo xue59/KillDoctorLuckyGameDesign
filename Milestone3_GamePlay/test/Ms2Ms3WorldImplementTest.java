@@ -1,4 +1,5 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +16,7 @@ import org.junit.Test;
 /**
  * This class contains unit tests for the `WorldImplement` class in the context of the Ms2 project.
  */
-public class Ms2WorldImplementTest {
+public class Ms2Ms3WorldImplementTest {
 
   private WorldImplement ms2TestWorld;
 
@@ -81,9 +82,8 @@ public class Ms2WorldImplementTest {
         + "Player's limit: 10, can still carry: 10\n"
         + "Carrying: [] \n"
         + "Current Room: Drawing Room\n"
-        + "#4 Room: Drawing Room, has items: [Letter Opener(Damage=2)]\n"
+        + "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n"
         + "Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
-
   }
 
   /**
@@ -99,7 +99,7 @@ public class Ms2WorldImplementTest {
     assertEquals("Player type: Human Player\n"
         + "Player's Name: human1 \n"
         + "Player's limit: 10, can still carry: 9\n"
-        + "Carrying: [Letter Opener(Damage=2)] \n"
+        + "Carrying: [Letter Opener(Damage=77)] \n"
         + "Current Room: Drawing Room\n"
         + "#4 Room: Drawing Room, has items: []\n"
         + "Neighbor Rooms: Armory, Dining Hall, Wine Cellar, Foyer\n", playerInfo);
@@ -157,7 +157,7 @@ public class Ms2WorldImplementTest {
             "#19 Room: Wine Cellar, has items: [Rat Poison(Damage=2), Piece of Rope(Damage=2)]\n" +
             "Players in Wine Cellar: \n" +
             "6. Neighbor:\n" +
-            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=2)]\n" +
+            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
             "Players in Drawing Room: \n" +
             "7. Neighbor:\n" +
             "#8 Room: Kitchen, has items: [Crepe Pan(Damage=3), Sharp Knife(Damage=3)]\n" +
@@ -279,7 +279,7 @@ public class Ms2WorldImplementTest {
             "#3 Room: Dining Hall, has items: []\n" +
             "Players in Dining Hall: \n" +
             "3. Neighbor:\n" +
-            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=2)]\n" +
+            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
             "Players in Drawing Room: \n" +
             "Neighboring room info " +
             "end:------------------------------------------------------------\n", human1LookRes);
@@ -855,8 +855,266 @@ public class Ms2WorldImplementTest {
     // Attempting one more action after the game has ended should throw a game over error.
     ms2TestWorld.cmdPlayerLook(); // one more move (turn 10) would cause a Game Over message.
 
-
   }
 
+  /**
+   * Tests two players in same room can be seen without pet.
+   */
+  @Test
+  public void testPlayerSeenSameRoomNoPet() {
+    ms2TestWorld.addOnePlayer("human1", 11, false, 10);
+    ms2TestWorld.addOnePlayer("human2", 11, true, 11);
+    assertEquals(0, ms2TestWorld.getPetRoomNumber()); // pet in room 0 not 11
+    assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen());
+  }
 
+  /**
+   * Tests two players in same room can be seen even with pet.
+   */
+  @Test
+  public void testPlayerSeenSameRoomWithPet() {
+    ms2TestWorld.addOnePlayer("human1", 0, false, 10);
+    ms2TestWorld.addOnePlayer("human2", 0, true, 11);
+    assertEquals(0, ms2TestWorld.getPetRoomNumber()); // pet in room 0 same as players
+    assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen());
+  }
+
+  /**
+   * Tests two players in two neighbor room with pet.
+   * The one with pet cannot been seen from the outside.
+   * In this case human0 have the pet, thus its room cannot been seen from outside.
+   */
+  @Test
+  public void testPlayerNotBeSeenWithPet1() {
+    ms2TestWorld.addOnePlayer("human0", 0, false, 10);
+    ms2TestWorld.addOnePlayer("human1", 1, true, 11);
+    assertEquals(0, ms2TestWorld.getPetRoomNumber()); // pet in room 0 same as human0
+    // current player: human0 cannot been seen, visibility check is false.
+    assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen());
+  }
+
+  /**
+   * Tests two players in two neighbor room with pet.
+   * The one with pet cannot been seen from the outside.
+   * In this case pet is moved to room#1 Billiard Room, thus player human0 can be seen again.
+   * But player human1 cannot be seen.
+   */
+  @Test
+  public void testPlayerNotBeSeenWithPet2() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("human0", 0, false, 10);
+    ms2TestWorld.addOnePlayer("human1", 1, true, 11);
+    assertEquals(0, ms2TestWorld.getPetRoomNumber()); // pet in room 0 same as human0
+    ms2TestWorld.cmdPetMove("Billiard Room"); // pet moved to room #1 & turn change
+    assertEquals(1, ms2TestWorld.getPetRoomNumber()); // pet in room 1 same as human0
+    assertEquals("human1", ms2TestWorld.getCurrentPlayerName());
+    // current player human 1 cannot been seen since turn change, and human 1 has pet buffer.
+    assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen()); // human1 cannot be seen.
+  }
+
+  /**
+   * Tests two players in two neighbor room without pet can always be seen.
+   * In this case human0 and human1 in two neighbor room 11 & 12, and pet are away.
+   * Thus, the two players can always be seen.
+   */
+  @Test
+  public void testPlayerBeSeenNeighborNoPet() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("human0", 11, false, 10);
+    ms2TestWorld.addOnePlayer("human1", 12, true, 11);
+    assertEquals(0, ms2TestWorld.getPetRoomNumber()); // pet in room 0, away from 2 players
+    assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen()); // human0 can be seen.
+    ms2TestWorld.cmdPetMove("Foyer"); //move pet change turn, change player
+    assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen()); // human1 can be seen.
+  }
+
+  /**
+   * Test case for validating the behavior of player attacks with an item in a game scenario.
+   * Scenario:
+   * - Two players, "human1" and "human2," are present in the game world.
+   * - Both players have a "Billiard Cue" item, which is used for attacking.
+   * - The initial health of the players and Dr. Lucky is set.
+   * - The first player attempts to attack Dr. Lucky using the "Billiard Cue,"
+   * - resulting in a successful attack.
+   * - Dr. Lucky's health is reduced, and he moves to the next room.
+   * - The second player attempts to use the "Billiard Cue" for a second time,
+   * triggering an expected IllegalAccessException.
+   * <p>
+   * Expected Outcome:
+   * - The first attack is expected to be successful, reducing Dr. Lucky's health.
+   * - Dr. Lucky moves to the next room.
+   * - The second player's attempt to use the "Billiard Cue" for the second time is expected to
+   * throw an IllegalAccessException, as per the game rules that prohibit using the same item
+   * twice.
+   */
+  @Test(expected = IllegalAccessException.class)
+  public void testPlayerUsedItemAttackFail() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("human1", 1, false, 10);
+    ms2TestWorld.addOnePlayer("human2", 5, false, 10);
+    ms2TestWorld.cmdPlayerPick("Billiard Cue");
+    assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen()); //check cannot be seen.
+    String cmdResult = ms2TestWorld.cmdPlayerKill("Billiard Cue");
+    assertTrue(cmdResult.contains(
+        "Player(human1) attack Dr.Lucky SUCCESS with item: Billiard Cue(Damage=3)\n" +
+            "Dr.Lucky(Doctor Lucky) was attacked by hp:-3\n" +
+            "Dr.Lucky(Doctor Lucky) Current HP=47"));// 1st attack success
+    assertEquals(47, ms2TestWorld.getDrLuckyHp());// check drLucky hp reduced by -3 from 50
+    ms2TestWorld.moveDrLucky(); // move Dr lucky to next room
+    ms2TestWorld.moveDrLucky();
+    ms2TestWorld.cmdPlayerLook();
+    // When 2nd player use the same item it will throw an exception error
+    // Due to the rule, no item can be used for second time.
+    ms2TestWorld.cmdPlayerKill("Billiard Cue");
+  }
+
+  /**
+   * Test case for when DrLucky is not in the room with the player, they player not suppose to
+   * execute attack command, if its attacked, it will throw an Exception error.
+   * In following case, player try poking but target not in room, it will fail.
+   */
+  @Test(expected = IllegalAccessException.class)
+  public void testPlayerAttackFailNoDrLuckyInRoom() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("human1", 11, false, 10);
+    ms2TestWorld.cmdPlayerKill("poking");
+  }
+
+  /**
+   * Test case for attack fail when 2 players in the same room with no pet.
+   * In following case, 2 players in same room #2, human1 try attack but failed, return null string.
+   * Validated the attack failed with Dr. hp remain unchanged.
+   */
+  @Test
+  public void testPlayerAttackFailOtherPlayerInSameRoom() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("human1", 2, false, 10);
+    ms2TestWorld.addOnePlayer("human2", 2, false, 10);
+    //current player are in the same room with human 1 & 2 thus attack failed.
+    assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen());
+    ms2TestWorld.moveDrLucky();
+    ms2TestWorld.moveDrLucky(); // move dr to the testing room
+    String res = ms2TestWorld.cmdPlayerKill("poking");
+    //System.out.println(res);
+    assertNull(res);
+    //check drLucky's hp is still 50 at full thus attack failed
+    assertEquals(50, ms2TestWorld.getDrLuckyHp());
+  }
+
+  /**
+   * Test case for when 2 players in neighbor room, with no pet, attack will fail due to be seen.
+   * In Dr Lucky's mansion room 2 & 20 are neighbors.
+   * In following case, player try poking target in room, it will fail, return null string.
+   * Validated the attack failed with Dr. hp remain unchanged.
+   */
+  @Test
+  public void testPlayerAttackFailOtherPlayerInNeighborNoPet() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("human1", 2, false, 10);
+    ms2TestWorld.addOnePlayer("human2", 20, false, 10);
+    //check player can be seen by each other.
+    assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen());
+    ms2TestWorld.moveDrLucky();
+    ms2TestWorld.moveDrLucky(); // move dr to the testing room
+    String res = ms2TestWorld.cmdPlayerKill("poking");
+    //System.out.println(res);
+    assertNull(res);
+    //check drLucky's hp is still 50 at full thus attack failed
+    assertEquals(50, ms2TestWorld.getDrLuckyHp());
+  }
+
+  /**
+   * Test case for when 2 players in neighbor room, with pet in other room , attack will fail due to
+   * be seen from room 20 where pet in there but inside can see others outside.
+   * In Dr Lucky's mansion room 2 & 20 are neighbors, pet is in other room.(20)
+   * In following case, player try poking target in room, it will fail, return null string.
+   * Validated the attack failed with Dr. hp remain unchanged.
+   * Validate Pet in effect.
+   */
+  @Test
+  public void testPlayerAttackFailOtherPlayerInNeighborWithPet() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("human1", 20, false, 10);
+    ms2TestWorld.addOnePlayer("human2", 2, false, 10);
+    ms2TestWorld.cmdPetMove("Winter Garden"); // move pet to neighbor room 20
+    //check player can be seen by each other.
+    assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen());
+    ms2TestWorld.moveDrLucky(); // move dr to the testing room
+    String res = ms2TestWorld.cmdPlayerKill("poking");
+    //System.out.println(res);
+    assertNull(res);
+    //check drLucky's hp is still 50 at full thus attack failed
+    assertEquals(50, ms2TestWorld.getDrLuckyHp());
+
+    //check pet is in effect, player in room 20 human1 cannot be seen due to pet in.
+    assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen());
+    assertEquals(20, ms2TestWorld.getPetRoomNumber());
+  }
+
+  /**
+   * Test case to validate a player's successful attack on Dr. Lucky when there is no pet present.
+   * <p>
+   * Scenario:
+   * - Two players, "human1" and "human2," are in the game world.
+   * - Player "human1" has a health level of 20, and Player "human2" has a "Poking" item with
+   * - damage 1.
+   * - The pet is moved to a faraway location using the "Winter Garden" command.
+   * - Dr. Lucky's initial health is verified to be 50.
+   * - Players cannot see each other initially.
+   * - Player "human2" successfully attacks Dr. Lucky with the "Poking" item, resulting in Dr.
+   * Lucky's health reduction.
+   * <p>
+   * Expected Outcome:
+   * - Dr. Lucky's health is reduced by the damage caused by the successful attack.
+   * - The attack message indicates success, and Dr. Lucky's updated health is provided.
+   *
+   * @throws IllegalAccessException if there is an issue with the player's attack.
+   */
+  @Test
+  public void testPlayerAttackSuccessWithNoPet() throws IllegalAccessException {
+    // Setup: Create two players, set initial conditions, and move the pet to a faraway location.
+    ms2TestWorld.addOnePlayer("human1", 20, false, 10);
+    ms2TestWorld.addOnePlayer("human2", 1, false, 10);
+    ms2TestWorld.cmdPetMove("Winter Garden"); // move pet to far away
+
+    // Assertion: Verify Dr. Lucky's initial health is 50.
+    assertEquals(50, ms2TestWorld.getDrLuckyHp());
+
+    // Assertion: Verify players cannot see each other initially.
+    assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen());
+
+    // Action: Attempt the player attack and verify the outcome.
+    String res = ms2TestWorld.cmdPlayerKill("poking");
+
+    // Assertion: Verify the success of the attack and Dr. Lucky's updated health.
+    assertTrue(res.contains(
+        "Player(human2) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)\n" +
+            "Dr.Lucky(Doctor Lucky) HP: -1\n" +
+            "Dr.Lucky(Doctor Lucky) Current HP=49\n"));
+    assertEquals(49, ms2TestWorld.getDrLuckyHp()); // check dr lucky hp reduced
+  }
+
+  /**
+   * This case test player can attempt attack Dr Lucky with other player in the neighbor room1,
+   * and the current player have pet to block the visibility to attack success.
+   *
+   * @throws IllegalAccessException if there is an issue with the player's attack.
+   */
+  @Test
+  public void testPlayerAttackSuccessWithPet() throws IllegalAccessException {
+    // Setup: Create two players, set initial conditions, and move the pet to a faraway location.
+    ms2TestWorld.addOnePlayer("human1", 0, false, 10);
+    ms2TestWorld.addOnePlayer("human2", 1, false, 10);
+
+    //check pet is present in room 0 for human1 player
+    assertEquals(0, ms2TestWorld.getPetRoomNumber());
+    // Assertion: Verify Dr. Lucky's initial health is 50.
+    assertEquals(50, ms2TestWorld.getDrLuckyHp());
+
+    // Assertion: Verify players cannot see each other initially.
+    assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen());
+
+    // Action: Attempt the player attack and verify the outcome.
+    String res = ms2TestWorld.cmdPlayerKill("poking");
+
+    // Assertion: Verify the success of the attack and Dr. Lucky's updated health.
+    assertTrue(res.contains(
+        "Player(human1) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)\n" +
+            "Dr.Lucky(Doctor Lucky) HP: -1\n" +
+            "Dr.Lucky(Doctor Lucky) Current HP=49\n"));
+    assertEquals(49, ms2TestWorld.getDrLuckyHp()); // check dr lucky hp reduced
+  }
 }

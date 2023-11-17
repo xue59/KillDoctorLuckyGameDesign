@@ -260,7 +260,6 @@ public interface World {
    */
   int getCurrentTurnNumber();
 
-  String getPetName();
 
   /**
    * Checks if the current player is in the same room as Dr. Lucky.
@@ -268,13 +267,81 @@ public interface World {
    * @return {@code true} if the current player is in the same room as Dr. Lucky, false otherwise.
    */
   boolean checkCurPlayerSameRoomWithDrLucky();
+
+  /**
+   * Checks if the current player can be seen by other players in the game.
+   *
+   * @return {@code true} if the current player is visible; {@code false} otherwise.
+   */
   boolean checkCurPlayerCanBeSeen();
+
+  /**
+   * Executes a player attack with a specified item in the game world.
+   *
+   * @param itemName the name of the item used for the attack.
+   * @return a string representation of the result of the player's attack.
+   * @throws NullPointerException     if a required parameter is null.
+   * @throws IllegalArgumentException if an illegal argument is provided.
+   * @throws IllegalAccessException   if there is an issue with the player's attack.
+   */
   String cmdPlayerKill(String itemName)
       throws NullPointerException, IllegalArgumentException, IllegalAccessException;
 
+  /**
+   * Retrieves a string containing information about all items carried by a specific player,
+   * including their names and damage values.
+   *
+   * @param playerName the name of the player.
+   * @return a string representation of the player's carried items and their damage values.
+   */
   String getPlayerAllCarryingItemStringWithDamage(String playerName);
+
+  /**
+   * Retrieves the name of the pet.
+   *
+   * @return the name of the pet.
+   */
+  String getPetName();
+
+  /**
+   * Retrieves the name of the player who has won the game.
+   *
+   * @return the name of the game winner.
+   */
   String getWinnerName();
 
+  /**
+   * Retrieves the name of Dr. Lucky in the game world.
+   *
+   * @return the name of Dr. Lucky.
+   */
   String getDrLuckyName();
+
+  /**
+   * Retrieves the current health points of Dr. Lucky in the game world.
+   *
+   * @return the health points of Dr. Lucky.
+   */
   int getDrLuckyHp();
+
+  /**
+   * Retrieves the room number where the pet is currently located in the game world.
+   *
+   * @return the room number of the pet.
+   */
+  int getPetRoomNumber();
+
+  /**
+   * Retrieves information about a specified room, excluding details about its neighbors.
+   * The method takes a room name as input, checks for items, the presence of Dr. Lucky, the pet,
+   * player in the room. The resulting information is formatted into a string and returned.
+   *
+   * @param roomName the name of the room for which information is requested.
+   * @return a formatted string containing details about the specified room, its contents.
+   * @throws IllegalArgumentException if the provided room name is invalid.
+   * @throws NullPointerException     if the room name is null.
+   */
+  String getOneRoomInfoWithOutNeighbor(String roomName)
+      throws IllegalArgumentException, NullPointerException;
+
 }

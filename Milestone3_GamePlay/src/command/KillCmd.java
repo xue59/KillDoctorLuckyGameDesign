@@ -2,10 +2,10 @@ package command;
 
 import model.world.World;
 
-public class KillCmd implements WorldCommand{
-  private String inputItemName;
+public class KillCmd implements WorldCommand {
+  private final String inputItemName;
 
-  public KillCmd(String inputItemName) throws NullPointerException{
+  public KillCmd(String inputItemName) throws NullPointerException {
     if (inputItemName.isEmpty() || inputItemName == null) {
       throw new NullPointerException("Error: killCmd Item name cannot be Blank or Null!");
     }

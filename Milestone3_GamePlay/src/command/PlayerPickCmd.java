@@ -6,7 +6,7 @@ import model.world.World;
  * A command class that represents a player's action to pick up an item in the game world.
  */
 public class PlayerPickCmd implements WorldCommand {
-  private String inputItemName;
+  private final String inputItemName;
 
   /**
    * Constructs a new PlayerPickCmd object with the specified input item name.

@@ -450,4 +450,27 @@ public class WorldMockModel implements World {
     this.log.append("getDrLuckyHp executed!");
     return 0;
   }
+
+  @Override
+  public int getPetRoomNumber() {
+    this.log.append("getPetRoomNumber executed!");
+    return 0;
+  }
+
+  /**
+   * Retrieves information about a specified room, excluding details about neighbors. The method
+   * takes a room name as input, checks items, the presence of Dr. Lucky, the pet, player in the
+   * room. The resulting information is formatted into a string and returned.
+   *
+   * @param roomName the name of the room for which information is requested.
+   * @return a formatted string containing details about the specified room, its contents.
+   * @throws IllegalArgumentException if the provided room name is invalid.
+   * @throws NullPointerException     if the room name is null.
+   */
+  @Override
+  public String getOneRoomInfoWithOutNeighbor(String roomName)
+      throws IllegalArgumentException, NullPointerException {
+    this.log.append("getOneRoomInfoWithOutNeighbor executed!");
+    return null;
+  }
 }

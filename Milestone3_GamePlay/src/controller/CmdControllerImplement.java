@@ -58,7 +58,7 @@ public class CmdControllerImplement implements Controller {
   public void startGame() throws IOException {
 
     while (!quitFlag) {
-      this.output.append(String.format("Welcome to the Game World of %s:\n",
+      this.output.append(String.format("\nWelcome to the Game World of %s:\n",
           world.getWorldName()));
       //this.output.append("(To quit: Ctrl + C) \n");
       this.displayMainMenuOptions();
@@ -229,9 +229,8 @@ public class CmdControllerImplement implements Controller {
     // if game over then should not start the game, let user go back re-start the game
     if (world.checkGameOver()) {
       // True game is over
-      this.output.append(
-          String.format("Last game already finished, back to main menu to re-start a New Game.\n"));
-      if (!world.getWinnerName().isEmpty()) {
+      this.output.append("Last game already finished, back to main menu to re-start a New Game.\n");
+      if (world.getWinnerName() != null) {
         this.output.append(String.format("Last game winner: %s!!!\n", world.getWinnerName()));
       } else {
         this.output.append(String.format(
@@ -251,10 +250,26 @@ public class CmdControllerImplement implements Controller {
     // Turn starting loop curTurnNum starting with 1
     while (curTurnNum <= world.getTotalAllowedTurns()) {
       this.loopToOnePlayerTurn(curTurnNum);
+      if (world.checkGameOver()) {
+        // True game is over
+        if (world.getWinnerName() != null) {
+          this.output.append(String.format("Congratulation!!!!!!!!!\nGame Winner: %s \n\n",
+              world.getWinnerName()));
+        } else {
+          output.append(String.format("Game Over: Max %d turns finished!\n", curTurnNum));
+          this.output.append(String.format(
+              "Whoops, Dr.Lucky(%s HP=%s) escaped!!!\n",
+              world.getDrLuckyName(), world.getDrLuckyHp()));
+        }
+        this.output.append(
+            "Game finished, back to main menu to 66-quit & re-start a New Game.\n");
+        loopToSelectMainMenu();
+        break;
+      }
       //last curTurnNum ++
       curTurnNum++;
     }
-    if (curTurnNum > world.getTotalAllowedTurns() && world.getWinnerName()==null) {
+    if (curTurnNum > world.getTotalAllowedTurns() && world.getWinnerName() == null) {
       output.append(String.format("Game Over: Max %d turns finished!\n", curTurnNum - 1));
       loopToSelectMainMenu();
     }
@@ -269,27 +284,13 @@ public class CmdControllerImplement implements Controller {
    */
   private void loopToOnePlayerTurn(int curTurnNum) throws IOException {
     // ms3 if game over when player killed dr lucky!
-    if (world.checkGameOver()) {
-      // True game is over
-      this.output.append(
-          String.format("Game finished, back to main menu to 66-quit & re-start a New Game.\n"));
-      if (!world.getWinnerName().isEmpty()) {
-        this.output.append(String.format("Congratulation!!!!!!!!!\nGame Winner: %s \n\n",
-            world.getWinnerName()));
-      } else {
-        this.output.append(String.format(
-            "Whoops, Dr.Lucky(%s HP=%s) escaped!!!\n",
-            world.getDrLuckyName(), world.getDrLuckyHp()));
-      }
-      loopToSelectMainMenu();
-      return;
-    }
+
     String curTurnPlayerName = world.getCurrentPlayerName();
     boolean isCurPlayerComputer = world.isCurrentPlayerComputer();
     this.output.append(String.format("\nTurn #%d Current Player Status: \n%s",
         curTurnNum, world.getOnePlayerAndRoomInfo(curTurnPlayerName)));
     this.output.append(String.format("%s\n", world.getDrLuckyInfo()));
-    if (this.world.checkCurPlayerSameRoomWithDrLucky()){
+    if (this.world.checkCurPlayerSameRoomWithDrLucky()) {
       this.output.append(
           String.format("Current Turn #%d for player: %s. (Available commands: "
                   + "[Move, Look, Pick, PetMove, Attack])\n",
@@ -327,12 +328,12 @@ public class CmdControllerImplement implements Controller {
         } else if ("PETMOVE".equals(command) || "PET MOVE".equals(command)) {
           this.consolePetMove(curTurnPlayerName);
           break;
-        } else if ("ATTACK".equals(command) && this.world.checkCurPlayerSameRoomWithDrLucky()){
+        } else if ("ATTACK".equals(command) && this.world.checkCurPlayerSameRoomWithDrLucky()) {
           this.consolePlayerKill(curTurnPlayerName);
           break;
         } else { // Default base case nothing match input & loop back to let user input selection
           this.output.append("No match command found! Please enter exact command:\n");
-          if (this.world.checkCurPlayerSameRoomWithDrLucky()){
+          if (this.world.checkCurPlayerSameRoomWithDrLucky()) {
             this.output.append(
                 String.format("Turn#%d player(%s). (Available commands: "
                         + "[Move, Look, Pick, PetMove, Attack])\n",
@@ -380,6 +381,19 @@ public class CmdControllerImplement implements Controller {
     }
   }
 
+
+  /**
+   * Executes player's kill command in the console, prompting the player to choose an item for
+   * attack and displaying relevant information such as Dr. Lucky's status and the carried items.
+   * Handles user input, processes the kill result,and updates the output accordingly.
+   * Displays appropriate messages for failed attacks or item name errors.
+   * Throws exceptions for Game Over state or if the player and Dr. Lucky are not in the same room.
+   *
+   * @param curTurnPlayerName the name of the current turn player.
+   * @throws IOException            if an I/O error occurs during console input.
+   * @throws IllegalAccessException if there is an issue with the player's attack.
+   * @throws IllegalStateException  if the game is in a Game Over state.
+   */
   private void consolePlayerKill(String curTurnPlayerName)
       throws IOException, IllegalAccessException {
     String curPlayerCarrying =
@@ -393,27 +407,25 @@ public class CmdControllerImplement implements Controller {
       String cmdKillResult;
       inputItemName = scanner.nextLine().trim();
       KillCmd cmdKill = new KillCmd(inputItemName);
-      try{
+      try {
         cmdKillResult = cmdKill.execute(this.world);
-        if (cmdKillResult == null || cmdKillResult.isEmpty() ){
+        if (cmdKillResult == null || cmdKillResult.isEmpty()) {
           output.append(String.format("Player(%s) Attack failed due to be seen!\n",
               curTurnPlayerName));
         } else {
           output.append(cmdKillResult);
         }
         return;
-      } catch (IllegalStateException e){// Game Over state!
+      } catch (IllegalStateException e) {// Game Over state!
         throw new IllegalStateException(String.format("Game Over! "
             + "Player:%s Cannot Attack with item! %s\n", curTurnPlayerName, inputItemName));
-      } catch (IllegalAccessException e){
+      } catch (IllegalAccessException e) {
         throw e; // player and drLucky are not in the same room
-      } catch (IllegalArgumentException e){
-        output.append(String.format("%s",e.getMessage()));
+      } catch (IllegalArgumentException e) {
+        output.append(String.format("%s", e.getMessage()));
         output.append("Check your item name for typos and case sensitivity!\n");
       }
-
     }
-
   }
 
   /**
@@ -455,7 +467,7 @@ public class CmdControllerImplement implements Controller {
         throw new IllegalAccessException("Can't PICK, your bag is Full, try other commands!\n");
       } catch (IllegalStateException e) { // Game Over state!
         throw new IllegalStateException(String.format("Game Over! Player:%s Cannot pick up item!"
-                + " %s\n", curTurnPlayerName, inputItemName));
+            + " %s\n", curTurnPlayerName, inputItemName));
       } catch (IllegalArgumentException e) {
         output.append(e.getMessage());
         output.append("\nCheck the item name for typos and case sensitivity!\n");
@@ -482,7 +494,7 @@ public class CmdControllerImplement implements Controller {
     String petName = world.getPetName();
     output.append(
         String.format("Available rooms for Pet(%s): \n ", petName));
-    output.append(String.format("%s",world.getAllRoomNames()));
+    output.append(String.format("%s", world.getAllRoomNames()));
     output.append(String.format("To Player: %s, Which room do you want Pet to move to?\n",
         curTurnPlayerName));
     while (true) {
@@ -494,7 +506,7 @@ public class CmdControllerImplement implements Controller {
         moveResult = cmdPetMove.execute(this.world);
         if (!moveResult.isEmpty()) {
           output.append(String.format("Player: %s moved Pet(%s) to: %s SUCCESS!\n",
-              curTurnPlayerName, petName,inputRoomName));
+              curTurnPlayerName, petName, inputRoomName));
         }
         return;
       } catch (IllegalAccessException e) {

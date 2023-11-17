@@ -80,11 +80,7 @@ public class ItemImplement implements Item {
   public boolean equals(Object obj) {
     if (obj instanceof Item) {
       Item comparedItem = (Item) obj;
-      if (this.hashCode() == comparedItem.hashCode()) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.hashCode() == comparedItem.hashCode();
     } else {
       return false;
     }

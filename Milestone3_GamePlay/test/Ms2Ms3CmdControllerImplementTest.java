@@ -82,7 +82,7 @@ public class Ms2Ms3CmdControllerImplementTest {
       // End for waiting user input by catching no user input Exception error
       assertEquals("No line found", e.getMessage());
     }
-    assertEquals("Welcome to the Game World of Doctor Lucky's Mansion:\n"
+    assertEquals("\nWelcome to the Game World of Doctor Lucky's Mansion:\n"
         + "Main Menu: \n"
         + "(Select following operation (integer only)!)\n"
         + "0-Create a graphical representation of the world map PNG.\n"
@@ -364,7 +364,7 @@ public class Ms2Ms3CmdControllerImplementTest {
    * Test human player know target location from display info.
    */
   @Test
-  public void testHumanPlayerInfo() throws IOException {
+  public void testHumanPlayerInfoKnowTarget() throws IOException {
     Readable input =
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
             + "move\n Kitchen\n m\n 66\n");
@@ -373,12 +373,546 @@ public class Ms2Ms3CmdControllerImplementTest {
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Target name: Doctor Lucky(HP:50)currently in room #0-Armory\n" +
+            "Current Turn #1 for player: hu1. (Available commands: [Move, Look, Pick, PetMove, " +
+            "Attack])\n" +
+            "Reachable Rooms: [Billiard Room, Dining Hall, Drawing Room]\n" +
+            "To Player: hu1, Which room do you want to move to?\n" +
+            "Player: hu1 moved to room: Dining Hall SUCCESS!"));
+  }
 
-    assertTrue(output.toString().contains("Current Turn #1 for player: hu1. (Available commands: " +
-        "[Move, Look, Pick, PetMove, Attack])\n" +
-        "Reachable Rooms: [Billiard Room, Dining Hall, Drawing Room]\n" +
-        "To Player: hu1, Which room do you want to move to?\n" +
-        "Player: hu1 moved to room: Dining Hall SUCCESS!"));
+  /**
+   * Test human player know info before their turn.
+   */
+  @Test
+  public void testHumanPlayerBeginTurn() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
+            + "move\n Kitchen\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    //System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        "Turn #3 Current Player Status: \n" +
+            "Player type: Human Player\n" +
+            "Player's Name: hu1 \n" +
+            "Player's limit: 1, can still carry: 1\n" +
+            "Carrying: [] \n" +
+            "Current Room: Dining Hall\n" +
+            "#3 Room: Dining Hall, has items: []"));
+  }
+
+  /**
+   * Test pet info before player's turn.
+   */
+  @Test
+  public void testPetInfoBeginTurn() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
+            + "move\n Kitchen\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    //System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        "Turn #1 Current Player Status: \n" +
+            "Player type: Human Player\n" +
+            "Player's Name: hu1 \n" +
+            "Player's limit: 1, can still carry: 1\n" +
+            "Carrying: [] \n" +
+            "Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)" +
+            "(**Pet**(Fortune Cat Pet) in this room.)"));
+  }
+
+  /**
+   * Test PetMove by player success.
+   */
+  @Test
+  public void testPetMoveByPlayer() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 1\n n\n m\n 4\n petmove\n "
+            + "Billiard Room\n look\n move\n Billiard Room\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)" +
+            "(**Pet**(Fortune Cat Pet) in this room.)"));
+    assertTrue(output.toString().contains(
+        "Player: hu1 moved Pet(Fortune Cat Pet) to: Billiard Room SUCCESS!"));
+    assertTrue(output.toString().contains(
+        "Current Turn #4 for player: com2. " +
+            "(Available commands: [Move, Look, Pick, PetMove] (Can " +
+            "not Attack, due to no Dr.Lucky))\n" +
+            "You (player: com2) are currently in room #1 Billiard Room and neighboring rooms: " +
+            "[Armory, Trophy Room, Dining Hall]\n" +
+            "Your current #1 Room: Billiard Room, has items: [Billiard Cue(Damage=3)]\n" +
+            "**Pet(Fortune Cat Pet) in this room(Billiard Room)."));
+  }
+
+  /**
+   * Test player lookaround current room with others.
+   */
+  @Test
+  public void testPlayerLookAroundSameRoomWithOthers() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n n\n m\n 4\n petmove\n "
+            + "Billiard Room\n look\n move\n Billiard Room\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Target name: Doctor Lucky(HP:50)currently in room #1-Billiard Room\n" +
+            "Current Turn #2 for player: com2. (Available commands: [Move, Look, Pick, PetMove] " +
+            "(Can not Attack, due to no Dr.Lucky))\n" +
+            "You (player: com2) are currently in room #0 Armory and neighboring rooms: " +
+            "[Billiard Room, Dining Hall, Drawing Room]\n" +
+            "Your current #0 Room: Armory, has items: [Revolver(Damage=99)]\n" +
+            "Other players in the same room: hu1, \n" +
+            "Neighboring room info " +
+            "begin:----------------------------------------------------------\n" +
+            "1. Neighbor:\n" +
+            "**Invisible inside/out Room** Pet(Fortune Cat Pet) in this room: Billiard Room\n" +
+            "2. Neighbor:\n" +
+            "#3 Room: Dining Hall, has items: []\n" +
+            "Players in Dining Hall: \n" +
+            "3. Neighbor:\n" +
+            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
+            "Players in Drawing Room: \n" +
+            "Neighboring room info end:" +
+            "------------------------------------------------------------"));
+  }
+
+  /**
+   * Test player lookaround current room with no others.
+   */
+  @Test
+  public void testPlayerLookAroundNoPlayerTogether() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n n\n m\n 4\n petmove\n "
+            + "Billiard Room\n look\n move\n Billiard Room\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        "Current Turn #4 for player: com2. (Available commands:" +
+            " [Move, Look, Pick, PetMove] (Can not Attack, due to no Dr.Lucky))\n" +
+            "You (player: com2) are currently in room #0 Armory and neighboring rooms: [Billiard " +
+            "Room, Dining Hall, Drawing Room]\n" +
+            "Your current #0 Room: Armory, has items: [Revolver(Damage=99)]\n" +
+            "Other players in the same room: \n" +
+            "Neighboring room info " +
+            "begin:----------------------------------------------------------\n" +
+            "1. Neighbor:\n" +
+            "**Invisible inside/out Room** Pet(Fortune Cat Pet) in this room: Billiard Room\n" +
+            "2. Neighbor:\n" +
+            "#3 Room: Dining Hall, has items: []\n" +
+            "**DrLucky(Doctor Lucky HP:50) in this room(Dining Hall).\n" +
+            "Players in Dining Hall: \n" +
+            "3. Neighbor:\n" +
+            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
+            "Players in Drawing Room: \n" +
+            "Neighboring room info " +
+            "end:------------------------------------------------------------\n" +
+            "Game Over: Max 4 turns finished!"));
+  }
+
+  /**
+   * Test player lookaround current room with no others in neighbor.
+   */
+  @Test
+  public void testPlayerLookNoPlayerNeighbor() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 11\n n\n m\n 4\n petmove\n "
+            + "Billiard Room\n look\n move\n Billiard Room\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Other players in the same room: \n" +
+            "Neighboring room info " +
+            "begin:----------------------------------------------------------\n" +
+            "1. Neighbor:\n" +
+            "#16 Room: Servants' Quarters, has items: [Broom Stick(Damage=2)]\n" +
+            "Players in Servants' Quarters: \n" +
+            "2. Neighbor:\n" +
+            "#17 Room: Tennessee Room, has items: []\n" +
+            "Players in Tennessee Room: \n" +
+            "3. Neighbor:\n" +
+            "#9 Room: Lancaster Room, has items: [Silken Cord(Damage=3)]\n" +
+            "Players in Lancaster Room: \n" +
+            "4. Neighbor:\n" +
+            "#12 Room: Master Suite, has items: [Shoe Horn(Damage=2)]\n" +
+            "Players in Master Suite: \n" +
+            "Neighboring room info " +
+            "end:------------------------------------------------------------"));
+    //System.out.println(output.toString());
+  }
+
+  /**
+   * Test player lookaround current room with players in neighbor.
+   */
+  @Test
+  public void testPlayerLookPlayersInNeighbor() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 3\n n\n m\n 4\n petmove\n "
+            + "Library\n look\n move\n Billiard Room\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Current Turn #2 for player: com2. (Available commands: " +
+            "[Move, Look, Pick, PetMove] (Can not Attack, due to no Dr.Lucky))\n" +
+            "You (player: com2) are currently in room #3 Dining Hall and neighboring rooms: " +
+            "[Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing Room, " +
+            "Kitchen, Parlor]\n" +
+            "Your current #3 Room: Dining Hall, has items: []\n" +
+            "Other players in the same room: \n" +
+            "Neighboring room info " +
+            "begin:----------------------------------------------------------\n" +
+            "1. Neighbor:\n" +
+            "#0 Room: Armory, has items: [Revolver(Damage=99)]\n" +
+            "Players in Armory: hu1, "));
+    //System.out.println(output.toString());
+  }
+
+  /**
+   * Test player lookaround current room with no item in same room.
+   */
+  @Test
+  public void testPlayerLookNoItemInSameRoom() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 3\n n\n m\n 4\n petmove\n "
+            + "Library\n look\n move\n Billiard Room\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Current Turn #4 for player: com2. (Available commands: [Move, Look, Pick, PetMove, " +
+            "Attack])\n" +
+            "You (player: com2) are currently in room #3 Dining Hall and neighboring rooms: " +
+            "[Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing Room, " +
+            "Kitchen, Parlor]\n" +
+            "Your current #3 Room: Dining Hall, has items: []\n" +
+            "**Dr. Lucky is in your room(Dining Hall): Target name: " +
+            "Doctor Lucky, Current HP: 50," +
+            " Current room index: 3\n" +
+            "Other players in the same room: \n" +
+            "Neighboring room info begin:--------"));
+    //System.out.println(output.toString());
+  }
+
+  /**
+   * Test player lookaround current room with item in same room and neighbor.
+   */
+  @Test
+  public void testPlayerLookItem() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 4\n n\n com2\n 1\n 4\n n\n m\n 4\n petmove\n "
+            + "Library\n look\n move\n Armory\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Current Turn #2 for player: com2. (Available commands: " +
+            "[Move, Look, Pick, PetMove] (Can not Attack, due to no Dr.Lucky))\n" +
+            "You (player: com2) are currently in room #4 Drawing Room and neighboring rooms: " +
+            "[Armory, Dining Hall, Wine Cellar, Foyer]\n" +
+            "Your current #4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
+            "Other players in the same room: hu1, \n" +
+            "Neighboring room info begin:-----"));
+    //System.out.println(output.toString());
+
+    assertTrue(output.toString().contains(
+        "You (player: com2) are currently in room #4 Drawing Room and neighboring rooms: " +
+            "[Armory, Dining Hall, Wine Cellar, Foyer]\n" +
+            "Your current #4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
+            "Other players in the same room: hu1, \n" +
+            "Neighboring room info " +
+            "begin:----------------------------------------------------------\n" +
+            "1. Neighbor:\n" +
+            "#0 Room: Armory, has items: [Revolver(Damage=99)]\n" +
+            "Players in Armory: \n" +
+            "2. Neighbor:\n" +
+            "#3 Room: Dining Hall, has items: []\n" +
+            "Players in Dining Hall: \n" +
+            "3. Neighbor:\n" +
+            "#19 Room: Wine Cellar, has items: [Rat Poison(Damage=2), Piece of Rope(Damage=2)]\n" +
+            "Players in Wine Cellar: \n" +
+            "4. Neighbor:\n" +
+            "#5 Room: Foyer, has items: []\n" +
+            "Players in Foyer: \n" +
+            "Neighboring room info end:" +
+            "------------------------------------------------------------"));
+  }
+
+  /**
+   * Test player lookaround current room and neighbor for the DrLucky location.
+   */
+  @Test
+  public void testPlayerLookTargetLocation() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 1\n n\n m\n 4\n look\n "
+            + "look\n move\n Billiard Room\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Current Turn #1 for player: hu1. (Available commands: [Move, Look, Pick, PetMove, " +
+            "Attack])\n" +
+            "You (player: hu1) are currently in room #0 Armory and neighboring rooms: [Billiard " +
+            "Room, Dining Hall, Drawing Room]\n" +
+            "Your current #0 Room: Armory, has items: [Revolver(Damage=99)]\n" +
+            "**Dr. Lucky is in your room(Armory): Target name: Doctor Lucky, Current HP: 50, " +
+            "Current room index: 0\n" +
+            "**Pet(Fortune Cat Pet) in this room(Armory).\n" +
+            "Other players in the same room: \n" +
+            "Neighboring room info begin:--------"));
+    //System.out.println(output.toString());
+
+    assertTrue(output.toString().contains(
+        "Neighboring room info begin:" +
+            "----------------------------------------------------------\n" +
+            "1. Neighbor:\n" +
+            "**Invisible inside/out Room** Pet(Fortune Cat Pet) in this room: Armory\n" +
+            "2. Neighbor:\n" +
+            "#18 Room: Trophy Room, has items: [Duck Decoy(Damage=3), Monkey Hand(Damage=2)]\n" +
+            "Players in Trophy Room: \n" +
+            "3. Neighbor:\n" +
+            "#3 Room: Dining Hall, has items: []\n" +
+            "**DrLucky(Doctor Lucky HP:50) in this room(Dining Hall).\n" +
+            "Players in Dining Hall: \n" +
+            "Neighboring room info " +
+            "end:------------------------------------------------------------\n" +
+            "Game Over: Max 4 turns finished!"));
+  }
+
+  /**
+   * Test player lookaround can not find target in any room or nearby.
+   */
+  @Test
+  public void testPlayerLookNoTarget() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 19\n n\n com2\n 1\n 11\n n\n m\n 4\n look\n "
+            + "look\n look\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    assertTrue(output.toString().contains(
+        "Turn #1 Current Player Status: \n" +
+            "Player type: Human Player\n" +
+            "Player's Name: hu1 \n" +
+            "Player's limit: 1, can still carry: 1\n" +
+            "Carrying: [] \n" +
+            "Current Room: Wine Cellar\n" +
+            "#19 Room: Wine Cellar, has items: [Rat Poison(Damage=2), Piece of Rope(Damage=2)]\n" +
+            "Neighbor Rooms: Dining Hall, Drawing Room, Kitchen\n" +
+            "Target name: Doctor Lucky(HP:50)currently in room #0-Armory\n" +
+            "Current Turn #1 for player: hu1. (Available commands: [Move, Look, Pick, PetMove] " +
+            "(Can not Attack, due to no Dr.Lucky))\n" +
+            "You (player: hu1) are currently in room #19 Wine Cellar and neighboring rooms: " +
+            "[Dining Hall, Drawing Room, Kitchen]\n" +
+            "Your current #19 Room: Wine Cellar, has items: [Rat Poison(Damage=2), Piece of Rope" +
+            "(Damage=2)]\n" +
+            "Other players in the same room: \n" +
+            "Neighboring room info " +
+            "begin:----------------------------------------------------------\n" +
+            "1. Neighbor:\n" +
+            "#3 Room: Dining Hall, has items: []\n" +
+            "Players in Dining Hall: \n" +
+            "2. Neighbor:\n" +
+            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
+            "Players in Drawing Room: \n" +
+            "3. Neighbor:\n" +
+            "#8 Room: Kitchen, has items: [Crepe Pan(Damage=3), Sharp Knife(Damage=3)]\n" +
+            "Players in Kitchen: \n" +
+            "Neighboring room info end:" +
+            "------------------------------------------------------------"));
+    //System.out.println(output.toString());
+  }
+
+  /**
+   * Test human player can success poking DrLucky causing hp -1.
+   */
+  @Test
+  public void testHumanPokingSuccess() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 11\n n\n m\n 4\n attack\n poking\n"
+            + "look\n look\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    //System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        "Choose your carrying item to attack:\n" +
+            "[]\n" +
+            "**Basic attack item: Poking(Damage=1)\n" +
+            " Player(hu1) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)\n" +
+            "Dr.Lucky(Doctor Lucky) HP: -1\n" +
+            "Dr.Lucky(Doctor Lucky) Current HP=49"));
+  }
+
+  /**
+   * Test human player can success attack DrLucky with item and reflect its damage.
+   */
+  @Test
+  public void testHumanItemAttackSuccessHumanWin() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n Chain Saw\n"
+            + "look\n attack\n Chain Saw\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    //System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        "You are in #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red Hammer" +
+            "(Damage=4)]\n" +
+            "(To Player) hu1: What do you want to pick? (Enter the exact name.):\n" +
+            "Player PICK execute success!\n" +
+            "Player: hu1 picked up item: Chain Saw SUCCESS!"));
+    assertTrue(output.toString().contains("Target name: Doctor Lucky(HP:50)currently in room " +
+        "#2-Carriage House.\n" +
+        "Choose your carrying item to attack:\n" +
+        "[Chain Saw(Damage=88)]\n" +
+        "**Basic attack item: Poking(Damage=1)\n" +
+        " Player(hu1) attack Dr.Lucky SUCCESS with item: Chain Saw(Damage=88)\n" +
+        "Dr.Lucky(Doctor Lucky) was attacked by hp:-88\n" +
+        "Dr.Lucky(Doctor Lucky) Current HP=0"));
+  }
+
+  /**
+   * Test human player try attack with wrong item name.
+   * In this case the system will stop and waring,then let customer using proper item name to
+   * attack.
+   */
+  @Test
+  public void testHumanItemAttackFailWrongItemName() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n " +
+            "Chain Saw\n look\n attack\n WrongItem\n Chain Saw\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    //System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        "Choose your carrying item to attack:\n" +
+            "[Chain Saw(Damage=88)]\n" +
+            "**Basic attack item: Poking(Damage=1)\n" +
+            " Error PlayerImpl: Item with name 'WrongItem' not found in player's inventory!\n" +
+            "Check your item name for typos and case sensitivity!"));
+  }
+
+  /**
+   * Test human player try attack with used item name.
+   * In this case the system will stop and waring,then let customer using proper item name to
+   * attack.
+   * In the game, every item after success attack will be deleted. Thus, the item will not be
+   * present in the player's inventory.
+   */
+  @Test
+  public void testHumanItemAttackFailUsedItem() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n " +
+            "Chain Saw\n look\n attack\n Chain saw\n Chain Saw\n look\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    //System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        " Error PlayerImpl: Item with name 'Chain saw' not found in player's inventory!\n" +
+            "Check your item name for typos and case sensitivity!"));
+  }
+
+  /**
+   * Test the game will end when DrLucky is killed and hp is 0.
+   */
+  @Test
+  public void testEndDrLuckyDead() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n " +
+            "Chain Saw\n look\n attack\n Chain Saw\n m\n 4\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    //System.out.println(output.toString());
+    assertTrue(output.toString().contains(
+        "Choose your carrying item to attack:\n" +
+            "[Chain Saw(Damage=88)]\n" +
+            "**Basic attack item: Poking(Damage=1)\n" +
+            " Player(hu1) attack Dr.Lucky SUCCESS with item: Chain Saw(Damage=88)\n" +
+            "Dr.Lucky(Doctor Lucky) was attacked by hp:-88\n" +
+            "Dr.Lucky(Doctor Lucky) Current HP=0"));
+    assertTrue(output.toString().contains(
+        "Congratulation!!!!!!!!!\n" +
+            "Game Winner: hu1 \n\n" +
+            "Game finished, back to main menu to 66-quit & re-start a New Game.\n" +
+            "Enter 'm' or 'M' to go back to Main Menu: "));
+  }
+
+  /**
+   * Test the game will end when max turn reach.(In this case total 4 turns).
+   * This mean DrLucky is escaped and hp is not 0.
+   */
+  @Test
+  public void testEndDrLuckyEscaped() throws IOException {
+    Readable input =
+        new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n " +
+            "Chain Saw\n look\n attack\n Poking\n look\n m\n 4\n m\n 66\n");
+    Appendable output = new StringBuilder();
+    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    testConsole.startGame();
+    // Check the output is correct or not by compare string from manually running game result
+    // The correct return string should contain correct command result info
+    System.out.println(output.toString());
+
+    assertTrue(output.toString().contains("Neighboring room info " +
+        "end:------------------------------------------------------------\n" +
+        "Game Over: Max 4 turns finished!\n" +
+        "Whoops, Dr.Lucky(Doctor Lucky HP=49) escaped!!!\n" +
+        "Game finished, back to main menu to 66-quit & re-start a New Game.\n" +
+        "Enter 'm' or 'M' to go back to Main Menu: "));
+
+    assertTrue(output.toString().contains(
+        "Last game already finished, back to main menu to re-start a New Game.\n" +
+            "Whoops, last game Dr.Lucky(Doctor Lucky HP=49) escaped!!!"));
+    //check make sure dr lucky health is not zero.
+    assertTrue(output.toString().contains(
+        "Dr.Lucky(Doctor Lucky HP=49) escaped!!!"));
   }
 
 

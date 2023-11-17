@@ -140,7 +140,7 @@ public class PlayerImplement implements Player {
    * Get a map containing information about the items in the player's inventory. The map associates
    * item names with their respective quantities.
    *
-   * @param   destinationRoomNum Final target room number ot be moved to.
+   * @param destinationRoomNum Final target room number ot be moved to.
    */
   @Override
   public void moveToRoomNumber(int destinationRoomNum) {
@@ -155,8 +155,8 @@ public class PlayerImplement implements Player {
    * Get a map containing information about items in the player's inventory. The map associates
    * item names with their respective quantities.
    *
-   * @return  A map where keys are item names, and values are the quantities of those items in the
-   *          player's inventory.
+   * @return A map where keys are item names, and values are the quantities of those items in the
+   * player's inventory.
    */
   @Override
   public Map<String, Integer> getItemListMapInfo() {
@@ -184,7 +184,7 @@ public class PlayerImplement implements Player {
       }
     }
     throw new IllegalArgumentException(
-        ("Item delete error Error: Player: %s doesn't have item: %s".format(this.getPlayerName(),
+        (String.format(this.getPlayerName(),
             item.getName())));
   }
 
@@ -221,10 +221,9 @@ public class PlayerImplement implements Player {
    */
   @Override
   public String getAllCarryingItemStringWithDamage() {
-    StringBuilder res = new StringBuilder();
-    res.append(String.format("%s", itemList));
-    res.append("\n**Basic attack item: Poking(Damage=1)\n");
-    return res.toString();
+    String res = String.format("%s", itemList) +
+        "\n**Basic attack item: Poking(Damage=1)\n";
+    return res;
   }
 
   /**
@@ -247,11 +246,7 @@ public class PlayerImplement implements Player {
   public boolean equals(Object obj) {
     if (obj instanceof Player) {
       Player comparedPlayer = (Player) obj;
-      if (this.hashCode() == comparedPlayer.hashCode()) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.hashCode() == comparedPlayer.hashCode();
     } else {
       return false;
     }
@@ -278,8 +273,6 @@ public class PlayerImplement implements Player {
     throw new IllegalArgumentException(String.format(
         "Error PlayerImpl: Item with name '%s' not found in player's inventory!\n", name));
   }
-
-
 
 
 }

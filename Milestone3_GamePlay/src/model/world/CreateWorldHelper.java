@@ -95,7 +95,7 @@ public class CreateWorldHelper {
       int botRowY = Integer.parseInt(inputText.next());
       int botColX = Integer.parseInt(inputText.next());
       String rmName = inputText.nextLine().trim();
-      Room newRoom = (Room) this.createAroom(rmName, i, topRowY, topColX, botRowY, botColX);
+      Room newRoom = this.createAroom(rmName, i, topRowY, topColX, botRowY, botColX);
       // create a new map hashset prepare for the AdjList Map<int, str()>
       this.worldNeighborMap.put(newRoom.getRoomNumber(), new HashSet<>());
     }
@@ -120,7 +120,7 @@ public class CreateWorldHelper {
       int appearInRmNum = Integer.parseInt(inputText.next());
       int damage = Integer.parseInt(inputText.next());
       String newItemName = inputText.nextLine().trim();
-      Item newItem = (Item) this.createAnItem(newItemName, damage);
+      Item newItem = this.createAnItem(newItemName, damage);
       //      System.out.println(String.format("%d %d %s",appearInRmNum,damage,newItemName));
       this.addAnItemToRoom(appearInRmNum, newItem);
     }
@@ -150,7 +150,7 @@ public class CreateWorldHelper {
    */
   public World createWorld() {
     Map<Integer, Set<Integer>> newMap = new HashMap<>(this.worldNeighborMap);
-    String newName = new String(this.name);
+    String newName = this.name;
     List<Room> newRoomList = new ArrayList<>(this.roomListRoom);
     DrLucky newDr = new DrLuckyImplement(this.drLucky.getName(), this.drLucky.getCurrentHp(),
         this.totalRooms - 1);
@@ -160,9 +160,8 @@ public class CreateWorldHelper {
     Integer[][] new2dArray = new Integer[this.rowSize][this.colSize];
     // Copy the values from the original array to the new array
     for (int i = 0; i < this.rowSize; i++) {
-      for (int j = 0; j < this.colSize; j++) {
-        new2dArray[i][j] = this.worldMap2dRmIndex[i][j];
-      }
+      if (this.colSize >= 0)
+        System.arraycopy(this.worldMap2dRmIndex[i], 0, new2dArray[i], 0, this.colSize);
     }
 
     return new WorldImplement(this.rowSize, this.colSize, newName, this.totalRooms, this.totalItems,
@@ -348,14 +347,10 @@ public class CreateWorldHelper {
    * @return True if the room size is within bounds; otherwise, false.
    */
   private boolean checkIfRoomSizeInWorld(int topRowY, int topColX, int botRowY, int botColX) {
-    if (topColX >= this.colSize || botColX >= this.colSize || topRowY >= this.rowSize
-        || botRowY >= this.rowSize) {
-      return false;
-      //      throw new IllegalArgumentException(
-      //          String.format("Error: room size %s is large or equal to world size.", name));
-    } else {
-      return true;
-    }
+    //      throw new IllegalArgumentException(
+    //          String.format("Error: room size %s is large or equal to world size.", name));
+    return topColX < this.colSize && botColX < this.colSize && topRowY < this.rowSize
+        && botRowY < this.rowSize;
   }
 
   /**

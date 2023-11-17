@@ -68,7 +68,6 @@ public interface Player {
    * item names with their respective quantities.
    *
    * @return A map where keys are item names, values are the quantities of those items player has.
-
    */
   Map<String, Integer> getItemListMapInfo();
 
@@ -86,7 +85,7 @@ public interface Player {
    *
    * @return A String of item names with damage.
    */
-  public String getAllCarryingItemStringWithDamage();
+  String getAllCarryingItemStringWithDamage();
 
 }
 
