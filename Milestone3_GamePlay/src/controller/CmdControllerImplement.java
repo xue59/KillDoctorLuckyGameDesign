@@ -416,7 +416,7 @@ public class CmdControllerImplement implements Controller {
           output.append(cmdKillResult);
         }
         return;
-      } catch (IllegalStateException e) {// Game Over state!
+      } catch (IllegalStateException e) { // Game Over state!
         throw new IllegalStateException(String.format("Game Over! "
             + "Player:%s Cannot Attack with item! %s\n", curTurnPlayerName, inputItemName));
       } catch (IllegalAccessException e) {
@@ -490,6 +490,11 @@ public class CmdControllerImplement implements Controller {
     output.append(cmdLook.execute(this.world));
   }
 
+  /**
+   * Allows a console player to move pet to a different room.
+   * @param curTurnPlayerName name of the current player.
+   * @throws IOException if an I/O error occurs while interacting with the game.
+   */
   private void consolePetMove(String curTurnPlayerName) throws IOException {
     String petName = world.getPetName();
     output.append(

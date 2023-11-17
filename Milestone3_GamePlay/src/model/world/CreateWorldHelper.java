@@ -160,8 +160,9 @@ public class CreateWorldHelper {
     Integer[][] new2dArray = new Integer[this.rowSize][this.colSize];
     // Copy the values from the original array to the new array
     for (int i = 0; i < this.rowSize; i++) {
-      if (this.colSize >= 0)
+      if (this.colSize >= 0) {
         System.arraycopy(this.worldMap2dRmIndex[i], 0, new2dArray[i], 0, this.colSize);
+      }
     }
 
     return new WorldImplement(this.rowSize, this.colSize, newName, this.totalRooms, this.totalItems,

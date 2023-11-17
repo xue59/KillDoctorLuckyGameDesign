@@ -2,9 +2,18 @@ package command;
 
 import model.world.World;
 
+/**
+ * A command class that represents a player's action to attack with using item in the game world.
+ */
 public class KillCmd implements WorldCommand {
   private final String inputItemName;
 
+  /**
+   * Constructs a new KillCmd object with the specified input item name.
+   *
+   * @param inputItemName The name of the item the player wants use.
+   * @throws NullPointerException If the input item name is blank or null.
+   */
   public KillCmd(String inputItemName) throws NullPointerException {
     if (inputItemName.isEmpty() || inputItemName == null) {
       throw new NullPointerException("Error: killCmd Item name cannot be Blank or Null!");

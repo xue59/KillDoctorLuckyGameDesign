@@ -155,8 +155,7 @@ public class PlayerImplement implements Player {
    * Get a map containing information about items in the player's inventory. The map associates
    * item names with their respective quantities.
    *
-   * @return A map where keys are item names, and values are the quantities of those items in the
-   * player's inventory.
+   * @return A map where keys are item names, and values are the quantities of those items have.
    */
   @Override
   public Map<String, Integer> getItemListMapInfo() {
@@ -221,8 +220,7 @@ public class PlayerImplement implements Player {
    */
   @Override
   public String getAllCarryingItemStringWithDamage() {
-    String res = String.format("%s", itemList) +
-        "\n**Basic attack item: Poking(Damage=1)\n";
+    String res = String.format("%s\n**Basic attack item: Poking(Damage=1)\n", itemList);
     return res;
   }
 

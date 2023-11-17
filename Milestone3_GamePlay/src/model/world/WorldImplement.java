@@ -745,12 +745,12 @@ public class WorldImplement implements World {
     } // if game over, throws IllegalStateException
     if (!checkCurPlayerSameRoomWithDrLucky()) {
       throw new IllegalAccessException("Error: Current player and DrLuck are not in same room!\n");
-    }// dr not exist, IllegalAccessException
+    } // dr not exist, IllegalAccessException
 
     Player curPlayer = this.playerList.get(curPlayerIndex);
     Room curRoom = this.roomList.get(curPlayer.getCurrentRoomNumber());
     Item item = null;
-    if (itemName.equalsIgnoreCase("POKING")) {
+    if ("POKING".equalsIgnoreCase(itemName)) {
       item = null;
       //System.out.println("Poking dectect4ed : " + itemName);
     } else {

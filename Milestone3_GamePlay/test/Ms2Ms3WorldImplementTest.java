@@ -133,40 +133,39 @@ public class Ms2Ms3WorldImplementTest {
     ms2TestWorld.addOnePlayer("computer2", 3, true, 11);
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room " +
-            "#3 Dining Hall and neighboring rooms: " +
-            "[Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing Room, " +
-            "Kitchen, Parlor]\n" +
-            "Your current #3 Room: Dining Hall, has items: []\n" +
-            "Other players in the same room: computer2, \n" +
-            "Neighboring room info " +
-            "begin:----------------------------------------------------------\n" +
-            "1. Neighbor:\n" +
-            "**Invisible inside/out Room** Pet(Fortune Cat Pet) in this room: Armory\n" +
-            "2. Neighbor:\n" +
-            "#17 Room: Tennessee Room, has items: []\n" +
-            "Players in Tennessee Room: \n" +
-            "3. Neighbor:\n" +
-            "#1 Room: Billiard Room, has items: [Billiard Cue(Damage=3)]\n" +
-            "Players in Billiard Room: \n" +
-            "4. Neighbor:\n" +
-            "#18 Room: Trophy Room, has items: [Duck Decoy(Damage=3), Monkey Hand(Damage=2)]\n" +
-            "Players in Trophy Room: \n" +
-            "5. Neighbor:\n" +
-            "#19 Room: Wine Cellar, has items: [Rat Poison(Damage=2), Piece of Rope(Damage=2)]\n" +
-            "Players in Wine Cellar: \n" +
-            "6. Neighbor:\n" +
-            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
-            "Players in Drawing Room: \n" +
-            "7. Neighbor:\n" +
-            "#8 Room: Kitchen, has items: [Crepe Pan(Damage=3), Sharp Knife(Damage=3)]\n" +
-            "Players in Kitchen: \n" +
-            "8. Neighbor:\n" +
-            "#14 Room: Parlor, has items: []\n" +
-            "Players in Parlor: \n" +
-            "Neighboring room info " +
-            "end:------------------------------------------------------------\n", human1LookRes);
+    assertEquals("You (player: human1) are currently in room "
+        + "#3 Dining Hall and neighboring rooms: "
+        + "[Armory, Tennessee Room, Billiard Room, Trophy Room, Wine Cellar, Drawing Room, "
+        + "Kitchen, Parlor]\n"
+        + "Your current #3 Room: Dining Hall, has items: []\n"
+        + "Other players in the same room: computer2, \n"
+        + "Neighboring room info "
+        + "begin:----------------------------------------------------------\n"
+        + "1. Neighbor:\n"
+        + "**Invisible inside/out Room** Pet(Fortune Cat Pet) in this room: Armory\n"
+        + "2. Neighbor:\n"
+        + "#17 Room: Tennessee Room, has items: []\n"
+        + "Players in Tennessee Room: \n"
+        + "3. Neighbor:\n"
+        + "#1 Room: Billiard Room, has items: [Billiard Cue(Damage=3)]\n"
+        + "Players in Billiard Room: \n"
+        + "4. Neighbor:\n"
+        + "#18 Room: Trophy Room, has items: [Duck Decoy(Damage=3), Monkey Hand(Damage=2)]\n"
+        + "Players in Trophy Room: \n"
+        + "5. Neighbor:\n"
+        + "#19 Room: Wine Cellar, has items: [Rat Poison(Damage=2), Piece of Rope(Damage=2)]\n"
+        + "Players in Wine Cellar: \n"
+        + "6. Neighbor:\n"
+        + "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n"
+        + "Players in Drawing Room: \n"
+        + "7. Neighbor:\n"
+        + "#8 Room: Kitchen, has items: [Crepe Pan(Damage=3), Sharp Knife(Damage=3)]\n"
+        + "Players in Kitchen: \n"
+        + "8. Neighbor:\n"
+        + "#14 Room: Parlor, has items: []\n"
+        + "Players in Parlor: \n"
+        + "Neighboring room info "
+        + "end:------------------------------------------------------------\n", human1LookRes);
   }
 
   /**
@@ -178,20 +177,19 @@ public class Ms2Ms3WorldImplementTest {
     ms2TestWorld.addOnePlayer("computer2", 2, true, 11);
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room " +
-            "#2 Carriage House and neighboring rooms: " +
-            "[Winter Garden]\n" +
-            "Your current #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red " +
-            "Hammer(Damage=4)]\n" +
-            "Other players in the same room: computer2, \n" +
-            "Neighboring room info " +
-            "begin:----------------------------------------------------------\n" +
-            "1. Neighbor:\n" +
-            "#20 Room: Winter Garden, has items: []\n" +
-            "Players in Winter Garden: \n" +
-            "Neighboring room info " +
-            "end:------------------------------------------------------------\n", human1LookRes);
+    assertEquals("You (player: human1) are currently in room "
+        + "#2 Carriage House and neighboring rooms: "
+        + "[Winter Garden]\n"
+        + "Your current #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red "
+        + "Hammer(Damage=4)]\n"
+        + "Other players in the same room: computer2, \n"
+        + "Neighboring room info "
+        + "begin:----------------------------------------------------------\n"
+        + "1. Neighbor:\n"
+        + "#20 Room: Winter Garden, has items: []\n"
+        + "Players in Winter Garden: \n"
+        + "Neighboring room info "
+        + "end:------------------------------------------------------------\n", human1LookRes);
   }
 
   /**
@@ -203,25 +201,24 @@ public class Ms2Ms3WorldImplementTest {
     ms2TestWorld.addOnePlayer("computer2", 15, true, 11);
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room " +
-            "#15 Piazza and neighboring rooms: [Winter " +
-            "Garden, Foyer, Hedge Maze]\n" +
-            "Your current #15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n" +
-            "Other players in the same room: computer2, \n" +
-            "Neighboring room info " +
-            "begin:----------------------------------------------------------\n" +
-            "1. Neighbor:\n" +
-            "#20 Room: Winter Garden, has items: []\n" +
-            "Players in Winter Garden: \n" +
-            "2. Neighbor:\n" +
-            "#5 Room: Foyer, has items: []\n" +
-            "Players in Foyer: \n" +
-            "3. Neighbor:\n" +
-            "#7 Room: Hedge Maze, has items: [Loud Noise(Damage=2)]\n" +
-            "Players in Hedge Maze: \n" +
-            "Neighboring room info " +
-            "end:------------------------------------------------------------\n", human1LookRes);
+    assertEquals("You (player: human1) are currently in room "
+        + "#15 Piazza and neighboring rooms: [Winter "
+        + "Garden, Foyer, Hedge Maze]\n"
+        + "Your current #15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n"
+        + "Other players in the same room: computer2, \n"
+        + "Neighboring room info "
+        + "begin:----------------------------------------------------------\n"
+        + "1. Neighbor:\n"
+        + "#20 Room: Winter Garden, has items: []\n"
+        + "Players in Winter Garden: \n"
+        + "2. Neighbor:\n"
+        + "#5 Room: Foyer, has items: []\n"
+        + "Players in Foyer: \n"
+        + "3. Neighbor:\n"
+        + "#7 Room: Hedge Maze, has items: [Loud Noise(Damage=2)]\n"
+        + "Players in Hedge Maze: \n"
+        + "Neighboring room info "
+        + "end:------------------------------------------------------------\n", human1LookRes);
   }
 
   /**
@@ -233,25 +230,24 @@ public class Ms2Ms3WorldImplementTest {
     ms2TestWorld.addOnePlayer("computer2", 15, true, 11);
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room " +
-            "#15 Piazza and neighboring rooms: [Winter " +
-            "Garden, Foyer, Hedge Maze]\n" +
-            "Your current #15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n" +
-            "Other players in the same room: computer2, \n" +
-            "Neighboring room info " +
-            "begin:----------------------------------------------------------\n" +
-            "1. Neighbor:\n" +
-            "#20 Room: Winter Garden, has items: []\n" +
-            "Players in Winter Garden: \n" +
-            "2. Neighbor:\n" +
-            "#5 Room: Foyer, has items: []\n" +
-            "Players in Foyer: \n" +
-            "3. Neighbor:\n" +
-            "#7 Room: Hedge Maze, has items: [Loud Noise(Damage=2)]\n" +
-            "Players in Hedge Maze: \n" +
-            "Neighboring room info " +
-            "end:------------------------------------------------------------\n", human1LookRes);
+    assertEquals("You (player: human1) are currently in room "
+        + "#15 Piazza and neighboring rooms: [Winter "
+        + "Garden, Foyer, Hedge Maze]\n"
+        + "Your current #15 Room: Piazza, has items: [Civil War Cannon(Damage=3)]\n"
+        + "Other players in the same room: computer2, \n"
+        + "Neighboring room info "
+        + "begin:----------------------------------------------------------\n"
+        + "1. Neighbor:\n"
+        + "#20 Room: Winter Garden, has items: []\n"
+        + "Players in Winter Garden: \n"
+        + "2. Neighbor:\n"
+        + "#5 Room: Foyer, has items: []\n"
+        + "Players in Foyer: \n"
+        + "3. Neighbor:\n"
+        + "#7 Room: Hedge Maze, has items: [Loud Noise(Damage=2)]\n"
+        + "Players in Hedge Maze: \n"
+        + "Neighboring room info "
+        + "end:------------------------------------------------------------\n", human1LookRes);
   }
 
   /**
@@ -262,27 +258,27 @@ public class Ms2Ms3WorldImplementTest {
     ms2TestWorld.addOnePlayer("human1", 0, false, 10);
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room #0 Armory and neighboring rooms: [Billiard " +
-            "Room, Dining Hall, Drawing Room]\n" +
-            "Your current #0 Room: Armory, has items: [Revolver(Damage=99)]\n" +
-            "**Dr. Lucky is in your room(Armory): Target name: Doctor Lucky, Current HP: 50, " +
-            "Current room index: 0\n" +
-            "**Pet(Fortune Cat Pet) in this room(Armory).\n" +
-            "Other players in the same room: \n" +
-            "Neighboring room info " +
-            "begin:----------------------------------------------------------\n" +
-            "1. Neighbor:\n" +
-            "#1 Room: Billiard Room, has items: [Billiard Cue(Damage=3)]\n" +
-            "Players in Billiard Room: \n" +
-            "2. Neighbor:\n" +
-            "#3 Room: Dining Hall, has items: []\n" +
-            "Players in Dining Hall: \n" +
-            "3. Neighbor:\n" +
-            "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n" +
-            "Players in Drawing Room: \n" +
-            "Neighboring room info " +
-            "end:------------------------------------------------------------\n", human1LookRes);
+    assertEquals("You (player: human1) are currently in room #0 Armory "
+        + "and neighboring rooms: [Billiard "
+        + "Room, Dining Hall, Drawing Room]\n"
+        + "Your current #0 Room: Armory, has items: [Revolver(Damage=99)]\n"
+        + "**Dr. Lucky is in your room(Armory): Target name: Doctor Lucky, Current HP: 50, "
+        + "Current room index: 0\n"
+        + "**Pet(Fortune Cat Pet) in this room(Armory).\n"
+        + "Other players in the same room: \n"
+        + "Neighboring room info "
+        + "begin:----------------------------------------------------------\n"
+        + "1. Neighbor:\n"
+        + "#1 Room: Billiard Room, has items: [Billiard Cue(Damage=3)]\n"
+        + "Players in Billiard Room: \n"
+        + "2. Neighbor:\n"
+        + "#3 Room: Dining Hall, has items: []\n"
+        + "Players in Dining Hall: \n"
+        + "3. Neighbor:\n"
+        + "#4 Room: Drawing Room, has items: [Letter Opener(Damage=77)]\n"
+        + "Players in Drawing Room: \n"
+        + "Neighboring room info "
+        + "end:------------------------------------------------------------\n", human1LookRes);
   }
 
   /**
@@ -293,20 +289,20 @@ public class Ms2Ms3WorldImplementTest {
     ms2TestWorld.addOnePlayer("human1", 2, false, 10);
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room #2 Carriage House and neighboring " +
-            "rooms: [Winter Garden]\n" +
-            "Your current #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red " +
-            "Hammer" +
-            "(Damage=4)]\n" +
-            "Other players in the same room: \n" +
-            "Neighboring room info " +
-            "begin:----------------------------------------------------------\n" +
-            "1. Neighbor:\n" +
-            "#20 Room: Winter Garden, has items: []\n" +
-            "Players in Winter Garden: \n" +
-            "Neighboring room info " +
-            "end:------------------------------------------------------------\n",
+    assertEquals("You (player: human1) are currently in room #2 Carriage House "
+            + "and neighboring "
+            + "rooms: [Winter Garden]\n"
+            + "Your current #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red "
+            + "Hammer"
+            + "(Damage=4)]\n"
+            + "Other players in the same room: \n"
+            + "Neighboring room info "
+            + "begin:----------------------------------------------------------\n"
+            + "1. Neighbor:\n"
+            + "#20 Room: Winter Garden, has items: []\n"
+            + "Players in Winter Garden: \n"
+            + "Neighboring room info "
+            + "end:------------------------------------------------------------\n",
         human1LookRes);
 
   }
@@ -321,20 +317,20 @@ public class Ms2Ms3WorldImplementTest {
 
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals("You (player: human1) are currently in room #2 Carriage House and " +
-            "neighboring " +
-            "rooms: [Winter Garden]\n" +
-            "Your current #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red " +
-            "Hammer" +
-            "(Damage=4)]\n" +
-            "Other players in the same room: human2, \n" +
-            "Neighboring room " +
-            "info begin:----------------------------------------------------------\n" +
-            "1. Neighbor:\n" +
-            "#20 Room: Winter Garden, has items: []\n" +
-            "Players in Winter Garden: \n" +
-            "Neighboring room info " +
-            "end:------------------------------------------------------------\n",
+    assertEquals("You (player: human1) are currently in room #2 Carriage House and "
+            + "neighboring "
+            + "rooms: [Winter Garden]\n"
+            + "Your current #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red "
+            + "Hammer"
+            + "(Damage=4)]\n"
+            + "Other players in the same room: human2, \n"
+            + "Neighboring room "
+            + "info begin:----------------------------------------------------------\n"
+            + "1. Neighbor:\n"
+            + "#20 Room: Winter Garden, has items: []\n"
+            + "Players in Winter Garden: \n"
+            + "Neighboring room info "
+            + "end:------------------------------------------------------------\n",
         human1LookRes);
 
   }
@@ -350,20 +346,19 @@ public class Ms2Ms3WorldImplementTest {
 
     String human1LookRes = ms2TestWorld.cmdPlayerLook();
     assertNotNull(human1LookRes);
-    assertEquals(
-        "You (player: human1) are currently in room " +
-            "#2 Carriage House and neighboring rooms: " +
-            "[Winter Garden]\n" +
-            "Your current #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red " +
-            "Hammer(Damage=4)]\n" +
-            "Other players in the same room: human2, human3, \n" +
-            "Neighboring room info " +
-            "begin:----------------------------------------------------------\n" +
-            "1. Neighbor:\n" +
-            "#20 Room: Winter Garden, has items: []\n" +
-            "Players in Winter Garden: \n" +
-            "Neighboring room info " +
-            "end:------------------------------------------------------------\n",
+    assertEquals("You (player: human1) are currently in room "
+            + "#2 Carriage House and neighboring rooms: "
+            + "[Winter Garden]\n"
+            + "Your current #2 Room: Carriage House, has items: [Chain Saw(Damage=88), Big Red "
+            + "Hammer(Damage=4)]\n"
+            + "Other players in the same room: human2, human3, \n"
+            + "Neighboring room info "
+            + "begin:----------------------------------------------------------\n"
+            + "1. Neighbor:\n"
+            + "#20 Room: Winter Garden, has items: []\n"
+            + "Players in Winter Garden: \n"
+            + "Neighboring room info "
+            + "end:------------------------------------------------------------\n",
         human1LookRes);
 
   }
@@ -406,14 +401,14 @@ public class Ms2Ms3WorldImplementTest {
     ms2TestWorld.addOnePlayer("human1", 0, false, 10);
     // Add assertions for verifying the player addition
     assertEquals(1 + totalPlayerBefore, ms2TestWorld.getAllPlayerNames().size());
-    assertEquals("Player type: Human Player\n" +
-            "Player's Name: human1 \n" +
-            "Player's limit: 10, can still carry: 10\n" +
-            "Carrying: [] \n" +
-            "Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)(**Pet**" +
-            "(Fortune Cat Pet) in this room.)\n" +
-            "#0 Room: Armory, has items: [Revolver(Damage=99)]\n" +
-            "Neighbor Rooms: Billiard Room, Dining Hall, Drawing Room\n",
+    assertEquals("Player type: Human Player\n"
+            + "Player's Name: human1 \n"
+            + "Player's limit: 10, can still carry: 10\n"
+            + "Carrying: [] \n"
+            + "Current Room: Armory (**Dr.Lucky**(Doctor Lucky HP=50) is in this #0 room.)(**Pet**"
+            + "(Fortune Cat Pet) in this room.)\n"
+            + "#0 Room: Armory, has items: [Revolver(Damage=99)]\n"
+            + "Neighbor Rooms: Billiard Room, Dining Hall, Drawing Room\n",
         ms2TestWorld.getOnePlayerAndRoomInfo("human1"));
   }
 
@@ -920,7 +915,7 @@ public class Ms2Ms3WorldImplementTest {
   public void testPlayerBeSeenNeighborNoPet() throws IllegalAccessException {
     ms2TestWorld.addOnePlayer("human0", 11, false, 10);
     ms2TestWorld.addOnePlayer("human1", 12, true, 11);
-    assertEquals(0, ms2TestWorld.getPetRoomNumber()); // pet in room 0, away from 2 players
+    assertEquals(0, ms2TestWorld.getPetRoomNumber()); // pet in room0, away from 2 players
     assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen()); // human0 can be seen.
     ms2TestWorld.cmdPetMove("Foyer"); //move pet change turn, change player
     assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen()); // human1 can be seen.
@@ -952,11 +947,11 @@ public class Ms2Ms3WorldImplementTest {
     ms2TestWorld.cmdPlayerPick("Billiard Cue");
     assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen()); //check cannot be seen.
     String cmdResult = ms2TestWorld.cmdPlayerKill("Billiard Cue");
-    assertTrue(cmdResult.contains(
-        "Player(human1) attack Dr.Lucky SUCCESS with item: Billiard Cue(Damage=3)\n" +
-            "Dr.Lucky(Doctor Lucky) was attacked by hp:-3\n" +
-            "Dr.Lucky(Doctor Lucky) Current HP=47"));// 1st attack success
-    assertEquals(47, ms2TestWorld.getDrLuckyHp());// check drLucky hp reduced by -3 from 50
+    assertTrue(cmdResult.contains("Player(human1) attack Dr.Lucky SUCCESS with item: "
+        + "Billiard Cue(Damage=3)\n"
+        + "Dr.Lucky(Doctor Lucky) was attacked by hp:-3\n"
+        + "Dr.Lucky(Doctor Lucky) Current HP=47")); // 1st attack success
+    assertEquals(47, ms2TestWorld.getDrLuckyHp()); // check drLucky hp reduced by -3 from 50
     ms2TestWorld.moveDrLucky(); // move Dr lucky to next room
     ms2TestWorld.moveDrLucky();
     ms2TestWorld.cmdPlayerLook();
@@ -1018,7 +1013,7 @@ public class Ms2Ms3WorldImplementTest {
   }
 
   /**
-   * Test case for when 2 players in neighbor room, with pet in other room , attack will fail due to
+   * Test case for when 2 players in neighbor room, with pet in other room , attack fail due to
    * be seen from room 20 where pet in there but inside can see others outside.
    * In Dr Lucky's mansion room 2 & 20 are neighbors, pet is in other room.(20)
    * In following case, player try poking target in room, it will fail, return null string.
@@ -1080,10 +1075,9 @@ public class Ms2Ms3WorldImplementTest {
     String res = ms2TestWorld.cmdPlayerKill("poking");
 
     // Assertion: Verify the success of the attack and Dr. Lucky's updated health.
-    assertTrue(res.contains(
-        "Player(human2) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)\n" +
-            "Dr.Lucky(Doctor Lucky) HP: -1\n" +
-            "Dr.Lucky(Doctor Lucky) Current HP=49\n"));
+    assertTrue(res.contains("Player(human2) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)\n"
+        + "Dr.Lucky(Doctor Lucky) HP: -1\n"
+        + "Dr.Lucky(Doctor Lucky) Current HP=49\n"));
     assertEquals(49, ms2TestWorld.getDrLuckyHp()); // check dr lucky hp reduced
   }
 
@@ -1111,10 +1105,9 @@ public class Ms2Ms3WorldImplementTest {
     String res = ms2TestWorld.cmdPlayerKill("poking");
 
     // Assertion: Verify the success of the attack and Dr. Lucky's updated health.
-    assertTrue(res.contains(
-        "Player(human1) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)\n" +
-            "Dr.Lucky(Doctor Lucky) HP: -1\n" +
-            "Dr.Lucky(Doctor Lucky) Current HP=49\n"));
+    assertTrue(res.contains("Player(human1) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)\n"
+        + "Dr.Lucky(Doctor Lucky) HP: -1\n"
+        + "Dr.Lucky(Doctor Lucky) Current HP=49\n"));
     assertEquals(49, ms2TestWorld.getDrLuckyHp()); // check dr lucky hp reduced
   }
 }
