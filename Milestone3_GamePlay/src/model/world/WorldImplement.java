@@ -609,8 +609,24 @@ public class WorldImplement implements World {
 
     int distRoomNumber = this.getRoomNumByNameString(roomName);
     this.pet.movePet(distRoomNumber);
+    //petDfsMoveHelper();  // execute pet move helper to move pet in DFS order, if needed.
     this.changeTurn();
   }
+
+
+  /**
+   * This method will get the pet Depth first search movement result.
+   *
+   * @return String of pet dfs result to check and make sure the DFS is working as expected.
+   */
+  public String getPetDfsMoveResult() {
+    String res = null;
+    if (!checkGameOver()) {
+      res = this.petDfsMoveHelper();
+    }
+    return res;
+  }
+
 
   /**
    * Gets information about the player's current room and surroundings.
@@ -695,6 +711,28 @@ public class WorldImplement implements World {
 
 
   /**
+   * Performs a Depth-First Search (DFS) traversal starting from the specified room number in a
+   * game world map. Visited rooms are added to the provided list in the order of traversal.
+   *
+   * @param roomNum the starting room number for DFS traversal.
+   * @param visited a set to keep track of visited rooms to avoid revisiting.
+   * @param dfsList a list to store the order of visited rooms during DFS.
+   */
+  private void runDfs(int roomNum, Set<Integer> visited, List<Integer> dfsList) {
+    visited.add(roomNum);
+    dfsList.add(roomNum);
+
+    Set<Integer> neighbors = worldMapIndex.get(roomNum);
+    if (neighbors != null) {
+      for (int neighbor : neighbors) {
+        if (!visited.contains(neighbor)) {
+          this.runDfs(neighbor, visited, dfsList);
+        }
+      }
+    }
+  }
+
+  /**
    * Allow the current player to pick up an item in the room.
    *
    * @param inputItemName The name of the item to be picked up.
@@ -720,6 +758,37 @@ public class WorldImplement implements World {
     curPlayer.pickUpOneItem(item);
     curRoom.removeOneItem(item);
     changeTurn();
+  }
+
+  /**
+   * This method will return a list integer that represent the depth first search of a pet
+   * moving in side a game world map. The integer represent each room number. This helper
+   * function will return the DFS of room number&room name result to the caller for further
+   * processing.
+   *
+   * @return String of the DFS pet move result with room number & room name.
+   */
+  private String petDfsMoveHelper() {
+    int curPetRoomNum = pet.getCurrentRoomNumber();
+    Set<Integer> visited = new HashSet<>();
+    List<Integer> dfsList = new ArrayList<>();
+    this.runDfs(curPetRoomNum, visited, dfsList);
+
+    StringBuilder dfsResult = new StringBuilder();
+    for (int i = 0; i < dfsList.size() - 1; i++) {
+      int currentRoomNum = dfsList.get(i);
+      int nextRoomNum = dfsList.get(i + 1);
+
+      String currentRoomName = roomList.get(currentRoomNum).getRoomName();
+      String nextRoomName = roomList.get(nextRoomNum).getRoomName();
+
+      dfsResult.append(String.format("%d. Pet moved from (Room#%d)%s "
+              + "to (Room#%d)%s, now pet in (Room#%d)%s\n",
+          i + 1, currentRoomNum, currentRoomName, nextRoomNum,
+          nextRoomName, nextRoomNum, nextRoomName));
+    }
+
+    return dfsResult.toString();
   }
 
 
@@ -1031,6 +1100,7 @@ public class WorldImplement implements World {
       this.curPlayerIndex++;
     }
     moveDrLucky(); // 每一次 player 动一次 Dr Lucky也动一次
+    //petDfsMoveHelper();  // execute pet move helper to move pet in DFS order, if needed.
     this.curTurn++;
   }
 

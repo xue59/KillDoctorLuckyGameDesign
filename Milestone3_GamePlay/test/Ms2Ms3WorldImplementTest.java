@@ -852,6 +852,85 @@ public class Ms2Ms3WorldImplementTest {
 
   }
 
+  @Test
+  public void testPetDfsMoveStartWithPlayerMovePet() throws IllegalAccessException {
+
+    ms2TestWorld.addOnePlayer("human0", 0, false, 10);
+    ms2TestWorld.addOnePlayer("human1", 1, true, 11);
+    assertEquals(0, ms2TestWorld.getPetRoomNumber()); // pet in room 0 same as human0
+    ms2TestWorld.cmdPetMove("Billiard Room"); // Confirm pet moved by player
+    String petDfsMoveResult = ms2TestWorld.getPetDfsMoveResult();
+    assertEquals(1, ms2TestWorld.getPetRoomNumber()); // pet in room 1 same as human0
+    assertEquals("human1", ms2TestWorld.getCurrentPlayerName());
+    // current player human 1 cannot been seen since turn change, and human 1 has pet buffer.
+    assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen()); // human1 cannot be seen.
+    //The above code check and make sure Pet move executed correctly.
+    assertTrue(petDfsMoveResult.contains("1. Pet moved from (Room#1)Billiard Room to (Room#0)"
+        + "Armory, now pet in (Room#0)Armory\n"
+        + "2. Pet moved from (Room#0)Armory to (Room#3)Dining Hall, now pet in (Room#3)Dining "
+        + "Hall\n"
+        + "3. Pet moved from (Room#3)Dining Hall to (Room#17)Tennessee Room, now pet in (Room#17)"
+        + "Tennessee Room\n"
+        + "4. Pet moved from (Room#17)Tennessee Room to (Room#18)Trophy Room, now pet in (Room#18)"
+        + "Trophy Room\n"
+        + "5. Pet moved from (Room#18)Trophy Room to (Room#10)Library, now pet in (Room#10)"
+        + "Library\n"
+        + "6. Pet moved from (Room#10)Library to (Room#12)Master Suite, now pet in (Room#12)Master "
+        + "Suite\n"
+        + "7. Pet moved from (Room#12)Master Suite to (Room#11)Lilac Room, now pet in (Room#11)"
+        + "Lilac Room\n"
+        + "8. Pet moved from (Room#11)Lilac Room to (Room#16)Servants' Quarters, now pet in "
+        + "(Room#16)Servants' Quarters\n"
+        + "9. Pet moved from (Room#16)Servants' Quarters to (Room#9)Lancaster Room, now pet in "
+        + "(Room#9)Lancaster Room\n"
+        + "10. Pet moved from (Room#9)Lancaster Room to (Room#14)Parlor, now pet in (Room#14)"
+        + "Parlor\n"
+        + "11. Pet moved from (Room#14)Parlor to (Room#8)Kitchen, now pet in (Room#8)Kitchen\n"
+        + "12. Pet moved from (Room#8)Kitchen to (Room#19)Wine Cellar, now pet in (Room#19)Wine "
+        + "Cellar\n"
+        + "13. Pet moved from (Room#19)Wine Cellar to (Room#4)Drawing Room, now pet in (Room#4)"
+        + "Drawing Room\n"
+        + "14. Pet moved from (Room#4)Drawing Room to (Room#5)Foyer, now pet in (Room#5)Foyer\n"
+        + "15. Pet moved from (Room#5)Foyer to (Room#15)Piazza, now pet in (Room#15)Piazza\n"
+        + "16. Pet moved from (Room#15)Piazza to (Room#20)Winter Garden, now pet in (Room#20)Winter"
+        + " Garden\n"
+        + "17. Pet moved from (Room#20)Winter Garden to (Room#2)Carriage House, now pet in (Room#2)"
+        + "Carriage House\n"
+        + "18. Pet moved from (Room#2)Carriage House to (Room#7)Hedge Maze, now pet in (Room#7)"
+        + "Hedge Maze\n"
+        + "19. Pet moved from (Room#7)Hedge Maze to (Room#6)Green House, now pet in (Room#6)Green "
+        + "House\n"
+        + "20. Pet moved from (Room#6)Green House to (Room#13)Nursery, now pet in (Room#13)"
+        + "Nursery"));
+  }
+
+  @Test
+  public void testPetDfsMoveStartWhenReachingEnd() throws IllegalAccessException {
+    ms2TestWorld.addOnePlayer("p1", 20, false, 10);
+    ms2TestWorld.addOnePlayer("p2", 2, false, 10);
+    String petDfsMoveResult = ms2TestWorld.getPetDfsMoveResult(); // recording DFS move result
+    ms2TestWorld.cmdPetMove("Winter Garden"); // move pet to neighbor room 20
+
+    //check player can be seen by each other.
+    assertTrue(ms2TestWorld.checkCurPlayerCanBeSeen());
+    ms2TestWorld.moveDrLucky(); // move dr to the testing room
+    String res = ms2TestWorld.cmdPlayerKill("poking");
+    assertNull(res);
+    //check drLucky's hp is still 50 at full thus attack failed
+    assertEquals(50, ms2TestWorld.getDrLuckyHp());
+
+    //check pet is in effect, player in room 20 human1 cannot be seen due to pet in.
+    assertFalse(ms2TestWorld.checkCurPlayerCanBeSeen());
+    assertEquals(20, ms2TestWorld.getPetRoomNumber());
+    assertTrue(petDfsMoveResult.contains("20. Pet moved from (Room#10)Library to (Room#13)Nursery, "
+        + "now pet in (Room#13)Nursery\n"));
+    assertTrue(petDfsMoveResult.contains("1. Pet moved from (Room#0)Armory to (Room#1)Billiard "
+        + "Room, now pet in (Room#1)Billiard Room\n"
+        + "2. Pet moved from (Room#1)Billiard Room to (Room#18)Trophy Room, now pet in (Room#18)"
+        + "Trophy Room\n"));
+
+  }
+
   /**
    * Tests two players in same room can be seen without pet.
    */

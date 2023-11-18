@@ -113,6 +113,14 @@ Milestone3_GamePlay
 2. This can be found in log line 130: Player(hum222) Attack failed due to be seen!
 3. The player hum222 try attack Dr. Lucky using poking in room #1 Billiard Room, but it failed.
 
+   **Ms3ExampleRun PetDfsWanderingDemo.txt – Extra Credit**
+1. This example run shows the pet can move with every turn following a depth-first traversal of the
+   spaces in the world, which satisfied the extra credit requirements.
+2. In this example, since there are total 20 room and 20 turns. All the rooms in the Dr. Lucky’s
+   mansion are visited by DFS with the pet.
+3. The example run indicated that the pet started in Billiard room as the player move it to.
+4. Then it DFS travels through all the rooms in the world.
+
 
 4. Assumptions for the MS2 and MS3:
    4.1: I assume that the visibility of the game for different players would be their neighboring
