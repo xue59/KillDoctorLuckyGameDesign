@@ -3,8 +3,10 @@ import controller.Controller;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import controller.GuiControllerImplement;
 import model.world.CreateWorldHelper;
 import model.world.World;
+import view.WorldViewImplement;
 
 /**
  * The main driver class for running the Dr. Lucky's Mansion game simulation. It reads a text-based
@@ -25,10 +27,11 @@ public class Driver {
     String fileName = "res/mansion2023Pet.txt";
     int totalPlayers = 2;
     int totalTurns = 10;
+    String guiOrConsole="gui";
 
     try {
-      if (args.length < 3) {
-        System.out.printf("Less than 3 arguments found! Staring game with "
+      if (args.length < 4) {
+        System.out.printf("Less than 3 arguments found! Staring game with GUI Control"
             + "default file, %d players, %d total turns!%n", totalPlayers, totalTurns);
         System.out.println(
             "ex: Example run command: java -jar ms2_Controller.jar <$ModuleFileDir$/mansion2023Pet"
@@ -39,6 +42,7 @@ public class Driver {
         fileName = args[0];
         totalPlayers = Integer.parseInt(args[1]);
         totalTurns = Integer.parseInt(args[2]);
+        guiOrConsole = args[3].toLowerCase(); // change to lower case gui or console
         System.out.printf("Input File args Found: %s%n", fileName);
       }
 
@@ -55,10 +59,21 @@ public class Driver {
       Readable input = new InputStreamReader(System.in);
       Appendable output = System.out;
 
-      Controller consoleController = new CmdControllerImplement(input, output, mainWorld);
-      consoleController.startGame();
+      if("gui".equals(guiOrConsole)){
+        Controller guiController = new GuiControllerImplement(mainWorld, new WorldViewImplement(
+            "Kill DrLucky Game"));
+        guiController.startGame();
+
+      } else if ("console".equals(guiOrConsole)){
+        Controller consoleController = new CmdControllerImplement(input, output, mainWorld);
+        consoleController.startGame();
+      } else {
+        throw new IOException("Error: please specify GUI or Console (Check typo!)!\n");
+      }
+
     } catch (IOException e) {
-      throw new IOException("Error: unable to open file in Driver.");
+      System.out.println(e.getMessage());
+      throw new IOException("Error: unable to open file in Driver.\n");
     }
   }
 }
