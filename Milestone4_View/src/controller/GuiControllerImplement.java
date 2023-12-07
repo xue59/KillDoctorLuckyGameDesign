@@ -1,12 +1,17 @@
 package controller;
 
+import command.LookAroundCmd;
+import command.MovePlayerCmd;
+import command.PetMoveCmd;
+import command.PlayerPickCmd;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import command.LookAroundCmd;
 import model.world.World;
 import view.ButtonAction;
+import view.KeyboardAction;
 import view.WorldView;
 
 
@@ -26,6 +31,7 @@ public class GuiControllerImplement implements Controller{
     this.totalAllowedTurns = world.getTotalAllowedTurns();
     this.quitFlag = false;
     this.curTurnNum = 0;
+    this.addKeyboardAction();
   }
 
   @Override
@@ -46,21 +52,105 @@ public class GuiControllerImplement implements Controller{
     });
 
     buttonActionMap.put("LOOK", () -> {
-      this.lookAroundTextBoxUpdate();
+      this.guiExeLook();
+    });
+
+    buttonActionMap.put("PICK", () -> {
+      this.guiExePick();
+    });
+
+    buttonActionMap.put("ATTACK", () -> {
+      this.guiExeAttack();
+    });
+
+    buttonActionMap.put("MOVE", () -> {
+      this.guiExeMove();
+    });
+
+    buttonActionMap.put("PETMOVE", () -> {
+      this.guiExePetMove();
     });
 
     ButtonAction buttonAction = new ButtonAction();
     buttonAction.setMap(buttonActionMap);
     this.view.addActionButton(buttonAction);
+
   }
 
-  private void lookAroundTextBoxUpdate(){
+  private void addKeyboardAction(){
+    Map<Integer, Runnable> keyPresses = new HashMap<>();
+    keyPresses.put(KeyEvent.VK_L, () -> {
+      System.out.println("L key pressed");
+      this.guiExeLook();
+    });
+
+    KeyboardAction keyboardAction = new KeyboardAction();
+    keyboardAction.setMap(keyPresses);
+    System.out.println("this.view.addActionKeyboard(keyboardAction); executed");
+    this.view.addActionKeyboard(keyboardAction);
+  }
+
+  private void guiExePetMove(){
+
+    if(world.checkGameOver()){
+      this.view.showError("Game Over! Cannot play!\n");
+    } else {
+      System.out.println("Now PetMove clicked! \n");
+      this.view.showPetMoveInfo(this.getPetMoveResult());
+      this.view.disableEnableAllActionButtons(false);
+    }
+  }
+
+  private void guiExeMove(){
+    if(world.checkGameOver()){
+      this.view.showError("Game Over! Cannot play!\n");
+    } else {
+      System.out.println("Now Move clicked! \n");
+      this.view.showMoveInfo(this.getMoveResult());
+      this.view.disableEnableAllActionButtons(false);
+    }
+  }
+
+  private void guiExeLook(){
+    if (!this.view.getBtnStatus("LOOK")){
+      this.view.showError("Cannot perform Action at this turn!\n");
+    }
     if(world.checkGameOver()){
       this.view.showError("Game Over! Cannot play!\n");
     } else {
       System.out.println("Now look around clicked! \n");
       this.view.showLookAroundInfo(this.getLookAroundResult());
+      this.view.disableEnableAllActionButtons(false);
     }
+  }
+
+  private void guiExePick() {
+    try{
+      if(world.checkGameOver()){
+        this.view.showError("Game Over! Cannot play!\n");
+      } else {
+        System.out.println("Now pick clicked! \n");
+        this.view.showPickInfo(this.getPickResult());
+        this.view.disableEnableAllActionButtons(false);
+      }
+    } catch (IllegalAccessException e ){
+      this.view.showError(e.getMessage());
+    }
+  }
+
+  private void guiExeAttack(){
+    try{
+      if(world.checkGameOver()){
+        this.view.showError("Game Over! Cannot play!\n");
+      } else {
+        System.out.println("Now attack clicked! \n");
+        this.view.showAttackInfo(this.world.getCurPlayerBestKillResult());
+        this.view.disableEnableAllActionButtons(false);
+      }
+    } catch (IllegalAccessException e){
+      this.view.showError(e.getMessage());
+    }
+
   }
 
   private void startTurnScreen(){
@@ -68,8 +158,10 @@ public class GuiControllerImplement implements Controller{
       this.view.showError("Game Over! Cannot play!\n");
     } else {
       System.out.println("Now start turns clicked! \n");
+      this.view.disableEnableAllActionButtons(true);
       this.world.createGraphBufferedImage();
       this.view.showStartTurnScreen(this.getCurTurnBeginInfo());
+      this.curTurnNum++;
     }
 
   }
@@ -148,6 +240,99 @@ public class GuiControllerImplement implements Controller{
       LookAroundCmd cmdLook = new LookAroundCmd();
       output.append(cmdLook.execute(this.world));
       return output.toString();
+  }
+
+  private String getPickResult() throws IllegalAccessException {
+    String highItemInRoom = world.getCurPlayerRoomHighItemName();
+    String curTurnPlayerName = world.getCurrentPlayerName();
+    String cmdPickResult;
+    StringBuilder output = new StringBuilder();
+
+    PlayerPickCmd cmdPick = new PlayerPickCmd(highItemInRoom);
+    try {
+      cmdPickResult = cmdPick.execute(this.world);
+      if (!cmdPickResult.isEmpty()) {
+        output.append(cmdPickResult);
+        output.append(String.format("Player: %s picked up item: %s SUCCESS!\n",
+            curTurnPlayerName, highItemInRoom));
+      }
+      return output.toString();
+    } catch (IllegalAccessException e) {
+      output.append(e.getMessage());
+      throw new IllegalAccessException("Can't PICK, your bag is Full, try other commands!\n");
+    } catch (IllegalStateException e) { // Game Over state!
+      throw new IllegalStateException(String.format("Game Over! Player:%s Cannot pick up item!"
+          + " %s\n", curTurnPlayerName, highItemInRoom));
+    } catch (IllegalArgumentException e) {
+      output.append(e.getMessage());
+      output.append("\nCheck the item name for typos and case sensitivity!\n");
+    } catch (NullPointerException e) {
+      output.append("Item name cannot be null! Try a valid Item name.\n");
+    }
+    return output.toString();
+  }
+
+  private String getMoveResult(){
+    String moveToRoomName = world.getCurrentPlayerOneNeighborRoom();
+    String curTurnPlayerName = world.getCurrentPlayerName();
+    StringBuilder output = new StringBuilder();
+    try {
+      MovePlayerCmd cmdMove = new MovePlayerCmd(moveToRoomName);
+      String moveResult;
+      moveResult = cmdMove.execute(this.world);
+      if (!moveResult.isEmpty()) {
+        output.append(String.format("Player: %s moved to room: %s SUCCESS!\n",
+            curTurnPlayerName, moveToRoomName));
+      }
+      return output.toString();
+    } catch (IllegalAccessException e) {
+      output.append(e.getMessage());
+      output.append("Check your room name for typo and case sensitivity!\n");
+    } catch (NullPointerException e) {
+      output.append(e.getMessage());
+      output.append("Enter a valid room name again!\n");
+    } catch (IllegalStateException e) {
+      // Game Over state!
+      throw new IllegalStateException(
+          String.format("Game Over! Player:%s Cannot move! %s\n", curTurnPlayerName,
+              e.getMessage()));
+    } catch (IllegalArgumentException e) {
+      output.append(e.getMessage());
+      output.append("\nCheck your room name for typo and case sensitivity!\n");
+    }
+    return output.toString();
+  }
+
+  private String getPetMoveResult(){
+    String curTurnPlayerName = world.getCurrentPlayerName();
+    String curPlayerRoomName = world.getOnePlayerCurrentRoomName(curTurnPlayerName);
+    String petName = world.getPetName();
+    StringBuilder output = new StringBuilder();
+    try {
+      PetMoveCmd cmdPetMove = new PetMoveCmd(curPlayerRoomName);
+      String moveResult;
+      moveResult = cmdPetMove.execute(this.world);
+      if (!moveResult.isEmpty()) {
+        output.append(String.format("Player: %s moved Pet(%s) to their own room: %s SUCCESS!\n",
+            curTurnPlayerName, petName, curPlayerRoomName));
+      }
+      return output.toString();
+    } catch (IllegalAccessException e) {
+      output.append(e.getMessage());
+      output.append("Check your room name for typo and case sensitivity!\n");
+    } catch (NullPointerException e) {
+      output.append(e.getMessage());
+      output.append("Enter a valid room name again!\n");
+    } catch (IllegalStateException e) {
+      // Game Over state!
+      throw new IllegalStateException(
+          String.format("Game Over! Player:%s Cannot move! %s\n", curTurnPlayerName,
+              e.getMessage()));
+    } catch (IllegalArgumentException e) {
+      output.append(e.getMessage());
+      output.append("\nCheck your room name for typo and case sensitivity!\n");
+    }
+    return output.toString();
   }
 
 }

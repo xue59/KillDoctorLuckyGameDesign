@@ -12,6 +12,7 @@ public interface WorldView {
 
   void setupNewGameWindow();
   void addActionButton(ButtonAction btnAction);
+  void addActionKeyboard(KeyboardAction keyboardAction);
   void showWelcomeGui();
   void showAddPlayerGui(Integer totalRoomNumber);
   void enableStartTurnsButton();
@@ -20,7 +21,12 @@ public interface WorldView {
 
   void showStartTurnScreen(String turnBeginInfo);
   void showLookAroundInfo(String lookResult);
-
+  void showPickInfo(String pickResult);
+  void showAttackInfo(String attackRes);
+  void showMoveInfo(String moveResult);
+  void showPetMoveInfo(String petResult);
+  void disableEnableAllActionButtons(Boolean input);
+  boolean getBtnStatus(String inputButtonName);
 
 
 }

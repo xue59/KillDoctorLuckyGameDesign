@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class WorldViewImplement extends JFrame implements WorldView {
-
+  private static final long serialVersionUID = 8609175038441759607L;
   private JPanel welcomeScreen;
   private JPanel addPlayerScreen;
   private JButton buttonStartGame;
@@ -44,8 +44,11 @@ public class WorldViewImplement extends JFrame implements WorldView {
   private JButton pickButton;
   private JButton petMoveButton;
   private JButton attackButton;
+  private JButton finishTurn;
 
   private JTextArea gameMessageTextArea;
+  private JPanel buttonPanel;
+
 
   public WorldViewImplement(String header){
     super(header);
@@ -64,16 +67,33 @@ public class WorldViewImplement extends JFrame implements WorldView {
     this.addPlayerScreen = new JPanel();
     this.buttonAddPlayer = new JButton("Add This Player");
     this.buttonStartTurns= new JButton("Start Turns!");
+    this.buttonStartTurns.setActionCommand("START_TURNS");
 
     //set game map turn start screen
     this.gameTurnScreen = new JPanel();
     this.moveButton = new JButton("Move");
+    this.moveButton.setActionCommand("MOVE");
+
     this.lookButton = new JButton("Look");
-    lookButton.setActionCommand("LOOK");
+    this.lookButton.setActionCommand("LOOK");
+
     this.pickButton = new JButton("Pick");
-    this.petMoveButton = new JButton("PetMove");
+    this.pickButton.setActionCommand("PICK");
+
     this.attackButton = new JButton("Attack");
+    this.attackButton.setActionCommand("ATTACK");
+
+    this.petMoveButton = new JButton("PetMove");
+    this.petMoveButton.setActionCommand("PETMOVE");
+
+    this.finishTurn = new JButton("Finish Turn");
+    this.finishTurn.setActionCommand("START_TURNS");
+
     this.gameMessageTextArea = new JTextArea();
+
+    this.buttonPanel = new JPanel(new FlowLayout());
+    //set focuse for keyboard
+
 
   }
 
@@ -117,6 +137,14 @@ public class WorldViewImplement extends JFrame implements WorldView {
     this.pickButton.addActionListener(btnAction);
     this.petMoveButton.addActionListener(btnAction);
     this.attackButton.addActionListener(btnAction);
+    this.finishTurn.addActionListener(btnAction);
+  }
+
+  @Override
+  public void addActionKeyboard(KeyboardAction keyboardAction){
+    this.addKeyListener(keyboardAction);
+    this.buttonPanel.addKeyListener(keyboardAction);
+    this.gameTurnScreen.addKeyListener(keyboardAction);
   }
 
   @Override
@@ -154,6 +182,14 @@ public class WorldViewImplement extends JFrame implements WorldView {
     //展示
     this.add(this.welcomeScreen);
     this.setVisible(true);
+  }
+
+  @Override
+  public void showMoveInfo(String moveResult){
+    this.gameMessageTextArea.setText(moveResult);
+    this.showMsg(String.format("%s \nClick Finish Turn to next player!",
+        moveResult));
+    this.finishTurn.setEnabled(true);
   }
 
   @Override
@@ -229,7 +265,6 @@ public class WorldViewImplement extends JFrame implements WorldView {
     this.addPlayerScreen.add(buttonAddPlayer,gbc);
 
     // 6th input - start game turn
-    this.buttonStartTurns.setActionCommand("START_TURNS");
     this.buttonStartTurns.setEnabled(false); // set button to be gray out
     gbc.gridx = 0;
     gbc.gridy = 10;
@@ -280,16 +315,19 @@ public class WorldViewImplement extends JFrame implements WorldView {
     this.gameMessageTextArea.setEditable(false);
 
     // Add buttons for Move, Look, Pick, PetMove, Attack
-    JPanel buttonPanel = new JPanel(new FlowLayout());
     buttonPanel.add(moveButton);
     buttonPanel.add(lookButton);
     buttonPanel.add(pickButton);
     buttonPanel.add(petMoveButton);
     buttonPanel.add(attackButton);
+    buttonPanel.add(finishTurn);
+    this.finishTurn.setEnabled(false); // disable finish turn until user input
     if (!turnBeginInfo.contains(", Attack])\n")){
       this.attackButton.setEnabled(false);
     }
-
+    if (turnBeginInfo.contains(", has items: []")){ // 如果当前room没有item 无法 pick
+      this.pickButton.setEnabled(false);
+    }
 
     // Combine text area and buttons in the same box
     JPanel textAreaWithButtonsPanel = new JPanel(new BorderLayout());
@@ -297,7 +335,8 @@ public class WorldViewImplement extends JFrame implements WorldView {
     textAreaWithButtonsPanel.add(buttonPanel, BorderLayout.SOUTH);
 
     // 使用 JSplitPane 将两个组件组合在一起
-    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mapScrollPane, textAreaWithButtonsPanel);
+    JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+        mapScrollPane, textAreaWithButtonsPanel);
     splitPane.setResizeWeight(0.75); // 设置左侧列占总宽度的比例
 
     // 设置 grid 布局
@@ -322,7 +361,37 @@ public class WorldViewImplement extends JFrame implements WorldView {
   @Override
   public void showLookAroundInfo(String lookResult){
     this.gameMessageTextArea.setText(lookResult);
+    this.finishTurn.setEnabled(true);
   }
+
+  @Override
+  public void showPickInfo(String pickResult){
+    this.gameMessageTextArea.setText(pickResult);
+    this.showMsg(String.format("%s \nPicked Highest Damage Item! "
+            + "\nClick Finish Turn to next "
+            + "player!",
+        pickResult));
+    this.finishTurn.setEnabled(true);
+  }
+
+  @Override
+  public void showAttackInfo(String attackRes){
+    if (attackRes != null){
+      this.gameMessageTextArea.setText(attackRes);
+      this.showMsg(String.format("%s \nAttacked with Highest Damage Item"
+              + "\nClick Finish Turn to next player!",
+          attackRes));
+    } else {
+      this.gameMessageTextArea.setText("Attack failed due being seen!\n");
+      this.showMsg(String.format("Attack failed due being seen! Careful next time!"
+              + "\nClick Finish Turn to next player!"));
+    }
+    this.finishTurn.setEnabled(true);
+
+  }
+
+
+
   @Override
   public void enableStartTurnsButton(){
     this.buttonStartTurns.setEnabled(true);
@@ -367,5 +436,41 @@ public class WorldViewImplement extends JFrame implements WorldView {
     }
     return null;
   }
+
+  @Override
+  public void showPetMoveInfo(String petResult){
+    this.gameMessageTextArea.setText(petResult);
+    this.showMsg(String.format("%s \nClick Finish Turn to next player!",
+        petResult));
+    this.finishTurn.setEnabled(true);
+  }
+
+  @Override
+  public void disableEnableAllActionButtons(Boolean input){
+    this.moveButton.setEnabled(input);
+    this.lookButton.setEnabled(input);
+    this.pickButton.setEnabled(input);
+    this.petMoveButton.setEnabled(input);
+    this.attackButton.setEnabled(input);
+  }
+
+  @Override
+  public boolean getBtnStatus(String inputButtonName){
+    switch (inputButtonName.toUpperCase()){
+      case "LOOK":
+        return lookButton.isEnabled();
+      case "MOVE":
+        return moveButton.isEnabled();
+      case "PICK":
+        return pickButton.isEnabled();
+      case "PETMOVE":
+        return petMoveButton.isEnabled();
+      case "ATTACK":
+        return attackButton.isEnabled();
+      default:
+        return false;
+    }
+  }
+
 
 }

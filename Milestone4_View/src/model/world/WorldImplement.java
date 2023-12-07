@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import javax.imageio.ImageIO;
 import model.drlucky.DrLucky;
@@ -1292,4 +1293,56 @@ public class WorldImplement implements World {
   public int getPetRoomNumber() {
     return this.pet.getCurrentRoomNumber();
   }
+
+  @Override
+  public String getCurPlayerRoomHighItemName() {
+    Player curPlayer = this.playerList.get(curPlayerIndex);
+    Room curRoom = this.roomList.get(curPlayer.getCurrentRoomNumber());
+    Map<String, Integer> itemWithDamageInTheRoom = curRoom.getAllItemsWithDamage();
+
+    if (curPlayer.getCurrentCapacity() > 0 && !itemWithDamageInTheRoom.isEmpty()) {
+      // Find the item with the highest damage
+      String bestItem = null;
+      int maxDamage = Integer.MIN_VALUE;
+
+      for (Map.Entry<String, Integer> entry : itemWithDamageInTheRoom.entrySet()) {
+        String itemName = entry.getKey();
+        int damage = entry.getValue();
+
+        // Compare the damage values
+        if (damage > maxDamage) {
+          maxDamage = damage;
+          bestItem = itemName;
+        }
+      }
+      return bestItem;
+    }
+
+    System.out.println("Error: no item found in the room!\n");
+    return null;
+  }
+
+  @Override
+  public String getCurPlayerBestKillResult() throws IllegalAccessException {
+    String res = this.computerKillHelper();
+    return res;
+  }
+
+  @Override
+  public String getCurrentPlayerOneNeighborRoom(){
+    Player curPlayer = this.playerList.get(curPlayerIndex);
+    Room curRoom = this.roomList.get(curPlayer.getCurrentRoomNumber());
+
+    Set<Integer> neighborList = worldMapIndex.get(curRoom.getRoomNumber());
+    // Convert set to list
+    List<Integer> integerList = new ArrayList<>(neighborList);
+
+    // Get a random number
+    Random random = new Random();
+    int randomIndex = random.nextInt(integerList.size());
+    int randomNumber = integerList.get(randomIndex);
+
+    return roomList.get(randomNumber).getRoomName();
+  }
+
 }

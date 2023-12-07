@@ -344,4 +344,8 @@ public interface World {
   String getOneRoomInfoWithOutNeighbor(String roomName)
       throws IllegalArgumentException, NullPointerException;
 
+  String getCurPlayerRoomHighItemName();
+  String getCurPlayerBestKillResult() throws IllegalAccessException;
+  String getCurrentPlayerOneNeighborRoom();
+
 }
