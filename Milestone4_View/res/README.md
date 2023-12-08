@@ -1,15 +1,27 @@
 KillDoctorLuckyGameDesign README
 Author: Zack-Haowen Xue
-Project Github: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone3
+Project Github: https://github.com/xue59/KillDoctorLuckyGameDesign/tree/Milestone4
 
-Milestone3_GamePlay
+Milestone4_GamePlay with GUI & View
 
 1. Instructions on how to run:
+   **GUI interface:**
+    1. Example command: java -jar ms4_GameView.jar mansion2023Pet.txt 2 4 gui
+    3. Once started the GUI interface, top left corner to the JMenu Bar to re-start, reload a
+       World or quit the game.
+    4. In welcome screen, click Start Game to play.
+    5. You need to follow the GUI instruction to add correct amount of players to play.
+    6. Once into the Game world, left side is the Board Game map for you to view, right side is
+       the game status and additional information.
+    7. You can control the actions by keyboard: A, P, T, M, L or use the button to control.
+    8. Once game over, click the quit to quit game.
+    
+   **Console Text based interface:**
    1.1 Once you clone or download the project Repo, unzip the Repo.  
    1.2 Open the terminal under the folder of /Milestone3_GamePlay/res
    1.3 Find the jar file called ms3_GamePlay.jar.
-   1.4 In the terminal under the res folder, run the command: java -jar ms2_Controller.jar [map
-   txt file directory] [totalPlayersNumber] [totalMaxTurnNumber]
+   1.4 In the terminal under the res folder, run the command: java -jar ms4_GameView.jar.jar [map
+   txt file directory] [totalPlayersNumber] [totalMaxTurnNumber] [gui or console]
    1.5: Please provide the map txt file, total player and max turn exact as above pattern, for
    example: java -jar ms3_GamePlay.jar mansion2023Pet.txt 2 99 this would start with 2 players
    and 99 turns.
@@ -30,99 +42,16 @@ Milestone3_GamePlay
    added and modified item damage, a few item damage are enhanced to make it easy on killing Dr.
    Lucky.
    c. customerWorld.txt - slightly changed room names based on Dr. Lucky's Mansion.
-   d. myOwnWorldMapV1.txt - my designed map.txt file.
+   d. myOwnWorldMapV2Pet.txt - my designed map.txt file with pet added. 
    e. After each run, check the generated pictures in the same /res folder.
 
 
-3. Example run with explanations:
-   **Ms3ExampleRunHumanWin.txt**
-1. This example run logged that the Human players win the game by successfully killing Dr Lucky and
-   reduced target HP to 0.
-2. Line 16 – 35 shows two Human players are added into the game called p1 and p2.
-3. Line 66: the game officially started.
-4. Line 76: turn #1, the p1 player moved the pet to Drawing Room. (Pet move success confirmed in
-   line 182)
-5. Line 93: turn #2, the p2 picked Letter Opener(Damage=77).
-6. Line 182: turn #5, the Pet effected the visibility of a Look around command carried out by p1.
-   The P1 was trying to look around for room Dining Hall, but the Pet is the Drawing Room, thus the
-   outsit players (p1) cannot see inside conditions. Thus, players and items in Drawing Room in this
-   turn cannot be seen.
-7. Line 207-209: turn #6, the p2 player encountered Dr. Lucky, target, in the same room in room #5
-   Foyer and the p2 player successfully Poking attacked the target. It confirmed the attack and Dr.
-   Lucky recued HP by 1.
-8. Line 348: turn #14, p2 is in room Parlor with Pet, but Dr. Lucky not in the same room, thus
-   cannot attack.
-9. Line 443: turn #18, player p2 is in room #17 Tennessee Room with Dr. Lucky, (cannot be seen by
-   others, since no players around room) and player p2 successfully attacked the Dr. Lucky with
-   Letter Opener(Damage=77). This caused damage and 0 HP for the target. Thus game is over and p2
-   win.(confirmed by the system message line 452 & 451)
-10. Line 451-452: Congratulation!!!!!!!!! Game Winner: p2
-11. Line 468: user confirmed game result again: Last game already finished, back to main menu to
-    re-start a New Game. Last game winner: p2!!!
-12. Line 482: Line 235: quit game successfully with order 66. :)
+3. MS4 GUI Example run with explanations:
+   Please refer to the "res/ExampleRunMS4.pdf"  to see each screen of the game GUI with real 
+   game play result. The screenshot and text explanation should be clear enough in the 
+   ExampleRunMS4.pdf.
 
-    **Ms3ExampleRunComputerWin.txt**
-1. This example run logged that the Computer players win the game by successfully killing Dr Lucky
-   and reduced target HP to 0.
-2. Line 16 – 35 shows two Computer players are added into the game called com1 and com2.
-3. Line 61: the game officially started.
-4. Line 97: turn #1, Player(com1) attacked Dr.Lucky SUCCESS with item: Poking(Damage=1) and causing
-   damage of hp reduced by 1. It is confirmed that the targeted hp reduced to 49 in line 99. This
-   shows that the computer attack logic is working as expected, as it will always try to attack
-   to Dr. Lucky whenever it’s possible. Even the computer player does not have items, it will use
-   the basic attack, poking, to attack. If they have items, they will always try to use the highest
-   damage item to attack. (This can be shown in turn #9, line 203).
-5. Line 125: turn #3, **Computer player**: com1 PICK up Revolver with 99 damage. This shows the
-   computer pick logic is working correctly, since it will always try to pick item when they
-   cannot attack and also having capacity. It also will try to pick the highest damage item in the
-   room floor.
-6. Line 138: turn #4, **Computer player**: com2 MOVE to room: Trophy Room. This shows the computer
-   move logic is correct. When the computer player cannot attack or pick it will try to move
-   randomly in the game world. In this case the com2 player moved to Trophy Room.
-7. Line 145: turn #5, Current Room: Armory(**Pet**(Fortune Cat Pet) in this room.) The computer
-   player com1 encountered the Pet, the Pet is taking effect, but there is no Dr. Lucky in the room
-   thus can not attack.
-8. Line 203: turn#9, **Computer player**: Player(com1) attack Dr.Lucky SUCCESS with item: Revolver(
-   Damage=99). This shows that the computer attack logic worked correctly, and it used the highest
-   item to attack Dr. Lucky when there is a chance to attack. And the Dr. Lucky is successfully
-   killed reduced HP to 0, thus, computer player com1 wins.
-9. Line 222: user can confirm that the computer player com1 won the game.
-10. Line 235: quit game successfully with order 66.  :)
-
-    **Ms3ExampleRunEscaped.txt**
-1. This example run logged that the max turns reached thus no winner for the game, and Dr. Lucky,
-   the target escaped successfully with positive HP.
-2. Line 33– 67: shows two Computer players are added into the game called com1 and com2, they are
-   both computer players in this case just to speed up the process and improve automation. Also
-   setting the computer players with less capacity for items, for example with capacity, this
-   ensured Dr. Lucky can have higher escape rate.
-3. Line 92: turn #1, since com1 are initially in the same with Dr. Lucky, so it attacked the
-   target with only Poking, it caused 1 damage, can be confirmed by: **Computer player**: Player(
-   com1) attack Dr.Lucky SUCCESS with item: Poking(Damage=1)  Dr.Lucky(Doctor Lucky) HP: -1.
-   Dr.Lucky(Doctor Lucky) Current HP=49
-4. Line 95 – line 198: shows some players movement in turn#2 – turn#9, since there are total 10
-   turns in this Demo run. After next turn#10, the target will escape.
-5. Line 213: turn #10, Game Over: Max 10 turns finished! Whoops, Dr.Lucky(Doctor Lucky HP=49)
-   escaped!!!  This shows, the player failed kill Dr. Lucky within 10 turns of games and the Dr.
-   Lucky go escaped.
-6. Line 226: quit game successfully with order 66.  :)
-
-   **Ms3ExampleRunHumanRunAttackFailed.txt**
-1. This example run logged that the human player tried an attempt on attacking Dr. Lucky, but failed
-   due to be seen by other players in the neighbor room
-2. This can be found in log line 130: Player(hum222) Attack failed due to be seen!
-3. The player hum222 try attack Dr. Lucky using poking in room #1 Billiard Room, but it failed.
-
-**Ms3ExampleRun PetDfsWanderingDemo.txt – Extra Credit**
-1. This example run shows the pet can move with every turn following a depth-first traversal of the
-   spaces in the world, which satisfied the extra credit requirements.
-2. In this example, since there are total 20 room and 20 turns. All the rooms in the Dr. Lucky’s
-   mansion are visited by DFS with the pet.
-3. The example run indicated that the pet started in Billiard room as the player move it to.
-4. Then it DFS travels through all the rooms in the world.
-
-
-4. Assumptions for the MS2 and MS3:
+4. Assumptions up to MS4:
    4.1: I assume that the visibility of the game for different players would be their neighboring
    rooms. Thus, players in neighboring room can see each other with out pet effect. If players can
    be seen each other they can not execute the attack or the attack will be failed.
@@ -153,9 +82,18 @@ Milestone3_GamePlay
    4.14. Assume if the Pet in neighboring room, and player execute look around command will still
    see the room name as its neighbor, but will not be able seen its inside, the player inside will
    not be seen, then the player inside room with pet can still kill Dr. Lucky if that is possible.
+   4.15 Assume user can follow the basic instruction on the GUI interface.
+   4.16 In GUI user interface, to optimize the user player strategy, when they pick they will 
+   always automatically pick the highest damage item in the room. 
+   4.17 In GUI user interface, to optimize the user player strategy, when they attack they will
+   always automatically use the highest damage item to attack Dr Lucky, if they choose to attack. 
+   4.18 In GUI, once attack failed, the user can not redo their turn. So assume the user can 
+   read the map and make rational decision on attempt to kill. 
+   4.19 In GUI, assume user would have a valid map in the res directory in order to start a new 
+   game.
 
 
-5. Limitations for MS2 and MS3:
+5. Limitations up to MS4:
    5.1: Include all assumptions from above.
    5.2: The game will only end when the maximum number of turns is reached.
    5.3: The players cannot stop the game during the gameplay turn. Players can quit the program in
@@ -183,9 +121,15 @@ Milestone3_GamePlay
    5.13: If the attack failed due to be seen by others, the system will count this turn and pass,
    let player know attack failed but will not remove item since the item did not take effect. The
    player may use the item again next time.
+   5.14. Including the assumption from GUI sections. 
+   5.15. User need to input correct jar command in terminal to start the GUI game. 
+   5.16. If the argument is not enough, it will always start the Console game.  
+   5.17. There is no automated testing for GUI interface, to truly test the GUI, a human player 
+   need to eyeball the result from the GUI screen. Thus mock GUI view model and mock GUI 
+   controller is introduced to testing the class feature at the best they can.  
 
 
-6. Change and Version History v2.0 - v3.0:
+6. Change and Version History v4.0:
    6.1: From v1.0 the milestone 1, players models are introduced.
    6.2: Synchronous Controller introduced along with MockWorld testing method.
    6.3: Necessary changes in World and World Implementation to accommodate the Synchronous
@@ -207,9 +151,11 @@ Milestone3_GamePlay
    move, this will increase the game difficulty, and hard to valid on command line interface thus
    not recommended in game play. But can be tested with test cases and unit test.  
    6.12: Attack command introduced in the game, see rule in above assumption and limitation.
+   6.13: Add supporting for GUI Game play. 
+   6.14: Add View for GUI and console. 
+   6.15: Add Mock View model and GUI controller model for testing purpose. 
 
 **References:**
-
 - https://www.youtube.com/watch?v=9hsPLAB5a9s&ab_channel=fenirob
 - https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/Graphics.html
 - https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/image/BufferedImage.html
@@ -217,3 +163,5 @@ Milestone3_GamePlay
 - https://www.jetbrains.com/help/idea/compiling-applications.html#run_packaged_jar
 - https://steamcommunity.com/sharedfiles/filedetails/?id=261218852
 - https://docs.oracle.com/javase/8/docs/api/java/util/Random.html
+- https://store.steampowered.com/app/945360/Among_Us/ 
+- https://www.shutterstock.com/zh/image-vector/cartoon-knight-running-fierce-dragon-castle-74602597
