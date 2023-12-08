@@ -344,8 +344,28 @@ public interface World {
   String getOneRoomInfoWithOutNeighbor(String roomName)
       throws IllegalArgumentException, NullPointerException;
 
+  /**
+   * Retrieves the name of the item in the current player's room with the highest damage value.
+   * The method considers the player's current capacity and the damage values of items in the room.
+   *
+   * @return  The name of the item with the highest damage in the current player's room, or null if
+   *          no suitable item is found.
+   */
   String getCurPlayerRoomHighItemName();
+
+  /**
+   * Retrieves the result of the computer-controlled player's best kill action.
+   *
+   * @return The result of the computer-controlled player's best kill action.
+   * @throws IllegalAccessException If Illegal access occurs during the kill action.
+   */
   String getCurPlayerBestKillResult() throws IllegalAccessException;
+
+  /**
+   * Retrieves the name of a random neighboring room of the current player's room.
+   *
+   * @return The name of a random neighboring room of the current player's room.
+   */
   String getCurrentPlayerOneNeighborRoom();
 
 }

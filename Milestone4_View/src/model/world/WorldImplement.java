@@ -1294,6 +1294,13 @@ public class WorldImplement implements World {
     return this.pet.getCurrentRoomNumber();
   }
 
+  /**
+   * Retrieves the name of the item in the current player's room with the highest damage value.
+   * The method considers the player's current capacity and the damage values of items in the room.
+   *
+   * @return The name of the item with the highest damage in the current player's room, or null if
+   *          no suitable item is found.
+   */
   @Override
   public String getCurPlayerRoomHighItemName() {
     Player curPlayer = this.playerList.get(curPlayerIndex);
@@ -1322,14 +1329,25 @@ public class WorldImplement implements World {
     return null;
   }
 
+  /**
+   * Retrieves the result of the computer-controlled player's best kill action.
+   *
+   * @return The result of the computer-controlled player's best kill action.
+   * @throws IllegalAccessException If Illegal access occurs during the kill action.
+   */
   @Override
   public String getCurPlayerBestKillResult() throws IllegalAccessException {
     String res = this.computerKillHelper();
     return res;
   }
 
+  /**
+   * Retrieves the name of a random neighboring room of the current player's room.
+   *
+   * @return The name of a random neighboring room of the current player's room.
+   */
   @Override
-  public String getCurrentPlayerOneNeighborRoom(){
+  public String getCurrentPlayerOneNeighborRoom() {
     Player curPlayer = this.playerList.get(curPlayerIndex);
     Room curRoom = this.roomList.get(curPlayer.getCurrentRoomNumber());
 

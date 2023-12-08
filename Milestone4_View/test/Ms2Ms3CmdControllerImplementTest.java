@@ -12,6 +12,7 @@ import model.world.CreateWorldHelper;
 import model.world.World;
 import org.junit.Before;
 import org.junit.Test;
+import view.ConsoleViewImplement;
 
 /**
  * This is a test method for testing the command line controller.
@@ -48,7 +49,8 @@ public class Ms2Ms3CmdControllerImplementTest {
   public void testCreateGameMapPngCommand() throws IOException {
     Readable input = new StringReader("0\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // can check the output contain create world map result!
     assertTrue(output.toString().contains("The world map png created in above directory.\n"));
@@ -61,7 +63,8 @@ public class Ms2Ms3CmdControllerImplementTest {
   public void testQuitCommandOrder66() throws IOException {
     Readable input = new StringReader("66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // can check the output contain quit command!
     assertTrue(output.toString().contains("Executed Order 66 to kill and eliminate ALL controller"
@@ -76,7 +79,9 @@ public class Ms2Ms3CmdControllerImplementTest {
   public void starGameWelcomeScreen() throws IOException {
     try {
       Readable input = new StringReader(" \n");
-      Controller cmdController = new CmdControllerImplement(input, this.outGameLog, this.realWorld);
+
+      Controller cmdController = new CmdControllerImplement(input,
+          this.realWorld, new ConsoleViewImplement(this.outGameLog));
       cmdController.startGame();
     } catch (NoSuchElementException e) {
       // End for waiting user input by catching no user input Exception error
@@ -103,7 +108,8 @@ public class Ms2Ms3CmdControllerImplementTest {
   public void testCheckOneRoomInfoCommandWithOneItem() throws IOException {
     Readable input = new StringReader("2\n Armory\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     assertTrue(output.toString().contains("#0 Room: Armory, has items: [Revolver(Damage=99)]\n"));
@@ -116,7 +122,8 @@ public class Ms2Ms3CmdControllerImplementTest {
   public void testCheckOneRoomInfoCommandWithTwoItem() throws IOException {
     Readable input = new StringReader("2\n Carriage House\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -134,7 +141,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n hu2\n 1\n 0\n n\n m\n 2\n Armory\n "
             + "m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -156,7 +164,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n hu2\n 1\n 0\n n\n m\n 2\n Armory\n "
             + "m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -181,7 +190,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n y\n hu2\n 1\n 0\n n\n m\n 2\n Armory\n "
             + "m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -205,7 +215,8 @@ public class Ms2Ms3CmdControllerImplementTest {
     Readable input = new StringReader("1\n hu1\n 1\n 0\n y\n hu2\n 1\n 0\n y\n m\n 2\n Armory\n "
         + "m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -230,7 +241,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
             + "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -247,7 +259,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
             + "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -264,7 +277,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
             + "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -280,7 +294,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
             + "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -297,7 +312,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         + "Revolver\n"
         + "move\n Dining Hall\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -312,7 +328,8 @@ public class Ms2Ms3CmdControllerImplementTest {
     Readable input = new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n "
         + "Look\n move\n Dining Hall\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -327,7 +344,8 @@ public class Ms2Ms3CmdControllerImplementTest {
     Readable input = new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n"
         + " Look\n move\n Dining Hall\n m\n 3\n com2\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -344,7 +362,8 @@ public class Ms2Ms3CmdControllerImplementTest {
     Readable input = new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n "
         + "Look\n move\n Dining Hall\n m\n 3\n hu1\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -372,7 +391,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
             + "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -394,7 +414,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
             + "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -417,7 +438,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n y\n m\n 4\n move\n Dining Hall\n"
             + "move\n Kitchen\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -440,7 +462,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 1\n n\n m\n 4\n petmove\n "
             + "Billiard Room\n look\n move\n Billiard Room\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -467,7 +490,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n n\n m\n 4\n petmove\n "
             + "Billiard Room\n look\n move\n Billiard Room\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -502,7 +526,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 0\n n\n m\n 4\n petmove\n "
             + "Billiard Room\n look\n move\n Billiard Room\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -539,7 +564,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 11\n n\n m\n 4\n petmove\n "
             + "Billiard Room\n look\n move\n Billiard Room\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -572,7 +598,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 3\n n\n m\n 4\n petmove\n "
             + "Library\n look\n move\n Billiard Room\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -601,7 +628,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 3\n n\n m\n 4\n petmove\n "
             + "Library\n look\n move\n Billiard Room\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -629,7 +657,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 4\n n\n com2\n 1\n 4\n n\n m\n 4\n petmove\n "
             + "Library\n look\n move\n Armory\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -675,7 +704,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 1\n n\n m\n 4\n look\n "
             + "look\n move\n Billiard Room\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -717,7 +747,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 19\n n\n com2\n 1\n 11\n n\n m\n 4\n look\n "
             + "look\n look\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -762,7 +793,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 1\n 0\n n\n com2\n 1\n 11\n n\n m\n 4\n attack\n poking\n"
             + "look\n look\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -784,7 +816,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n Chain Saw\n"
             + "look\n attack\n Chain Saw\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -816,7 +849,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n "
             + "Chain Saw\n look\n attack\n WrongItem\n Chain Saw\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -841,7 +875,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n "
             + "Chain Saw\n look\n attack\n Chain saw\n Chain Saw\n look\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -860,7 +895,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n "
             + "Chain Saw\n look\n attack\n Chain Saw\n m\n 4\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -887,7 +923,8 @@ public class Ms2Ms3CmdControllerImplementTest {
         new StringReader("1\n hu1\n 22\n 2\n n\n com2\n 1\n 11\n n\n m\n 4\n pick\n "
             + "Chain Saw\n look\n attack\n Poking\n look\n m\n 4\n m\n 66\n");
     Appendable output = new StringBuilder();
-    Controller testConsole = new CmdControllerImplement(input, output, this.realWorld);
+    Controller testConsole =
+        new CmdControllerImplement(input, this.realWorld, new ConsoleViewImplement(output));
     testConsole.startGame();
     // Check the output is correct or not by compare string from manually running game result
     // The correct return string should contain correct command result info
@@ -911,17 +948,18 @@ public class Ms2Ms3CmdControllerImplementTest {
   /**
    * Test method to ensure that an IllegalStateException is thrown when the Appendable fails.
    */
-  @Test(expected = IllegalStateException.class)
+  @Test(expected = NoSuchElementException.class)
   public void testFailingAppendable() {
     // Testing when something goes wrong with the Appendable
     // Here we are passing it of an Appendable that always fails
     StringReader input = new StringReader("0876 2");
     Appendable gameLog = new FailingAppendable();
-    Controller c = new CmdControllerImplement(input, gameLog, this.realWorld);
+    Controller c = new CmdControllerImplement(input, this.realWorld,
+        new ConsoleViewImplement(this.outGameLog));
     try {
       c.startGame();
     } catch (IOException e) {
-      throw new IllegalStateException(e);
+      throw new NoSuchElementException();
     }
   }
   //End test file.

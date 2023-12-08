@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import model.world.World;
+import view.WorldView;
 
 /**
  * The CmdControllerImplement class is responsible for controlling and managing the command-line
@@ -26,25 +27,28 @@ import model.world.World;
 public class CmdControllerImplement implements Controller {
   private final World world;
   private final Scanner scanner;
-  private final Appendable output;
+  private final WorldView view;
   private final int totalAllowedPlayers;
   private final int totalAllowedTurns;
   private boolean quitFlag;
 
+
   /**
    * Constructs a CmdControllerImplement with the specified input, output, and game world.
    *
-   * @param input  A Readable input source, typically a user input stream, for receiving commands.
-   * @param output An Appendable output destination, typically a console or a text-based interface.
-   * @param world  The game World model that provides methods for executing commands interactions.
+   * @param input       A Readable input source, typically a user input stream, for receiving
+   *                    commands.
+   * @param consoleView An WorldView output destination, a console or a text-based interface.
+   * @param world       The game World model that provides methods for executing commands
+   *                    interactions.
    */
-  public CmdControllerImplement(Readable input, Appendable output, World world) {
+  public CmdControllerImplement(Readable input, World world, WorldView consoleView) {
     this.scanner = new Scanner(input);
-    this.output = output;
     this.world = world;
     this.totalAllowedPlayers = world.getTotalAllowedPlayers();
     this.totalAllowedTurns = world.getTotalAllowedTurns();
     this.quitFlag = false;
+    this.view = consoleView;
   }
 
   /**
@@ -58,15 +62,15 @@ public class CmdControllerImplement implements Controller {
   public void startGame() throws IOException {
 
     while (!quitFlag) {
-      this.output.append(String.format("\nWelcome to the Game World of %s:\n",
+      this.view.showMsg(String.format("\nWelcome to the Game World of %s:\n",
           world.getWorldName()));
-      //this.output.append("(To quit: Ctrl + C) \n");
+      //this.view.showMsg("(To quit: Ctrl + C) \n");
       this.displayMainMenuOptions();
       int select = 0;
       try {
         select = Integer.parseInt(scanner.nextLine().trim());
       } catch (NumberFormatException exception) {
-        this.output.append("Error: please only enter an integer.\n");
+        this.view.showMsg("Error: please only enter an integer.\n");
       }
 
       switch (select) {
@@ -87,13 +91,13 @@ public class CmdControllerImplement implements Controller {
           break;
         case 66:
           //Execute order 66 to kill the program and Quit. Lol
-          this.output.append("Executed Order 66 to kill and eliminate ALL controller program "
+          this.view.showMsg("Executed Order 66 to kill and eliminate ALL controller program "
               + "and Quit!\n");
           quitFlag = true;
           return;
 
         default:
-          this.output.append("Please select from Main Menu:(0-4)\n");
+          this.view.showMsg("Please select from Main Menu:(0-4)\n");
       }
     }
   }
@@ -106,9 +110,9 @@ public class CmdControllerImplement implements Controller {
    * @throws IOException if an I/O error occurs while interacting with the game.
    */
   private void displayMainMenuOptions() throws IOException {
-    this.output.append("Main Menu: \n");
-    this.output.append("(Select following operation (integer only)!)\n");
-    this.output.append(String.format("0-Create a graphical representation of the world map PNG.\n"
+    this.view.showMsg("Main Menu: \n");
+    this.view.showMsg("(Select following operation (integer only)!)\n");
+    this.view.showMsg(String.format("0-Create a graphical representation of the world map PNG.\n"
         + "1-Setup game by adding all %d players.\n"
         + "2-Find a Room (Display information about specified room in the world).\n"
         + "3-Find a Player (Display information about specified player in the world).\n"
@@ -123,7 +127,7 @@ public class CmdControllerImplement implements Controller {
    */
   private void loopToSelectMainMenu() throws IOException {
     try {
-      output.append("Enter 'm' or 'M' to go back to Main Menu: ");
+      this.view.showMsg("Enter 'm' or 'M' to go back to Main Menu: ");
       String userInput = scanner.nextLine().trim();
 
       if ("m".equalsIgnoreCase(userInput)) {
@@ -131,7 +135,7 @@ public class CmdControllerImplement implements Controller {
         startGame();
       } else {
         // Invalid input, ask again
-        output.append("Invalid input. Please enter 'm' or 'M' to go back to the main menu.\n");
+        this.view.showMsg("Invalid input. Please enter 'm' or 'M' to go back to the main menu.\n");
         loopToSelectMainMenu(); // Recursive call to ask again
       }
     } catch (IOException e) {
@@ -148,20 +152,20 @@ public class CmdControllerImplement implements Controller {
   private void loopToDisplayOneRoomInfo() throws IOException {
     String inputName = null;
     try {
-      this.output.append(String.format("All %d room in the %s:\n%s", world.getTotalOfRoom(),
+      this.view.showMsg(String.format("All %d room in the %s:\n%s", world.getTotalOfRoom(),
           world.getWorldName(), world.getAllRoomNames()));
-      this.output.append("\nWhich room do you want to check? "
+      this.view.showMsg("\nWhich room do you want to check? "
           + "(Enter the exact room name from above list.)\n");
       inputName = this.scanner.nextLine().trim();
-      this.output.append(world.getOneRoomInfo(inputName));
-      this.output.append("\n");
+      this.view.showMsg(world.getOneRoomInfo(inputName));
+      this.view.showMsg("\n");
       loopToSelectMainMenu();
     } catch (IllegalArgumentException e) {
-      this.output.append(String.format("No room name found for: %s\n", inputName));
-      this.output.append("Check your room name typo again, room names are case sensitive.\n");
+      this.view.showMsg(String.format("No room name found for: %s\n", inputName));
+      this.view.showMsg("Check your room name typo again, room names are case sensitive.\n");
       loopToDisplayOneRoomInfo();
     } catch (NullPointerException e) {
-      this.output.append("Room name cannot be Null.\n");
+      this.view.showMsg("Room name cannot be Null.\n");
       loopToDisplayOneRoomInfo();
     }
   }
@@ -174,7 +178,7 @@ public class CmdControllerImplement implements Controller {
   private void loopToDisplayOnePlayerInfo() throws IOException {
     //if no players added advise user go back to main menu to add players.
     if (world.getAllPlayerNames().size() == 0) {
-      this.output.append("No players added, back to Main menu and add players first!\n");
+      this.view.showMsg("No players added, back to Main menu and add players first!\n");
       loopToSelectMainMenu();
       return;
     }
@@ -182,20 +186,20 @@ public class CmdControllerImplement implements Controller {
     String inputName = null;
     List<String> playerNameList = world.getAllPlayerNames();
     try {
-      this.output.append(String.format("All %d players in the %s:\n%s", playerNameList.size(),
+      this.view.showMsg(String.format("All %d players in the %s:\n%s", playerNameList.size(),
           world.getWorldName(), playerNameList));
-      this.output.append("\nWhich player do you want to check? "
+      this.view.showMsg("\nWhich player do you want to check? "
           + "(Enter the exact player name from the above list.)\n");
       inputName = this.scanner.nextLine().trim();
-      this.output.append(world.getOnePlayerAndRoomInfo(inputName));
-      this.output.append("\n");
+      this.view.showMsg(world.getOnePlayerAndRoomInfo(inputName));
+      this.view.showMsg("\n");
       loopToSelectMainMenu();
     } catch (IllegalArgumentException e) {
-      this.output.append(String.format("No player found for: %s\n", inputName));
-      this.output.append("Check your player name typo again. Player names are case sensitive.\n");
+      this.view.showMsg(String.format("No player found for: %s\n", inputName));
+      this.view.showMsg("Check your player name typo again. Player names are case sensitive.\n");
       loopToDisplayOnePlayerInfo();
     } catch (NullPointerException e) {
-      this.output.append("Player name cannot be null.\n");
+      this.view.showMsg("Player name cannot be null.\n");
       loopToDisplayOnePlayerInfo();
     }
   }
@@ -207,7 +211,7 @@ public class CmdControllerImplement implements Controller {
    */
   private void createWorldMapPng() throws IOException {
     this.world.createGraphBufferedImage();
-    this.output.append("The world map png created in above directory.\n");
+    this.view.showMsg("The world map png created in above directory.\n");
     loopToSelectMainMenu();
   }
 
@@ -220,7 +224,7 @@ public class CmdControllerImplement implements Controller {
 
     // if not enough player advise user to main to add more players
     if (world.getAllPlayerNames().size() < this.totalAllowedPlayers) {
-      this.output.append(
+      this.view.showMsg(
           String.format("Not enough players! Back to Main Menu to add %d players to " + "play.\n",
               this.totalAllowedPlayers));
       loopToSelectMainMenu();
@@ -229,11 +233,11 @@ public class CmdControllerImplement implements Controller {
     // if game over then should not start the game, let user go back re-start the game
     if (world.checkGameOver()) {
       // True game is over
-      this.output.append("Last game already finished, back to main menu to re-start a New Game.\n");
+      this.view.showMsg("Last game already finished, back to main menu to re-start a New Game.\n");
       if (world.getWinnerName() != null) {
-        this.output.append(String.format("Last game winner: %s!!!\n", world.getWinnerName()));
+        this.view.showMsg(String.format("Last game winner: %s!!!\n", world.getWinnerName()));
       } else {
-        this.output.append(String.format(
+        this.view.showMsg(String.format(
             "Whoops, last game Dr.Lucky(%s HP=%s) escaped!!!\n",
             world.getDrLuckyName(), world.getDrLuckyHp()));
       }
@@ -243,7 +247,7 @@ public class CmdControllerImplement implements Controller {
 
     int curTurnNum = 1;
 
-    this.output.append(String.format("Game turns starting in %s, total %d players: %s\n",
+    this.view.showMsg(String.format("Game turns starting in %s, total %d players: %s\n",
         world.getWorldName(), world.getAllPlayerNames().size(), world.getAllPlayerNames()));
 
     // For MS2 game only end when max turns reached, no Dr.Lucky Health involved now!
@@ -253,15 +257,15 @@ public class CmdControllerImplement implements Controller {
       if (world.checkGameOver()) {
         // True game is over
         if (world.getWinnerName() != null) {
-          this.output.append(String.format("Congratulation!!!!!!!!!\nGame Winner: %s \n\n",
+          this.view.showMsg(String.format("Congratulation!!!!!!!!!\nGame Winner: %s \n\n",
               world.getWinnerName()));
         } else {
-          output.append(String.format("Game Over: Max %d turns finished!\n", curTurnNum));
-          this.output.append(String.format(
+          this.view.showMsg(String.format("Game Over: Max %d turns finished!\n", curTurnNum));
+          this.view.showMsg(String.format(
               "Whoops, Dr.Lucky(%s HP=%s) escaped!!!\n",
               world.getDrLuckyName(), world.getDrLuckyHp()));
         }
-        this.output.append(
+        this.view.showMsg(
             "Game finished, back to main menu to 66-quit & re-start a New Game.\n");
         loopToSelectMainMenu();
         break;
@@ -270,7 +274,7 @@ public class CmdControllerImplement implements Controller {
       curTurnNum++;
     }
     if (curTurnNum > world.getTotalAllowedTurns() && world.getWinnerName() == null) {
-      output.append(String.format("Game Over: Max %d turns finished!\n", curTurnNum - 1));
+      this.view.showMsg(String.format("Game Over: Max %d turns finished!\n", curTurnNum - 1));
       loopToSelectMainMenu();
     }
 
@@ -287,16 +291,16 @@ public class CmdControllerImplement implements Controller {
 
     String curTurnPlayerName = world.getCurrentPlayerName();
     boolean isCurPlayerComputer = world.isCurrentPlayerComputer();
-    this.output.append(String.format("\nTurn #%d Current Player Status: \n%s",
+    this.view.showMsg(String.format("\nTurn #%d Current Player Status: \n%s",
         curTurnNum, world.getOnePlayerAndRoomInfo(curTurnPlayerName)));
-    this.output.append(String.format("%s\n", world.getDrLuckyInfo()));
+    this.view.showMsg(String.format("%s\n", world.getDrLuckyInfo()));
     if (this.world.checkCurPlayerSameRoomWithDrLucky()) {
-      this.output.append(
+      this.view.showMsg(
           String.format("Current Turn #%d for player: %s. (Available commands: "
                   + "[Move, Look, Pick, PetMove, Attack])\n",
               curTurnNum, curTurnPlayerName));
     } else {
-      this.output.append(
+      this.view.showMsg(
           String.format("Current Turn #%d for player: %s. (Available commands: "
                   + "[Move, Look, Pick, PetMove] (Can not Attack, due to no Dr.Lucky))\n",
               curTurnNum, curTurnPlayerName));
@@ -332,14 +336,14 @@ public class CmdControllerImplement implements Controller {
           this.consolePlayerKill(curTurnPlayerName);
           break;
         } else { // Default base case nothing match input & loop back to let user input selection
-          this.output.append("No match command found! Please enter exact command:\n");
+          this.view.showMsg("No match command found! Please enter exact command:\n");
           if (this.world.checkCurPlayerSameRoomWithDrLucky()) {
-            this.output.append(
+            this.view.showMsg(
                 String.format("Turn#%d player(%s). (Available commands: "
                         + "[Move, Look, Pick, PetMove, Attack])\n",
                     curTurnNum, curTurnPlayerName));
           } else {
-            this.output.append(
+            this.view.showMsg(
                 String.format("Turn#%d player(%s). (Available commands: "
                         + "[Move, Look, Pick, PetMove] "
                         + "(Can not Attack, due to no Dr.Lucky in room.))\n",
@@ -347,12 +351,12 @@ public class CmdControllerImplement implements Controller {
           }
         }
       } catch (IllegalStateException e) {    // Turn max reached & Game over!
-        this.output.append(e.getMessage());
+        this.view.showMsg(e.getMessage());
         loopToSelectMainMenu();
         return;
       } catch (IllegalAccessException e) {
-        this.output.append(e.getMessage());
-        this.output.append("Try a different command!\n");
+        this.view.showMsg(e.getMessage());
+        this.view.showMsg("Try a different command!\n");
       }
     }
   }
@@ -364,19 +368,19 @@ public class CmdControllerImplement implements Controller {
    * @throws IOException if an I/O error occurs while interacting with the game.
    */
   private void computerPlayerTakeOneTurn(String curTurnPlayerName) throws IOException {
-    this.output.append(String.format("**Computer player**: %s is taking action...\n",
+    this.view.showMsg(String.format("**Computer player**: %s is taking action...\n",
         curTurnPlayerName));
 
     String computerActionResult = null;
     ComputerActionCmd computerActionCmd = new ComputerActionCmd();
     try {
       computerActionResult = computerActionCmd.execute(this.world);
-      this.output.append(computerActionResult); // display computer action run
+      this.view.showMsg(computerActionResult); // display computer action run
     } catch (IllegalAccessException e) {
-      this.output.append(e.getMessage());
+      this.view.showMsg(e.getMessage());
       loopToSelectMainMenu();
     } catch (IllegalStateException e) { // Turn max reached Game over!
-      this.output.append(e.getMessage());
+      this.view.showMsg(e.getMessage());
       loopToSelectMainMenu();
     }
   }
@@ -398,7 +402,7 @@ public class CmdControllerImplement implements Controller {
       throws IOException, IllegalAccessException {
     String curPlayerCarrying =
         this.world.getPlayerAllCarryingItemStringWithDamage(curTurnPlayerName);
-    output.append(String.format(
+    this.view.showMsg(String.format(
         "%s.\nChoose your carrying item to attack:\n%s ",
         world.getDrLuckyInfo(), curPlayerCarrying));
 
@@ -410,10 +414,10 @@ public class CmdControllerImplement implements Controller {
       try {
         cmdKillResult = cmdKill.execute(this.world);
         if (cmdKillResult == null || cmdKillResult.isEmpty()) {
-          output.append(String.format("Player(%s) Attack failed due to be seen!\n",
+          this.view.showMsg(String.format("Player(%s) Attack failed due to be seen!\n",
               curTurnPlayerName));
         } else {
-          output.append(cmdKillResult);
+          this.view.showMsg(cmdKillResult);
         }
         return;
       } catch (IllegalStateException e) { // Game Over state!
@@ -422,8 +426,8 @@ public class CmdControllerImplement implements Controller {
       } catch (IllegalAccessException e) {
         throw e; // player and drLucky are not in the same room
       } catch (IllegalArgumentException e) {
-        output.append(String.format("%s", e.getMessage()));
-        output.append("Check your item name for typos and case sensitivity!\n");
+        this.view.showMsg(String.format("%s", e.getMessage()));
+        this.view.showMsg("Check your item name for typos and case sensitivity!\n");
       }
     }
   }
@@ -440,9 +444,9 @@ public class CmdControllerImplement implements Controller {
       throws IOException, IllegalAccessException, IllegalStateException {
     String whatCanPickInfo = world.getPlayerWhatCanPickInfo(curTurnPlayerName);
     if (whatCanPickInfo != null) {
-      output.append(
+      this.view.showMsg(
           String.format("You are in %s\n", whatCanPickInfo)); // display what can be picked info
-      output.append(
+      this.view.showMsg(
           String.format("(To Player) %s: What do you want to pick? (Enter the exact name.):\n",
               curTurnPlayerName));
     } else {
@@ -457,22 +461,22 @@ public class CmdControllerImplement implements Controller {
       try {
         cmdPickResult = cmdPick.execute(this.world);
         if (!cmdPickResult.isEmpty()) {
-          output.append(cmdPickResult);
-          output.append(String.format("Player: %s picked up item: %s SUCCESS!\n",
+          this.view.showMsg(cmdPickResult);
+          this.view.showMsg(String.format("Player: %s picked up item: %s SUCCESS!\n",
               curTurnPlayerName, inputItemName));
         }
         return;
       } catch (IllegalAccessException e) {
-        output.append(e.getMessage());
+        this.view.showMsg(e.getMessage());
         throw new IllegalAccessException("Can't PICK, your bag is Full, try other commands!\n");
       } catch (IllegalStateException e) { // Game Over state!
         throw new IllegalStateException(String.format("Game Over! Player:%s Cannot pick up item!"
             + " %s\n", curTurnPlayerName, inputItemName));
       } catch (IllegalArgumentException e) {
-        output.append(e.getMessage());
-        output.append("\nCheck the item name for typos and case sensitivity!\n");
+        this.view.showMsg(e.getMessage());
+        this.view.showMsg("\nCheck the item name for typos and case sensitivity!\n");
       } catch (NullPointerException e) {
-        output.append("Item name cannot be null! Try a valid Item name.\n");
+        this.view.showMsg("Item name cannot be null! Try a valid Item name.\n");
       }
     }
   }
@@ -487,20 +491,21 @@ public class CmdControllerImplement implements Controller {
       throws IOException, IllegalAccessException {
     // using command design pattern to execute the Look command
     LookAroundCmd cmdLook = new LookAroundCmd();
-    output.append(cmdLook.execute(this.world));
+    this.view.showMsg(cmdLook.execute(this.world));
   }
 
   /**
    * Allows a console player to move pet to a different room.
+   *
    * @param curTurnPlayerName name of the current player.
    * @throws IOException if an I/O error occurs while interacting with the game.
    */
   private void consolePetMove(String curTurnPlayerName) throws IOException {
     String petName = world.getPetName();
-    output.append(
+    this.view.showMsg(
         String.format("Available rooms for Pet(%s): \n ", petName));
-    output.append(String.format("%s", world.getAllRoomNames()));
-    output.append(String.format("To Player: %s, Which room do you want Pet to move to?\n",
+    this.view.showMsg(String.format("%s", world.getAllRoomNames()));
+    this.view.showMsg(String.format("To Player: %s, Which room do you want Pet to move to?\n",
         curTurnPlayerName));
     while (true) {
       String inputRoomName;
@@ -510,24 +515,24 @@ public class CmdControllerImplement implements Controller {
         String moveResult;
         moveResult = cmdPetMove.execute(this.world);
         if (!moveResult.isEmpty()) {
-          output.append(String.format("Player: %s moved Pet(%s) to: %s SUCCESS!\n",
+          this.view.showMsg(String.format("Player: %s moved Pet(%s) to: %s SUCCESS!\n",
               curTurnPlayerName, petName, inputRoomName));
         }
         return;
       } catch (IllegalAccessException e) {
-        output.append(e.getMessage());
-        output.append("Check your room name for typo and case sensitivity!\n");
+        this.view.showMsg(e.getMessage());
+        this.view.showMsg("Check your room name for typo and case sensitivity!\n");
       } catch (NullPointerException e) {
-        output.append(e.getMessage());
-        output.append("Enter a valid room name again!\n");
+        this.view.showMsg(e.getMessage());
+        this.view.showMsg("Enter a valid room name again!\n");
       } catch (IllegalStateException e) {
         // Game Over state!
         throw new IllegalStateException(
             String.format("Game Over! Player:%s Cannot move! %s\n", curTurnPlayerName,
                 e.getMessage()));
       } catch (IllegalArgumentException e) {
-        output.append(e.getMessage());
-        output.append("\nCheck your room name for typo and case sensitivity!\n");
+        this.view.showMsg(e.getMessage());
+        this.view.showMsg("\nCheck your room name for typo and case sensitivity!\n");
       }
     }
   }
@@ -540,9 +545,9 @@ public class CmdControllerImplement implements Controller {
    */
   private void consolePlayerMove(String curTurnPlayerName) throws IOException {
     String playerCurRoom = world.getOnePlayerCurrentRoomName(curTurnPlayerName);
-    output.append(
+    this.view.showMsg(
         String.format("Reachable Rooms: %s\n", world.getNeighborsRoomList(playerCurRoom)));
-    output.append(String.format("To Player: %s, Which room do you want to move to?\n",
+    this.view.showMsg(String.format("To Player: %s, Which room do you want to move to?\n",
         curTurnPlayerName));
 
     while (true) {
@@ -553,24 +558,24 @@ public class CmdControllerImplement implements Controller {
         String moveResult;
         moveResult = cmdMove.execute(this.world);
         if (!moveResult.isEmpty()) {
-          output.append(String.format("Player: %s moved to room: %s SUCCESS!\n",
+          this.view.showMsg(String.format("Player: %s moved to room: %s SUCCESS!\n",
               curTurnPlayerName, inputRoomName));
         }
         return;
       } catch (IllegalAccessException e) {
-        output.append(e.getMessage());
-        output.append("Check your room name for typo and case sensitivity!\n");
+        this.view.showMsg(e.getMessage());
+        this.view.showMsg("Check your room name for typo and case sensitivity!\n");
       } catch (NullPointerException e) {
-        output.append(e.getMessage());
-        output.append("Enter a valid room name again!\n");
+        this.view.showMsg(e.getMessage());
+        this.view.showMsg("Enter a valid room name again!\n");
       } catch (IllegalStateException e) {
         // Game Over state!
         throw new IllegalStateException(
             String.format("Game Over! Player:%s Cannot move! %s\n", curTurnPlayerName,
                 e.getMessage()));
       } catch (IllegalArgumentException e) {
-        output.append(e.getMessage());
-        output.append("\nCheck your room name for typo and case sensitivity!\n");
+        this.view.showMsg(e.getMessage());
+        this.view.showMsg("\nCheck your room name for typo and case sensitivity!\n");
       }
     }
   }
@@ -583,15 +588,15 @@ public class CmdControllerImplement implements Controller {
   private void loopToAddAllPlayers() throws IOException {
     int count = 1;
     while (world.getAllPlayerNames().size() < world.getTotalAllowedPlayers()) {
-      this.output.append(String.format("Enter information for No.%d player: \n", count));
+      this.view.showMsg(String.format("Enter information for No.%d player: \n", count));
       addOnePlayer();
       count++;
     }
     if (world.getAllPlayerNames().size() == world.getTotalAllowedPlayers()) {
       this.world.createGraphBufferedImage();
-      this.output.append(String.format("\nAll %d players added successfully! They are:\n",
+      this.view.showMsg(String.format("\nAll %d players added successfully! They are:\n",
           world.getTotalAllowedPlayers()));
-      this.output.append(world.getAllPlayerInfo());
+      this.view.showMsg(world.getAllPlayerInfo());
     }
     loopToSelectMainMenu();
   }
@@ -604,20 +609,20 @@ public class CmdControllerImplement implements Controller {
   private void addOnePlayer() throws IOException {
     try {
       String playerName;
-      this.output.append("Give a name for this Player:\n");
+      this.view.showMsg("Give a name for this Player:\n");
       playerName = scanner.nextLine().trim(); // get player name
 
-      this.output.append(String.format("Set Player: %s's carrying limit(Integer only!):\n",
+      this.view.showMsg(String.format("Set Player: %s's carrying limit(Integer only!):\n",
           playerName));
       int playerLimit;
       playerLimit = Integer.parseInt(scanner.nextLine().trim()); // get player limit
 
-      this.output.append(String.format("Set Player: %s's initial room index (0 to %d):\n",
+      this.view.showMsg(String.format("Set Player: %s's initial room index (0 to %d):\n",
           playerName, world.getTotalOfRoom() - 1));
       int playerInitialRoom;
       playerInitialRoom = Integer.parseInt(scanner.nextLine().trim()); // get player limit
 
-      this.output.append(String.format("Set Player: is this %s a computer player?:(Y/N)\n",
+      this.view.showMsg(String.format("Set Player: is this %s a computer player?:(Y/N)\n",
           playerName));
       // if user input Y for isComputer True; N for isComputer False.
       boolean isComputer;
@@ -626,18 +631,16 @@ public class CmdControllerImplement implements Controller {
       // call world method to create the player & add into game world
       this.world.addOnePlayer(playerName, playerInitialRoom, isComputer, playerLimit);
 
-      this.output.append(String.format("Player: %s (limit: %d) successfully added into Room #%d\n",
+      this.view.showMsg(String.format("Player: %s (limit: %d) successfully added into Room #%d\n",
           playerName, playerLimit, playerInitialRoom));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
     } catch (NumberFormatException e) {
-      output.append("Please enter an integer for limit and room index! \n");
-      output.append(String.format("\nNow, re-add No.%d player from beginning: \n",
+      this.view.showMsg("Please enter an integer for limit and room index! \n");
+      this.view.showMsg(String.format("\nNow, re-add No.%d player from beginning: \n",
           this.world.getAllPlayerNames().size() + 1));
       this.addOnePlayer();
     } catch (IllegalArgumentException e) {
-      output.append(e.getMessage());
-      output.append(String.format("\nNow, re-add No.%d player from beginning: \n",
+      this.view.showMsg(e.getMessage());
+      this.view.showMsg(String.format("\nNow, re-add No.%d player from beginning: \n",
           this.world.getAllPlayerNames().size() + 1));
       this.addOnePlayer();
     }
